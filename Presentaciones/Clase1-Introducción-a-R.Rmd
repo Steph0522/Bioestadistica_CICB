@@ -1,0 +1,2017 @@
+---
+title: "Introducción a R y Rstudio"
+subtitle: "![](logo.jpg){width=2in}"
+author: "Dra. Stephanie Hereira Pacheco"
+institute: "CICB, UATx"
+date: 23-02-2024
+output:
+  xaringan::moon_reader:
+    css: xaringan-themer.css
+nature:
+  ratio: "16:9"
+---
+
+
+```{r, echo=FALSE}
+htmltools::tagList(rmarkdown::html_dependency_jquery())
+```
+
+
+```{r, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_mono_accent(
+  base_color = "#5E2129",
+  code_highlight_color = "#E3906F", 
+  code_inline_color = "#0E2B54",
+  text_font_size = "1.3rem",
+  
+)
+```
+
+```{r, xaringanExtra-clipboard, echo=FALSE}
+htmltools::tagList(
+  xaringanExtra::use_clipboard(
+    button_text = "<i class=\"fa fa-clipboard\"></i>",
+    success_text = "<i class=\"fa fa-check\" style=\"color: #90BE6D\"></i>",
+  ),
+  rmarkdown::html_dependency_font_awesome()
+)
+
+xaringanExtra::use_logo(
+  image_url = "https://www.ciisder.mx/images/logos/logo_uatx_2019.png",
+  position = xaringanExtra::css_position(top = "1em", right = "1em")
+)
+
+xaringanExtra::use_tile_view()
+
+xaringanExtra::use_share_again()
+
+
+```
+
+## Introducción a R y Rstudio
+
+-   **¿Qué es R y por qué usarlo?**
+
+-   **R studio y paneles**
+
+-   **Configuración del ambiente de trabajo y Scripts**
+
+-   **Directorios, sesión  y áreas de trabajo y Proyectos**
+
+-   **Instalación y carga de paquetes**
+
+-   **Tipos de objetos, tipos de datos y estructuras de datos**
+
+-   **Funciones**
+---
+## ¿Qué es R?
+
+-   R es un lenguaje de programación enfocado principalmente a la estadística.
+
+-   Fue creado por estadísticos como un ambiente interactivo para el análisis de datos.
+
+-   Cuando instalamos R en nuestra computadora en realidad lo que estamos instalando es el entorno computacional y para que podamos hacer uso de ese entorno necesitamos conocer la manera de escribir de manera que el software pueda interpretar y ejecutar las instrucciones que le damos.
+
+-   En R pueden guardar su trabajo como una secuencia de comandos o instrucciones, conocida como un *script*, que se pueden ejecutar fácilmente en cualquier momento.
+---
+# Un poco de historia...
+
+-   R proviene del lenguaje S, creado en los Laboratorios Bell (Estados Unidos). Los mismos que inventaron el transistor, el láser, el sistema operativo Unix y entre otros.
+
+-   Este trabajo, que culminaría en la creación de R, inició en 1992 y no fue hasta el 2000 que se obtuvo una versión final estable.
+
+-   Hoy día, el mantenimiento y desarrollo de R es realizado por el R Development Core Team, un equipo de especialistas en ciencias computacionales y estadística provenientes de diferentes instituciones y lugares alrededor del mundo. R posee una Licencia Pública para que pueda ser distribuido de manera gratuita.
+---
+
+## ¿Por qué usar R?
+
+1.  R es gratuito y de código abierto.
+2.  Se ejecuta en todas las plataformas principales: Windows, Mac Os, UNIX/Linux.
+3.  Los *scripts* y los objetos de datos se pueden compartir sin problemas entre plataformas.
+4.  Existe una comunidad grande, creciente y activa de usuarios de R y, como resultado, hay numerosos recursos para aprender y hacer preguntas.
+5.  Es fácil para otras personas contribuir complementos o paquetes que les permiten a los desarrolladores compartir implementaciones de software de nuevas metodologías de ciencia de datos.
+---
+# RStudio
+
+RStudio será nuestra plataforma para los proyectos usados con el lenguaje R. Nos provee un editor visual e interactivo para crear y editar nuestros *scripts*, además de otras herramientas útiles que iremos viendo con el pasar de los temas.
+
+---
+### Paneles
+
+Rstudio posee 4 paneles principales:
+
+```{r, echo=FALSE, fig.align='center', out.width='650px'}
+## http://ww2.coastal.edu/kingw/statistics/R-tutorials/install_help/R_console.png
+knitr::include_graphics(file.path("../images/Consola2.jpg"))
+```
+---
+
+## *Scripts*
+
+Una de las grandes ventajas de R y Rstudio es que se pueden guardar los diversos códigos e instrucciones, los llamados *scripts*, que entonces se pueden editar y guardar con un editor de texto. Para iniciar un nuevo *script*, hagan clic en *Archivo*, entonces *Nuevo Archivo* y luego *R Script*.
+
+```{r, echo=FALSE,   out.width="45%"}
+knitr::include_graphics(file.path("../images/script.jpeg"))
+knitr::include_graphics(file.path("../images/script2.jpg"))
+
+```
+
+---
+
+### Abriendo un *script*
+
+Podemos abrir y ejecutar scripts en R usando la función `source()`, dandole como argumento la ruta del archivo .R en nuestra computadora, entre comillas.
+
+Por ejemplo.
+
+```{r, eval=FALSE}
+source("C:/mi_script.R")
+
+```
+
+Otra opción es yendo a *File*, entonces *Open File* y luego buscando en las carpetas donde tengas el script.
+---
+### Comentarios en *Scripts*
+
+Las primeras líneas de código son títulos o comentarios para hacerlo siempre debemos poner el símbolo "\#" para indicar que no es un código y luego cargamos los paquetes y datos que vamos a utilizar. Para esta parte, luego veremos otra sección donde profundizaremos mejor en esto de cargar datos y paquetes. Por ejemplo:\
+
+```{r, eval=FALSE}
+#Este es mi código
+data(iris)
+#Aquí termina el código
+```
+---
+## Cómo ejecutar comandos mientras editan *scripts*
+
+Empezamos por abrir un nuevo *script* y luego nombramos el *script*. Podemos hacer esto a través del editor guardando el nuevo *script* actual sin nombre. Al guardar el script por primera vez use un nombre descriptivo, con letras minúsculas, sin espacios, preferiblemente o con guión bajo "\_" para separar palabras, evitar guiones medios "-" para separar las palabras. Llamaremos a este *script*: *mi_script.R*.
+
+```{r, echo=FALSE, out.width= "300px", fig.align='center'}
+knitr::include_graphics(file.path("../images/save.png"))
+
+```
+
+Ahora podemos editar nuestro primer *script*.
+
+## Cómo ejecutar comandos mientras editan *scripts*
+
+Ahora podemos continuar escribiendo código. Como ejemplo, trabajaremos con el dataset: *"iris"*. Cargarmos la librería *"datasets"*, cargamos los datos, luego veremos el resumen de los datos y por último graficaremos un boxplot. Para hacer esto, escribimos cada línea de código y luego hacemos click en el botón *Run* en la parte derecha superior del panel de edición. Para ejecutar una línea a la pueden usar Control+Enter en Windows y Linux y Command+Return en Mac.
+
+Estas son las líneas del código:
+
+```{r, eval=FALSE}
+library(datasets)
+data(iris)
+summary(iris)
+boxplot(iris)
+```
+
+Tan pronto se corra el código, inmediatamente aparece en en panel de la consola y el gráfico aparece en en panel de *"Plots"* . En el panel de *"Plots"* se puede hacer click hacia delante o hacia atrás en diferentes gráficos, hacer zoom en el gráfico o guardar los gráficos como archivos.
+
+## Cómo ejecutar comandos mientras editan *scripts*
+
+Y así luce al correrlo:
+
+```{r, echo=TRUE, out.width= "320px",echo=FALSE, out.height="160px"}
+knitr::include_graphics(file.path("../images/code.png"))
+
+```
+
+## Directorio de trabajo
+
+El *directorio de trabajo* es el lugar en nuestra computadora en el que se encuentran los archivos con los que estamos trabajando en R. Este es el lugar donde R busca los archivos para importarlos y al que serán exportados o guardados, a menos que se indique otra cosa.
+
+Para saber donde está ubicado tu directorio de trabajo, puedes poner el código:
+
+```{r, eval=FALSE}
+getwd()
+```
+
+Y para establecer o cambiar este directorio de trabajo, correr el siguiente código:
+
+```{r, eval=FALSE}
+setwd("/home/steph/Desktop/")
+```
+
+Por ejemplo en este caso estoy estableciendo mi directorio de trabajo en la carpeta "Escritorio". También si quieres conocer el contenido de tu directorio, como archivos o directorios puedes usar los siguientes códigos:
+
+```{r, eval=FALSE}
+list.files()
+list.dirs()
+```
+
+## Sesión
+
+Los objetos y funciones de R son almacenados en la memoria de nuestra computadora. Cuando ejecutamos R, ya estamos creando una instancia del entorno computacional de este lenguaje de programación, cada instancia es una *sesión*.
+
+Todos los objetos, tablas, gráficas y funciones creadas en una sesión, permanecen sólo en ella, no son compartidos entre sesiones. Si se quiere guardar toda esta data generada en la sesión antes de cerrar el R hay que indicar que se guarde, si no, aunque se guarden los scripts, los objetos (que algunos pueden ser muy pesados y ocupar memoria) no se guardarán. Lo cual es una opción si no se tiene mucho espacio en el disco. Es posible tener más de una sesión de R activa en la misma computadora. Esto se guarda en un archivo con extensión **.Rdata** en tu directorio de trabajo.
+
+Con la función *ls()* conoceremos una lista con los nombres de todo lo guardado en la sesión.
+
+## *Proyecto*
+
+-   Un proyecto de R (extensión .Rproj) identifica todos los archivos y contenido asociados.
+
+-   Ayuda a organizar tu trabajo y así cada curso, artículo o trabajo diferente en un proyecto por separado.
+
+-   Al crear un proyecto todos los ficheros o carpetas quedan vinculados directamente a él.
+
+```{r, echo=FALSE,   out.width="49%", out.height="90px"}
+knitr::include_graphics(file.path("../images/new_directory.png"))
+knitr::include_graphics(file.path("../images/new_directory2.png"))
+```
+
+## Proyecto
+
+```{r, echo=FALSE, out.width= "300px", echo=FALSE}
+knitr::include_graphics(file.path("../images/new_directory3.png"))
+```
+
+## Instalación de paquetes de R
+
+-   Dentro de las ventajas de R está que muchos desarrolladores y programadores elaboran constantemente *paquetes* que nos permiten usar en acceso libre con muchas funcionalidades.
+
+-   Actualmente hay muchos paquetes disponibles en CRAN (Comprehensive R Archive Network) que es una red de servidores alrededor del mundo. También hay muchos paquetes desarrollados publicados en GitHub y en Bioconductor.
+
+-   Por ejemplo para instalar el paquete tidyverse, que es de gran utilidad y que veremos en sesiones posteriores, usamos el código:
+
+```{r,eval=FALSE}
+install.packages("tidyverse")
+```
+
+En RStudio pueden navegar a la pestaña *Pakages* y seleccionar *Install*. Luego, escribir el paquete que queremos siempre y cuando esté en CRAN. Para cargar una librería como lo vimos anteriormente se usa la función, `library()`:
+
+```{r, eval=FALSE}
+library(tidyverse)
+```
+
+## Instalación de paquetes de R
+
+Una vez que se instalan los paquetes una vez, no deben instalarlo de nuevo. Sin embargo, cada vez que cerramos sesión, reiniciamos sesión o abrimos un nuevo proyecto o sesión tenemos que volver a cargarlos.
+
+Debemos tener en cuenta que la instalación de **tidyverse** instala varios paquetes. Esto ocurre comúnmente cuando un paquete tiene *dependencias*, es decir usa funciones de otros paquetes. Así mismo, cuando cargan un paquete usando `library`, también cargan sus dependencias.
+
+Hay paquetes que no se encuentra en CRAN o que si queremos su versión en desarrollo, se necesitan de otros paquetes para ser instalados. Por ejemplo, si queremos instalar la versión en desarrollo del paquete *"rmarkdown"*, que se encuentra en github, se utiliza el paquete devtools:
+
+```{r, eval=FALSE, echo=TRUE}
+devtools::install_github('rstudio/rmarkdown')
+```
+
+Los dos pares puntos *"::"* se utilizan para denotar que llamamos la función de un paquete pero sin llamarla permanentemente en nuestra sesión.
+
+## Tipos de objetos en R
+
+La información que manipulamos en R se estructura en forma de objetos y los podemos ver almacenados en el panel del ambiente de trabajo o *Enviroment*. Los objetos pueden ser:
+
+-   Números escalares o letras
+
+-   Vectores y matrices
+
+-   Dataframes, tablas y listas
+
+Más adelante detallaremos este tipo de objetos o datos en R. Aquí unos ejemplos:
+
+```{r}
+
+a <- 1                                                   #escalar
+letra <- "a"                                             #caracter
+b <- c(1,2,3)                                            #vector
+c<- matrix(1:10)                                         #matriz
+d<- data.frame(Especie=c("A", "B"), Longitud=c(c(1,2)))  #dataframe
+e<- list(c(1:20), c(1:10))                               #lista
+```
+
+## Definiendo variables
+
+-   Una ventaja de los lenguajes de programación es poder definir variables y escribir expresiones como estas, como se hace en las matemáticas y así almacenar los valores para su uso posterior.
+
+-   Usamos **\<-** para asignar valores a las variables. También podemos asignar valores usando **=**, pero recomiendo no usar **=**.
+
+-   Esto, debido a que en R el signo **=** implica igualdad en términos lógicos y esto puede evitarnos confusiones en el futuro.
+
+-   Para ver el valor almacenado en una variable, simplemente le pedimos a R que evalúe `a` y R nos muestra el valor almacenado:
+
+```{r}
+#valor declarado en el paso anterior
+a
+```
+
+Una forma explícita de pedirle a R que nos muestre el valor almacenado en **a** es usar `print` así:
+
+```{r}
+print(a)
+```
+
+## Visualizando variables asignadas
+
+Otra forma de examinar los objetos es buscarlos en el *Enviorment* o ambiente de trabajo y visualizarlos desde allí. Deberíamos ver en el ambiente a **a**, **b**, **c**, **d** y **e**. Si intentamos imprimir o visualizar el valor de un objeto que no está definido en el ambiente se recibirá un mensaje de error. Por ejemplo, si escriben **f**, verán lo siguiente: `Error: object 'f' not found`.
+
+### Algunos tips para asignar variables u objetos en R...
+
+-   Los nombres de variables tienen que comenzar con una letra, no pueden contener espacios y no deben ser variables predefinidas en R (como funciones o argumentos de funciones). Por ejemplo, no nombren una de sus variables `install.packages` escribiendo algo como: `install.packages <- 2`. Esto reescribe la función o causa confusiones para R.
+
+-   Que tus nombres sean descriptivos y/o significativos para lo que se está almacenado.
+
+-   Usar preferiblemente solo minúsculas y guiones bajos *( \_ )* como sustituto de espacios.
+
+-   Evitar caracteres especiales (- ; . \@ ?).
+
+## Guardar los espacios de trabajo y exportar objetos de R
+
+Los objetos evaluados permanecen en el espacio de trabajo hasta que finalicen sus sesiones sin guardar. Pero los espacios de trabajo también se pueden guardar para su uso posterior. De hecho, al salir de R, el programa les pregunta si desean guardar su espacio de trabajo. Si lo guardan, la próxima vez que inicien R, el programa restaurará el espacio de trabajo con todos los objetos en él.
+
+NO SE RECOMIENDA guardar el espacio de trabajo porque si no se trabaja con diferentes proyectos será más difícil darle seguimiento a lo que guardan y ocupará mucho espacio en la memoria de su disco. 
+
+En cambio, ES RECOMENDABLE en gran medida realizar un proyecto por trabajo o tarea y así tener un espacio de trabajo para cada uno. Decidiendo si guardas o no las sesiones y no entrar en confusiones entre las diferentes sesiones.
+
+## Guardar los espacios de trabajo y exportar objetos de R
+
+Ahora bien, R ya posee funciones de exportación, tales como:
+
+```{r, eval=FALSE}
+library(readr)
+write_tsv(d, "data.tsv")
+write.table(d, "data.txt", sep = "\t")
+write_csv(d, "data.csv")
+```
+
+Estas funciones guardan tus tablas u objetos con formatos de texto. También hay una forma de guardar objetos de R sin declararlos como texto sino que se queden con la identidad de R:
+
+```{r, eval=FALSE}
+saveRDS(d, "data.RDS")
+```
+
+Y para abrir o cargar este tipo de objetos con extensión .RDS usamos la siguiente función:
+
+```{r, eval=FALSE}
+readRDS("data.RDS")
+```
+
+## Funciones
+
+-   Una vez que definimos los objetos o las variables, si queremos continuar con el análisis de datos generalmente se usan una serie de funciones específicas que se aplican a las variables o datos.
+
+-   A lo largo de este curso ya hemos usado varias funciones tales como las funciones para exportar datos como *write_csv()* o para cargar paquetes tales como *library()*, entre otras.
+
+-   Hay otras funciones más sencillas, por ejemplo, la función `log` o `sqrt` con las que poemos obtener el logaritmo o la raíz cuadrada.
+
+-   R incluye muchas funciones por *default* o preestablecidas y otras pueden extraerse al cargar los diversos paquetes.
+
+<!-- -->
+
+-   Muchas otras funciones vienen establecidas en otros paquetes como fue el caso que vimos de *write_csv()* del paquete *readr*.
+
+    ***(Nótese que las funciones en su gran mayoría están definidas en inglés)***.
+
+## Funciones
+
+-   La sintaxis o el lenguaje de R nos indica que necesitas usar paréntesis para evaluar funciones como hemos visto en los ejemplos anteriores que hemos usado funciones.
+
+-   Algunas funciones como *ls()* no requieren argumentos sino que nos da la información que ocupamos sin evaluar nada dentro de los paréntesis. Sin embargo, otras funciones sí requieren uno o más argumentos.    
+
+-   A continuación se muestra un ejemplo de cómo asignamos un objeto al argumento de la función `log`. Recuerden que anteriormente definimos `a` como 1:
+
+```{r}
+log(a)
+```
+
+-   Podemos explorar funciones es en el panel inferior derecho en la pestaña de *Packages* o *Paquetes* podemos explorar los paquetes y al hacer click en alguno nos despliega las funciones que posee y su documento de ayuda también.
+
+-   Se puede saber cuáles son los argumentos de la función, lo que la función espera o las opciones que tiene, con el comando *help* o también anteponiendo un signo *?* antes de la función.
+
+## Funciones
+
+-   También, mientras escribimos la función si usamos la tecla *tab* nos indica que argumentos espera esta función.
+
+-   Pueden averiguar lo que la función espera y lo que hace revisando unos manuales muy útiles incluidos en R. Pueden obtener ayuda utilizando la función `help` así:
+
+```{r, eval=FALSE}
+help("log")
+?log
+```
+
+-   La página de ayuda les mostrará qué argumentos espera la función. Por ejemplo, `log` necesita `x` y `base` para correr.
+
+-   Sin embargo, algunos argumentos son obligatorios y otros son opcionales.
+
+-   Pueden determinar cuáles son opcionales notando en el documento de ayuda cuáles valores predeterminados se asignan con `=`. Definir estos es opcional. Por ejemplo, la base de la función `log` por defecto es `base = exp(1)` que hace `log` el logaritmo natural por defecto.
+
+## Funciones
+
+-   Para echar un vistazo rápido a los argumentos sin abrir el sistema de ayuda, pueden escribir:
+
+```{r}
+args(log)
+```
+
+-   Pueden cambiar los valores predeterminados simplemente asignando otro objeto:
+
+```{r, warning=FALSE, message=FALSE}
+log(x = 8, base = 2)
+```
+
+Para especificar argumentos, debemos usar `=` y no `<-`. En el caso de las funciones, **aquí sí aplica la igualdad**. También podemos ahorrarnos un poco de escritura, si no usan un nombre de argumento, R supone que están ingresando argumentos en el orden en que se muestran en ayuda. Entonces, al no usar los nombres, R supone que los argumentos son `x` seguido por `base`:
+
+```{r}
+log(8,2)
+```
+
+## Funciones
+
+Hay algunas excepciones a la regla de que las funciones necesitan los paréntesis para ser evaluadas. Entre estas, las más utilizados son los operadores aritméticos y relacionales. Por ejemplo:
+
+```{r}
+a + a
+a - 2
+1 * pi
+2 / 3
+4 ^ a
+```
+
+## Funciones
+
+También es posible declarar una función que no esté definida en R. Por ejemplo, la función *mean()* en Rbase nos da el promedio de un conjunto de datos, pero si quisieramos definirla (en caso de no conocerla o hacerlo a nuestra manera), sería algo así:
+
+```{r}
+average<- function(x){sum(x)/length(x)}
+x<- 1:100
+average(x)
+mean(x)
+```
+
+Al compararlas nos arrojan el mismo valor. Lo importante de este punto es que hemos declarado una nueva función, declarando primero la variable (o variables, dependiendo el caso) y luego las operaciones y asignándolos a un objeto de R:
+
+```{r, eval=FALSE}
+nombre <- function(argumentos) {
+  operaciones}
+```
+
+## Tipos de datos
+
+Como vimos en el ejemplo anterior, los objetos en R pueden ser de varios tipos. Por ejemplo, necesitamos distinguir números de los caracteres. La función `class` nos ayuda a determinar qué tipo de objeto tenemos:
+
+```{r}
+a <- 5
+class(a)
+```
+
+| Tipo                   | Nombre en inglés/en R | Ejemplo     |
+|------------------------|-----------------------|-------------|
+| Numérico               | numeric               | 5.1         |
+| Entero                 | integer               | 4           |
+| Real                   | double/float          | 3.4         |
+| Cadena de texto, letra | character             | "a"         |
+| Factor                 | factor                | Bajo        |
+| Lógico                 | logic                 | TRUE, FALSE |
+| Perdido/Omitido        | NA                    | NA          |
+| Vacío                  | null                  | NULL        |
+
+Existen otro tipos de datos más complejos que no están en el alcance del presente curso, por ejemplo: números complejos, fechas, entre otros.
+
+## Para tener en cuenta...
+
+-   El tipo *character* representa texto y es fácil reconocerlo porque un dato siempre esta rodeado de comillas, simples o dobles. Este es el tipo de datos más flexible de R, pues una cadena de texto puede contener letras, números, espacios, signos de puntuación y símbolos especiales.
+
+-   Un *factor* es un tipo de datos específico a R. Puede ser descrito como un dato numérico representado por una etiqueta. Por último, cada una de las etiquetas o valores que puedes asumir un factor se conoce como **nivel** o **level**. los niveles tienen un orden diferente al orden de aparición en el factor. En R, por defecto, los niveles se ordenan alfabéticamente. **Advertencia: Los factores pueden causar confusión ya que a veces se comportan como caracteres y otras veces no. Como resultado, estos son una fuente común de errores. A veces las funciones necesitan a fuerza que se ocupe un vector y a veces lo contrario**.
+
+-   La diferencia entre las dos es que un dato `NULL` aparece sólo cuando R intenta recuperar un dato y no encuentra nada, mientras que `NA` es usado para representar explícitamente datos perdidos, omitidos o que por alguna razón son faltantes. `NA` además puede aparecer como resultado de una operación realizada, pero no tuvo éxito en su ejecución.
+
+## Coerción de datos...
+
+En R, los datos pueden ser coercionados, es decir, forzados para transformarlos de un tipo a otro.
+
+| Función de coerción | Tipo     |
+|---------------------|----------|
+| as.integer()        | Entero   |
+| as.numeric()        | Numérico |
+| as.character()      | Caracter |
+| as.factor()         | Factor   |
+| as.logical()        | Lógico   |
+
+Veamos algunos ejemplos:
+
+```{r}
+a<- 5
+as.character(a)
+as.factor("medio")
+```
+
+## Tipos de estructura de los datos
+
+Los datos se estructuran de diferentes formas dependiendo de su propósito, en todo caso, la función *class()* también nos puede dar información sobre los tipos de estructuras de datos.
+
+-   Vectores
+
+-   Matrices y arreglos
+
+-   Listas
+
+-   *Dataframe*s
+
+## Vectores
+
+Los vectores son colecciones de uno o más datos del mismo tipo. Por ejemplo, si tenemos un vector con datos numéricos tenemos un vector de tipo numérico. No es posible mezclar datos de tipos diferentes dentro de ellos. Por ejemplo, un vector de colores puede ser:
+
+```{r}
+colores<- c("red", "black", "blue")
+is.vector(colores)
+class(colores)
+```
+
+Al usar las funcion `is.vector()` corroboramos que efectivamente es un vector al darnos `TRUE` pero al pedirle que nos indique el tipo con la función `class` nos dice que es un "character" es decir que es un vector de una cadena de texto.
+
+## Vectores
+
+Existen algunas operaciones al aplicarlas a un vector, se aplican a cada uno de sus elementos. A este proceso le llamamos **vectorización**. Las operaciones aritméticas y relacionales pueden vectorizarse. Si las aplicamos a un vector, la operación se realizará para cada uno de los elementos que contiene.
+
+```{r}
+un_vector <- c(1:10)
+un_vector*10
+un_vector+1
+un_vector + un_vector
+
+```
+
+## Matrices y arreglos
+
+-   Las matrices y arreglos no son más que vectores multidimensionales, es decir un conjunto de vectores.
+
+-   Al igual que un vector deben contener un sólo tipo de datos.
+
+-   En sentido estricto, un arreglo es una matrix pero con `n` dimensiones, mientras que las matrices tienen solo dos dimensiones.
+
+-   Las matrices y los arreglos (arrays) suelen ser usados de manera regular en matemáticas y estadística, por ser sencillas y contener solo un tipo de datos (usualmente de tipo numérico).
+
+-   En general, es preferible usar listas en lugar de arrays.
+
+## Matrices
+
+En R, podemos usar el símbolo "`:`" para indicar una secuencia de números que tiene un principio y fin, por ejemplo:
+
+```{r}
+vect<- 1:20
+```
+
+Este es un vector con números que va desde el 1 al 20. Pero para hacerlo matriz hacemos:
+
+```{r}
+matr<- matrix(1:20)
+```
+
+O para dividirlo en varias renglones y columnas:
+
+```{r}
+matri<-matrix(1:20, nrow = 5, ncol = 4)
+dim(matri)
+matri
+```
+
+## Matrices
+
+Con la función *dim()* podemos saber cuáles son las dimensiones (es decir, largo y ancho) de nuestra matriz. Las operaciones aritméticas también son vectorizadas al aplicarlas a una matriz. La operación es aplicada a cada uno de los elementos de la matriz al igual que los vectores.
+
+```{r}
+matri*2
+```
+
+Algo más que podemos hacer es transponer una matriz, es decir, rotarla 90°.
+
+```{r}
+t(matri)
+```
+
+## Listas
+
+-   Las listas, al igual que los vectores, son estructuras de datos unidimensionales, sólo tienen largo
+
+-   A diferencia de los vectores cada uno de sus elementos puede ser de diferente tipo o incluso de diferente clase
+
+-   Por lo que son estructuras heterogéneas.
+
+-   Podemos tener listas que contengan escalares, vectores, matrices, data frames u otras listas.
+
+-   Para crear una lista usamos la función list(), que nos pedirá los elementos que deseamos incluir en nuestra lista. Para esta estructura, no importan las dimensiones o largo de los elementos que queramos incluir en ella.
+
+-   Al igual que con un dataframe, tenemos la opción de poner nombre a cada elemento de una lista.
+
+-   No es posible vectorizar operaciones aritméticas usando listas. Al intentarlo nos es devuelto un error.
+
+## Listas
+
+Un ejemplo de una lista:
+
+```{r, warning=FALSE, message=FALSE}
+un_vector <- 1:20
+una_matriz <- matrix(1:20, nrow = 2)
+una_df     <- data.frame("numeros" = 1:3, "letras" = c("a", "b", "c"))
+una_lista <- list("vec" = un_vector,"mat" = una_matriz,"df" = una_df)
+una_lista
+```
+
+## Coercionando una matriz o dataframe
+
+Finalmente, en caso de que sea necesario utilizar funciones que requieran a fuerza una matrix o un *dataframe* también aplica la coerción entre estas dos estructuras de datos. Esta coerción es muy útil por ejemplo al utilizar la función `t()` que transpone una *dataframe*:
+
+```{r}
+df_transpuesta<- t(una_df)
+class(df_transpuesta)
+```
+
+Como vemos la función `t()` cambia la estructura de los datos, para evitar esto, coercionamos esta salida.
+
+```{r}
+df_transpuesta<- as.data.frame(t(una_df))
+class(df_transpuesta)
+```
+## *Dataframes*
+
+-   La forma más común de almacenar un set de datos en R es usando un *dataframe*.
+
+-   Los dataframes son estructuras de datos de dos dimensiones que pueden contener datos de diferentes tipos, por lo tanto, son heterogéneas.
+
+-   Vamos a trabajar con una data de ejemplo y exploraremos esta *dataframe*, es una data en la que evaluan el efecto de la dosis de vitamina C sobre el crecimiento de los dientes de unos tipos de cerdos. La función `str` es útil para obtener más información sobre la estructura de un objeto:
+
+    ```{r, echo=TRUE}
+    data(ToothGrowth)
+    str(ToothGrowth)
+    ```
+
+Esto nos dice mucho más sobre el objeto. Vemos que la tabla tiene 60 filas y 3 variables.
+
+## *Dataframes*
+
+Podemos conocer las dimensiones de la tabla con la función `dim`:
+
+```{r}
+dim(ToothGrowth)
+```
+
+También, podemos mostrar las primeras seis líneas usando la función `head`:
+
+```{r}
+head(ToothGrowth)
+```
+
+## *Dataframes*
+
+Para crear un dataframe usamos la función `data.frame()`. Esta función nos pedirá un número de vectores igual al número de columnas que deseemos. Todos los vectores que proporcionemos deben tener el mismo largo. Es decir, un dataframe está compuesto por vectores. Veamos un ejemplo:
+
+```{r}
+df <- data.frame(
+  "entero" = 1:3, 
+  "factor" = c("alto", "medio", "bajo"), 
+  "letras" = as.character(c("a", "b", "c")))
+df
+```
+
+Las funciones `names` y `colnames` nos permiten conocer los nombres de los títulos (headers) o de las columnas.
+
+```{r, eval=FALSE}
+names(df)
+```
+
+```{r}
+colnames(df)
+```
+
+## El operador `$` y otras formas de acceso
+
+Para tener acceso a las diversas variables o columnas de un *data.frame* utilizamos el operador de acceso `$`, por ejemplo, si quisieramos tener acceso a la variable 'factor' de la *data.frame* **df** se hace de la siguiente manera:
+
+```{r}
+df$factor
+class(df$factor)
+is.vector(df$factor)
+```
+
+Cuando usamos el operador `$` el tipo de objeto que obtenemos es un vector, en el ejemplo como la columna 'factor'.
+
+**Tip**: R viene con una muy buena funcionalidad de autocompletar que nos ahorra la molestia de escribir todos los nombres. Escriban `df$` y luego presionen la tecla *tab* en su teclado. Esta funcionalidad y muchas otras características útiles de autocompletar están disponibles en RStudio, esto aplica también para las funciones.
+
+## El operador `$` y otras formas de acceso
+
+En el caso de las listas también podemos acceder con el operador `$`, aunque también podemos usar corchetes dobles (`[[`) así. Por ejemplo declaramos una lista:
+
+```{r}
+notas_estudiantes <- list(nombres = c("Ana", "Clara", "Sofy"),
+               id_estudiante = c("i1", "i2", "i3"),
+               notas = c(10, 9,7))
+```
+
+Y queremos extraer los nombres de los estudiantes, entonces hacemos\_
+
+```{r}
+notas_estudiantes$nombres
+notas_estudiantes[["nombres"]]
+```
+
+Y obtenemos el mismo resultados.
+
+## El operador `$` y otras formas de acceso
+
+Para el caso de las matrices se puede acceder usando corchetes (`[`). Si desean la primera fila y la pimera columna, entonces:
+
+```{r}
+mat<- matrix(1:10, ncol = 5, nrow = 2)
+mat[1,1]
+```
+
+Para acceder solo a la primera fila y solo a la primera columa usamos las comas, así: s
+
+```{r}
+mat[1 ,] #acceder primera fila
+mat[, 1] #acceder a la primera columna
+is.vector(mat[, 1])
+```
+
+Notese que esto devuelve un vector, no una matriz.
+
+## El operador `$` y otras formas de acceso
+
+Se pueden crear subconjuntos basados tanto en las filas como en las columnas:
+
+```{r}
+mat[1:2 , 2:4]  #en orden de posición es filas primero y luego columnas
+```
+
+Podemos convertir las matrices en *dataframes* usando la función `as.data.frame`:
+
+```{r}
+as.data.frame(mat)
+```
+
+## Creando subconjuntos o Indexación
+
+En R, podemos obtener subconjuntos de nuestras estructuras de datos, es decir, podemos extraer partes de una estructura de datos (nuestro conjunto).
+
+También podemos usar corchetes individuales (`[`) para acceder a las filas y las columnas de un *dataframe* y es exactamente igual que lo que se aplicó con las matrices. A esto es lo que llamamos **Subconjuntos** de los *data.frame*. Como las listas de datos que usamos para *notas_estudiantes* tienen las mismas dimensiones entonces podemos coercionarlo a ser una *data.frame*:
+
+```{r}
+evaluaciones<- as.data.frame(notas_estudiantes)
+```
+
+Y para obtener más de una entrada se puede utilizar un vector de entradas múltiples como índice:
+
+```{r}
+evaluaciones[c(1,2)]
+```
+
+Obtenemos las dos primeras columnas.
+
+## Creando subconjuntos.
+
+Las secuencias definidas anteriormente son particularmente útiles si necesitamos acceso, digamos, a los dos primeros elementos:
+
+```{r}
+evaluaciones[1:2]
+```
+
+Ahora bien, si queremos **NO** elegir, por ejemplo, la primera columna o dejarla fuera, entonces usamos el signo **'-'**:
+
+```{r}
+evaluaciones[,-1]
+```
+
+## Creando subconjuntos.
+
+Si los elementos tienen nombres de columna o *headers* también podemos acceder a las entradas utilizando estos nombres:
+
+```{r}
+evaluaciones[c("nombres","notas")]
+```
+
+## Creando subconjuntos.
+
+Ahora bien, podemos seleccionar datos que tengan características específicas, por ejemplo, todos los valores mayores a cierto número o aquellos que coinciden exactamente con un valor de nuestro interés. Para realizar esta operación haremos uso de índices y operadores lógicos.
+
+| Operador | Comparación           |
+|----------|-----------------------|
+| \<       | Menor que             |
+| \<=      | Menor o igual que     |
+| \>       | Mayor que             |
+| \>=      | Mayor o igual que     |
+| ==       | Exactamente igual que |
+| ! =      | No es igual que       |
+| !        | No es                 |
+| =        | Igual que             |
+| &, \|    | y , ó                 |
+
+## Creando subconjuntos.
+
+Por ejemplo en el caso de la tabla de **evaluaciones**, si queremos escoger los valores que sean mayor de 8 en las notas obtenidas:
+
+```{r}
+evaluaciones$notas > 8
+```
+
+Observamos cuales cumplen con la condición si muestran `TRUE`. Ahora para usar este filtro y hacer un subconjunto con el *data.frame*, hacemos:
+
+```{r}
+mas_de_8<-evaluaciones[evaluaciones$notas > 8,]
+mas_de_8
+```
+
+## Creando subconjuntos.
+
+Si queremos usar más de una condición pero indicando negación:
+
+```{r}
+evaluaciones[!(evaluaciones$notas > 8 & 
+                 evaluaciones$nombres == "Clara"), ]
+
+```
+
+Para escoger un valor que sea exactamente igual a una condición usamos '==':
+
+```{r}
+evaluaciones[evaluaciones$nombres == "Sofy",]
+
+```
+
+## Importando datos {#importing-data}
+
+```{r, echo=FALSE}
+img_path <- "../images/"
+```
+
+Para el ejemplo que vimos en la clase pasada usamos un dataset que está en el ambiente de R por default, si queremos saber cuales son los datasets que tenemos en nuestro ambiente, podemos usar el comando *data()* y nos desplegará la lista:
+
+```{r}
+data()
+```
+
+Si queremos utilizar los datos de nuestro trabajo o usar datos de una base de datos o de un 'dataset' que se encuentre en internet, debemos *Importar* estos datos a nuestra sesión de R. Usualmente tenemos nuestros datos guardados en hojas de cálculo en diferentes formatos con diferentes extensiones, estos son los más populares:
+
+-   separados con *coma* o *punto y coma* (`,`,`;`): csv,
+
+-   separados con tabulaciones o espacios (*tab,* `\t`) : .txt o .tsv,
+
+-   Hojas de cálculo de excel: .xls, son las más usadas.
+
+## Importando datos
+
+A continuación muestro una imagen de como se ven un .csv y .txt:
+
+```{r, echo=FALSE, out.width= "330px"}
+knitr::include_graphics(file.path(img_path,"files.png"))
+```
+
+## El directorio de trabajo y rutas
+
+Antes de importar nuestros propios archivos, tablas o datos debemos estar seguros en qué directorio nos encontramos, para estar seguros que vamos a importar el archivo deseado a R.
+
+Existen tres opciones para esto:
+
+1.  Utilizar **getwd()** y **setwd()**, como lo vimos anteriormente, para establecer y saber en qué directorio nos encontramos y si es el caso, cambiarlo.
+
+2.  Poner la ruta completa de nuestro archivo, sin importar donde esté.
+
+3.  Utilizar **"Import Dataset"** de nuestro panel de ambiente y ubicar manualmente la ubicación del archivo.
+
+El reto de la primera opción es permitir que las funciones de importación de R sepan dónde buscar el archivo que contiene los datos. La forma más sencilla de hacer esto es tener una copia del archivo en la carpeta donde las funciones de importación buscan por defecto, es decir guardar este archivo en nuestro directorio de trabajo.
+
+## Descargando un archivo de la web
+
+Para descargar algún archivo en la web podemos correr el siguiente código:
+
+```{r, eval=FALSE}
+download.file(
+  url = "https://archive.ics.uci.edu/ml/machine-learning-databases/
+  iris/iris.data", 
+  destfile = "iris.data")
+
+```
+
+Si observamos nuestros archivos en nuestro directorio de trabajo con el código *list.files()* veremos que se encuentra esta data que hemos descargado.
+
+El código anterior no lee los datos sólo, en este caso, descarga la data. Otra forma de descargarlo y a la vez abrirlo es de la siguiente manera, con el paquete *readr*:
+
+```{r, warning=FALSE, message=FALSE, eval=FALSE}
+iris_dat<-readr::read_csv("https://archive.ics.uci.edu/ml/
+                          machine-learning-databases/iris/iris.data")
+```
+
+## Funciones de importación
+
+Una vez descargado o que se encuentre en nuestro directorio de trabajo, podemos importar los datos con solo una línea de código. Aquí usamos la función `read.csv` o `read.delim` de R base (que viene por default cuando descargamos R).\
+
+```{r, eval=FALSE}
+iris_data<- read.csv("iris.data", header = F)
+iris_data<- read.delim("iris.data",header = F, sep = ",")
+```
+
+Los datos se importan y almacenan en el objeto `iris_dat`.
+
+Los argumentos *header = F* y *sep=","* son parámetros extra que podemos agregar a la función para indicarle algunas cosas.
+
+Podemos usar la tecla *'tab'* para explorar las demás opciones que podemos utilizar en estas funciones.
+
+También el paquete *readr* tiene otras funciones de importación muy parecidas:
+
+```{r, warning=FALSE, message=FALSE}
+library(readr)
+iris_data<-read_csv("iris.data", 
+                    col_names = c("Longitud.sepalo", "Ancho.Sepalo" ,
+                    "Longitud.Petalo" ,"Ancho.Petalo" , "Especies"))
+```
+
+En esta función usamos el argumento *col_names* para establecer los nombres de las columnas de esta tabla.
+
+## Funciones de importación
+
+La segunda opción que vimos es utilizar la ruta completa del archivo, por ejemplo:
+
+```{r}
+data<- read_csv("../Data/penguins_size.csv")
+```
+
+En este ejemplo, la data que importamos está ubicada en la carpeta de 'Data' de este proyecto. Y vemos que esta función de *readr* también nos da información del archivo como el tipo y nombre de las variables.
+
+## Funciones de importación
+
+La última opción, un poco más fácil para algunos y más interactiva es usar *Import Dataset* del panel de *ambiente*.
+
+```{r, echo=FALSE, out.width= "300px", fig.align='center'}
+knitr::include_graphics(file.path(img_path,"import.png"))
+
+```
+
+En esta opción podemos importar tablas con cualquiera de las funciones que despliega dependiendo del tipo de archivo, yo recomiendo que si es .csv o .txt usar *readr* que es el mismo que usa *tidyverse*, como lo vimos anteriormente. Paquete que veremos más detalladamente junto con *readxl* en la siguiente sección.
+
+\newpage
+
+## Los paquetes readr y readxl: readr
+
+El paquete **readr** un paquete de tiyverse, tiene las siguientes funciones para importar archivos con diferentes extensiones:
+
++------------+---------------------------------------------------------------+----------------+
+| Función    | Tipo de archivo                                               | Extensión      |
++============+===============================================================+================+
+| read_table | valores separados por espacios en blanco                      | txt            |
++------------+---------------------------------------------------------------+----------------+
+| read_csv   | valores separados por comas                                   | csv            |
++------------+---------------------------------------------------------------+----------------+
+| read_csv2  | valores separados por punto y coma                            | csv            |
++------------+---------------------------------------------------------------+----------------+
+| read_tsv   | valores separados delimitados por tab                         | tsv o txt      |
++------------+---------------------------------------------------------------+----------------+
+| read_delim | formato de archivo de texto general, debe definir delimitador | txt, csv o tsv |
++------------+---------------------------------------------------------------+----------------+
+
+## Los paquetes readr y readxl: readxl
+
+Este paquete ofrece funciones para leer archivos provenientes de Microsoft Excel:
+
+| Función    | Formato                             | Sufijo típico |
+|------------|-------------------------------------|---------------|
+| read_excel | detectar automáticamente el formato | xls, xlsx     |
+| read_xls   | formato original                    | xls           |
+| read_xlsx  | nuevo formato                       | xlsx          |
+
+## Algunos tips para hojas de cálculo de excel...
+
+-   Evitar tener diferentes formatos como colores, subrayados, etc.
+-   Evitar en lo posible celdas vacías y/o poner un dato en cada celda
+-   Evitar celdas con cálculo o aplicación de fórmulas.
+-   Tenga en cuenta que nuestros datos que tenemos en hojas de cálculo en excel también podemos guardarlos en otros formatos un poco más fáciles para ser importados como los que ya vimos (.csv y .txt). Esto utilizando la opción *Guardar como* y escogiendo el tipo de formato deseado. En la imagen podemos ver un ejemplo de esto:
+
+```{r, echo=FALSE, out.width= "350px", fig.align='center'}
+knitr::include_graphics(file.path(img_path,"saveexcel.jpg"))
+
+```
+
+## Funciones Básicas de R: `sort` y `order`
+
+Digamos que queremos clasificar las notas de la mayor a la menor, podemos usar alguna de estas dos funciones:
+
+```{r}
+sort(evaluaciones$notas)
+```
+
+```{r}
+order(evaluaciones$notas)
+```
+
+## Funciones Básicas de R: `max` y `which.max`
+
+Si solo estamos interesados en la entrada con el mayor valor, podemos usar `max`:
+
+```{r}
+max(evaluaciones$notas)
+```
+
+y `which.max` nos dice qué valor es el mayor, posicionalmente:
+
+```{r}
+which.max(evaluaciones$notas)
+```
+
+Para el mínimo, podemos usar `min` y `which.min` del mismo modo.
+
+## Funciones Básicas de R: `which`
+
+La función `which` nos dice qué entradas de un vector lógico son TRUE. Entonces podemos escribir:
+
+```{r}
+ind <- which(evaluaciones$nombres == "Ana")
+ind
+evaluaciones[ind,]
+```
+
+De esta forma también podemos usarlo para filtrar y hacer subconjuntos.
+
+## Funciones Básicas de R: `match`
+
+La función `match` nos dice qué índices de un segundo vector coinciden con cada una de las entradas de un primer vector:
+
+```{r}
+v1<- c("Uvas", "Peras", "Mandarinas", "Plátanos", "Manzanas")
+v2<- c("Uvas","Cerezas", "Mandarinas", "Naranjas", "Manzanas") 
+match(v1, v2)
+match(c("Peras", "Plátanos"), v1)
+ind<-match(c("Peras", "Plátanos"), v1)
+v1[ind]
+```
+
+## `match`
+
+Este filtro puede aplicarse de igual manera a un *dataframe*:
+
+```{r}
+ind2<- match(v1, v2)
+
+frutas<- data.frame(persona1=v1,
+                    persona2=v2)
+
+frutas[ind,]
+
+na.omit(frutas[ind2,])     #na.omit() nos permite quitar los NA's
+```
+
+## Funciones Básicas de R: `%in%`
+
+Si en lugar de un índice queremos un lógico que nos diga si cada elemento de un primer vector está en un segundo vector, podemos usar la función `%in%`. Siguiendo el ejemplo pasado:
+
+```{r}
+c("Peras", "Plátanos") %in% frutas$persona1
+```
+
+Nos dice que los dos elementos que buscamos están presente en el *dataframe*
+
+**Avanzado**: `match` e `%in%` pueden dar el mismo output usando `which`:
+
+```{r}
+match(c("Peras", "Plátanos"), frutas$persona1)
+which(frutas$persona1 %in% c("Peras", "Plátanos"))
+```
+
+## La familia de funciones `apply()`
+
+Esta familia de funciones es usada para aplicar una función a cada elemento de una estructura de datos. En particular, es usada para aplicar funciones en matrices, dataframes, arreglos y listas. Para entender más fácilmente el uso de la familia apply, recordemos la vectorización de operaciones. Hay operaciones que si las aplicamos a un vector, son aplicadas a todos sus elementos. La familia apply esta formada por las siguientes funciones:
+
+-   **apply()**
+
+-   **lapply()**
+
+-   **mapply()**
+
+-   **sapply()**
+
+-   eapply()
+
+-   rapply()
+
+-   tapply()
+
+-   vapply()
+
+Es una familia numerosa y esta variedad de funciones se debe a que varias de ellas tienen aplicaciones sumamente específicas. Las más usadas son las que están en negrita. Repasaremos la función apply pero no nos detendremos mucho porque muchas de estas no están al alcance del presente curso.
+
+## apply()
+
+`apply` aplica una función a todos los elementos de una **matriz**.
+
+La estructura de esta función es la siguiente.
+
+```{r, eval=FALSE}
+apply(X, MARGIN, FUN)
+```
+
+`apply` tiene tres argumentos:
+
+-   `X`: Una matriz o un objeto que pueda coercionarse a una matriz, generalmente, un dataframe.
+
+-   `MARGIN`: La dimensión (margen) que agrupará los elementos de la matriz `X`, para aplicarles una función. Son identificadas con números, **1** son filas y **2** son colummnas.
+
+-   `FUN`: La función que aplicaremos a la matriz `X` en su dimensión `MARGIN`.
+
+## apply()
+
+Si queremos sumar todas las columnas de una matriz, podemos aplicar esta función, para comparar usaremos también la función `ColSums()` que realiza esta misma operación:
+
+```{r}
+matriz<- matrix(1:20, ncol = 5, nrow = 4)
+matriz
+apply(X = matriz, MARGIN = 2, FUN = sum)
+colSums(matriz)
+```
+
+## apply
+
+También podemos aplicar múltiples funciones a una matriz:
+
+```{r}
+multiples.func <- function(x) {
+      c(sum = sum(x), prom = mean(x), max = max(x))}
+apply(X = matriz, MARGIN = 2, FUN = multiples.func)
+```
+
+## Estructuras de control
+
+Estas estructuras nos permiten controlar la manera en que se ejecuta nuestro código. Se establecen como condicionales en nuestros código. Por ejemplo, qué condiciones deben cumplirse para realizar una operación o qué debe ocurrir para ejecutar una función.
+
+Las estructuras de control más usadas son:
+
+| Estructura de control | Descripción      |
+|-----------------------|------------------|
+| if, else              | Si, de otro modo |
+| while                 | mientras         |
+| for                   | Para             |
+| break                 | interrumpe       |
+| next                  | siguiente        |
+
+Conoceremos como se utilizan pero no profundizaremos mucho en ellas.
+
+## If, else
+
+If y else se utilizan para crear condiciones, por ejemplo, si cumple esta condición entonces haz esto, de otra manera, haz esto.
+
+Ejemplo:
+
+```{r}
+if(10>2) {"Verdadero"
+} else {
+  "Falso"
+}
+
+```
+
+```{r}
+if(10<2) {"Verdadero"
+} else {
+  "Falso"
+}
+```
+
+## If, else
+
+También hay una función que reune estas dos condiciones: `ifelse()` y se usa de igual manera:
+
+```{r}
+ifelse((10>2), "Verdadero", "Falso")
+
+```
+
+Podemos aplicarlo en los *dataframes* usando como ejemplo el dataset anterior:
+
+```{r}
+ifelse(evaluaciones$notas>7,  "Aprobado", "Reprobado")
+
+```
+
+## for
+
+La estructura `for` nos permite ejecutar un bucle (*loop*), realizando una operación para cada elemento de un conjunto de datos.
+
+Ejemplo:
+
+```{r}
+un_vector<- 1:10
+for(i in un_vector) {
+ print(i*2)
+}
+```
+
+## while
+
+Este es un tipo de bucle que ocurre **mientras** una condición es verdadera (`TRUE`). La operación se realiza hasta que se se llega a cumplir un criterio previamente establecido.
+
+Ejemplo:
+
+```{r}
+umbral <- 3
+valor <- 0
+
+while(valor < umbral) {
+  print("Aún no llegas al umbral")
+  valor <- valor + 1
+}
+```
+
+Para revisar las demás estructuras, podemos revisar la referencia citada[^1]
+
+[^1]: <https://bookdown.org/jboscomendoza/r-principiantes4/estructuras-de-control.html>
+
+## Extra: Tratando con datos NA
+### 1. Probando qué tenemos NA en nuestros datos:
+```{r, eval=FALSE}
+data <- data.frame(x1 = c(NA, 5, 6, 8, 9),   
+                        x2 = c(2, 4, NA, NA, 1), 
+                        x3 = c(3,6,7,0,3), 
+                        x4 = c("Hola", "algo",
+                               NA, "Chao", NA)) 
+is.na(data) 
+is.na(data$x2)
+which(is.na(data))
+sum(is.na(data))
+```
+### 2. Omitir NAs
+```{r eval=FALSE}
+mean(data$x1, na.rm=TRUE) 
+data[complete.cases(data),]
+na.omit(data)
+data[!is.na(data$x2),]
+```
+
+## Extra: Tratando con datos NA
+### 3. Reemplazar NA's
+```{r, eval=FALSE}
+#reemplazar con 0
+data[is.na(data)] <- 0
+#reemplazar con el promedio o mediana
+data$x1[is.na(data$x1)] <- mean(data$x1, na.rm = TRUE)
+data$x2[is.na(data$x2)] <- median(data$x2, na.rm = TRUE)
+```
+
+Para ver soluciones más complejas podemos buscar los paquetes *Hmisc* (impute), *mice* (mice) y *rpart* (repart).
+
+
+## Gráficas R base
+
+R cuenta con un sistema de generación de gráficas poderoso y flexible. En este capítulo revisaremos como crear las gráficas más comunes con R base y luego un poco más complejas usando *ggplot2* del *tidyverse*.
+
+### La función *plot()*
+
+La función *plot()* es usada de manera general para generar gráficos. Esta función es muy especial porque depende del tipo de datos que le demos generará diferentes tipos de gráficos. El argumento principal que pide esta función es *"x"* también podemos poner *"y"*. Y depende de estos el tipo de gráfica que se generará. Diremos:
+
+-   **Continuo**: Cuando nos referimos a un vector numérico, entero, lógico o complejo.
+
+-   **Discreto**: Cuando nos referimos a un vector de factores o cadenas de texto.
+
+| x        | y        | Tipo Gráfico                        |
+|----------|----------|-------------------------------------|
+| Continuo | Continuo | Dispersión /Scatter                 |
+| Continuo | Discreto | Dispersión y coercionada a numérica |
+| Continuo | Ninguno  | Dispersión por número de renglón    |
+| Discreto | Continuo | Boxplot/Cajas                       |
+| Discreto | Discreto | Mosaico                             |
+| Discreto | Ninguno  | Barras                              |
+
+## La función *plot()*
+
+```{r,echo=TRUE,fig.align = "center", fig.height=2.5, fig.width=6}
+#Ejemplos
+par(mfrow= c(1,3))
+plot(x=iris$Sepal.Length, y=iris$Sepal.Width)
+plot(x=iris$Sepal.Length, y = iris$Species)
+plot(x=iris$Sepal.Length)
+```
+
+## La función *plot()*
+
+```{r,echo=TRUE,fig.align = "center", fig.height=2.5, fig.width=6}
+par(mfrow= c(1,3))
+
+plot(x = iris$Species, y = iris$Sepal.Length)
+plot(x=iris$Species, y=iris$Species)
+plot(x=iris$Species)
+```
+
+## La función *plot()*
+
+Además de estas, también hay otras funciones de Rbase que nos permiten graficar tipos específicos como son *barplot()*, *boxplot()* o *hist()*.
+
+Veamos algunas de estas...
+
+## Histogramas
+
+Los histogramas ya los vimos en el capítulo de estadísticos, podemos usar más argmentos para darle formato, veamoslo con un ejemplo:
+
+```{r,  fig.align='center', fig.height=3, fig.width=4}
+hist(x = iris$Sepal.Length, main = "Histograma de longitud de sepalo", 
+     xlab = "Longitud", ylab = "Frecuencia",
+     col = "purple")
+
+```
+
+## Histogramas
+
+Como vimos en este ejemplo hay argumentos que aplicamos que puede ser aplicados para todos los gráficos de Rbase, tales como:
+
+-   *main* : Titulo de la gráfica
+
+-   *xlab* y *ylab*: Títulos de los axis x y y
+
+-   *col* = color de las barras o gráfica.
+
+## Diagramas de dispersión
+
+Estos diagramas nos son útiles para ver las relaciones que hay entre dos variables continuas.
+
+```{r,  fig.align='center', fig.height=3.5, fig.width=4}
+plot(x = iris$Petal.Length, y = iris$Petal.Width, 
+     col = iris$Species, xlab = "Largo", ylab = "Ancho")
+```
+
+## Diagramas de dispersión
+
+Si queremos agregar una leyenda a alguna de nuestras figuras de Rbase, usamos la función *legend()*:
+
+`legend()` siempre nos pide siempre los siguientes argumentos.
+
+-   `legend`: Las etiquetas de los datos que queremos describir con la leyenda. Por ejemplo, si tenemos cuatro categorías a describir, proporcionamos un vector de cuatro cadenas de texto.
+
+-   `fill`: Los colores que acompañan a las etiquetas definidas con `legend`. Estos colores tienen que coincidir con los que hemos usado en el gráfico.
+
+-   `x` y `y`: Las coordenadas en pixeles, en las que estará ubicada la leyenda. Podemos dar como argumento a `x` alguno de los siguientes, para ubicar automáticamente la leyenda: "bottomright", "bottom", "bottomleft", "left", "topleft", "top", "topright", "right", "center".
+
+-   `title`: Para poner título a la leyenda.
+
+## Diagramas de dispersión
+
+Veámoslo con el mismo ejemplo, primero ponemos *plot()* con la gráfica que queremos y debajo *legend()* para ponerlo encima de la figura que ya habíamos hecho:
+
+```{r,  fig.align='center', fig.height=3.5, fig.width=5}
+plot(x = iris$Petal.Length, y = iris$Petal.Width, col = iris$Species)
+legend(x = "topleft", legend = c("Setosa", "Versicolor", "Virginica"), 
+       fill = c("black", "red", "green"), title = "Especie")
+```
+
+## Boxplots o diagramas de cajas
+
+Los diagramas de cajas o boxplots son gráficos que nos muestran la distribución de una variable mostrando sus cuartiles, mediana, máximo y mínimo:
+
+```{r,  fig.align='center', fig.height=3.2, fig.width=4}
+plot(x=iris$Species, y = iris$Sepal.Length, xlab = "Especie",
+     ylab = "Longitud Sépalo", col = c("purple", "pink", "blue"))
+```
+
+## Boxplots o diagramas de cajas
+
+También podemos usar la función *boxplot()*. En esta segunda forma de hacer diagramas de cajas necesitamos declarar dos argumentos principales:
+
+-   `formula`: Para esta función las fórmulas tienen el formato `y ~ x`, donde x es el nombre de la variable continua a graficar, y la x es la variable que usaremos como agrupación.
+
+-   `data`: Es el data frame del que serántomadas las variables.
+
+## Boxplots o diagramas de cajas
+
+Además declarar los demás argumentos extras como colores, títulos y demás.
+
+```{r,  fig.align='center', fig.height=3.5, fig.width=4}
+boxplot(formula = Sepal.Length ~ Species, data =  iris, xlab = "Especie", 
+        ylab = "Longitu Sépalo",      col = c("purple", "pink", "blue"))
+```
+
+## Otros gráficos
+
+Usando la función *plot()* podemos dibujar más gráficos de los vistos que son los estándares, como fue el caso cuando graficas modelos lineales. También existe otro argumento de esta función que se denomina *type* y nos permite escoger otros tipos de gráficos. Esto lo podemos ver usando el '?' para ver la ayuda y los argumentos.
+
+```{r, eval=FALSE}
+?plot
+```
+
+Son posibles los siguientes valores: "p" para puntos, "l" para líneas, "b" para puntos y líneas, "c" para puntos vacíos unidos por líneas, "o" para puntos sobretrazados y líneas, "s" y "S" para escalones y "h" para líneas verticales similares a histogramas. Finalmente, "n" no produce ningún punto o línea.
+
+## Otros gráficos
+
+Veamos algunos ejemplos:
+
+```{r,echo=TRUE,fig.align = "center", fig.height=2.5, fig.width=6}
+#dataset de ensayo
+df<- data.frame(x= c(1:5),y= c(200, 400, 600, 700, 500))
+par(mfrow = c(1, 3))
+plot(df$x, df$y, type = "p", main = 'type = "p"')
+plot(df$x, df$y, type = "l", main = 'type = "l"')
+plot(df$x, df$y, type = "b", main = 'type = "b"')
+
+```
+## Otros gráficos
+
+```{r,echo=TRUE,fig.align = "center", fig.height=2.5, fig.width=6}
+par(mfrow = c(1, 3))
+plot(df$x, df$y, type = "c", main = 'type = "c"')
+plot(df$x, df$y, type = "s", main = 'type = "s"')
+plot(df$x, df$y, type = "h", main = 'type = "h"')
+```
+
+
+## Otros gráficos
+
+Ahora bien, en cuanto a líneas podemos escoger el tipo de línea con el argumento *lty*:\
+
+```{r,echo=TRUE,fig.align = "center", fig.height=2.5, fig.width=6}
+par(mfrow = c(1, 3))
+plot(df$x, df$y, type = "l", lty=1, main = 'type = "l1"')
+plot(df$x, df$y, type = "l", lty=2, main = 'type = "l2"')
+plot(df$x, df$y, type = "l", lty=3, main = 'type = "l3"')
+```
+
+## Otros gráficos
+
+```{r,echo=TRUE,fig.align = "center", fig.height=2.5, fig.width=6}
+par(mfrow = c(1, 3))
+plot(df$x, df$y, type = "l", lty=4, main = 'type = "l4"')
+plot(df$x, df$y, type = "l", lty=5, main = 'type = "l5"')
+plot(df$x, df$y, type = "l", lty=6, main = 'type = "l6"')
+```
+
+## Barplots o gráficas de barras
+
+Las gráficas de barras nos permiten ver los valores de una manera diferente a las líneas:
+
+```{r, fig.height=3.4, fig.width=4, fig.align='center'}
+barplot(y ~ x , data = df, main = "Barplot", col = "darkred")
+```
+
+## Otros gráficos
+
+También hay capas que podemos agregarle a las gráficas, como la capa *text* o la capa *abline* para agregar texto y líneas sobre la gráfica, por ejemplo:
+
+```{r fig.align='center', fig.height=3, fig.width=4}
+plot(df$x, df$y, type = "p", main = 'type = "p-capas"')
+abline(h=400, v=3, col="red", lty=2)
+text(df, labels=rownames(df), cex=0.7, pos=2, col="blue")
+```
+
+## Guardando una gráfica
+
+Para guardar o exportar una gráfica debemos:
+
+1.  Indicar las instrucciones de cómo exportaremos la imagen
+
+2.  Usar *plot()* y graficarla y luego,
+
+3.  *dev.off*() para quitarla del panel y exportarla
+
+```{r, eval=FALSE}
+png(filename="gráfica1.png", width=648, height=432)
+plot(df$x, df$y, type = "p", main = 'type = "p"')
+dev.off()
+```
+
+## Gráficas con *ggplot2()*
+
+-   Las gráficas con *ggplot2()* es quizás de las cosas más poderosas y atractivas de R si lo comparamos con otros lenguajes y/o programas. *ggplot2* es generalmente más intuitiva porque usa una gramática de gráficos además de ser visualmente agradable.
+
+-   La limitación de ggplot2 es que está diseñado para trabajar exclusivamente con tablas de datos en formato tidy (donde las filas son observaciones y las columnas son variables). Sin embargo,ya vimos en anteriores temas cómo podemos convertir nuestras tablas para que tengan este formato.
+
+-   Para usar ggplot2, tendrán que aprender varias funciones y argumentos. Estos son difíciles de memorizar, por lo que les recomendamos que tengan a mano la hoja de referencia de ggplot2. Pueden obtener una copia en línea o simplemente realizar una búsqueda en internet de "ggplot2 cheat sheet." y econtraran algo como esto:
+
+##  Gráficas con *ggplot2()*
+
+```{r, echo=FALSE, out.width= "500px", fig.align='center'}
+img_path<- "../images/"
+knitr::include_graphics(file.path(img_path,"ggplot.png"))
+```
+
+## Gráficas con *ggplot2()* 
+
+Es fácil de usar, pero puedes crear figuras complejas con una sintaxis bastante simple.
+
+"gg" significa gramática gráfica - Significa que se superponen diferentes capas de objetos y elementos sobre los anteriores para generar la figura.
+
+En esta parte se repasará las diferentes características de ggplot2:
+
+1.  geomas o "geoms"
+
+2.  escalas o "scales"
+
+3.  temas o "theme"
+
+4.  facetas o "facets"
+
+## Gráficas con *ggplot2()* 
+
+El primer paso para aprender **ggplot2** es poder separar un gráfico en componentes. Las figuras aquí, se construyen por capas. Los tres componentes principales para considerar son:
+
+-   **Data**: nuestro set de datos o *dataframe*
+
+-   **Mapeo estético o 'aes'**: El gráfico usa varias señales visuales para representar la información proveída por el set de datos. Las dos señales más importantes en este gráfico son las posiciones de los puntos en el eje-x y el eje-y.
+
+-   **Geometría**: Nos indica el tipo de gráfica a realizar. Unas posibles geometrías son diagrama de barras, dispersión, histograma, densidades suaves (*smooth densities* en inglés), gráfico Q-Q y diagrama de cajas.
+
+-   **Elementos adicionales**: temas, guías, colores, etc.
+
+Para esta parte usaremos como ejemplo el set de Datos de "ToothGrotwth" de nuevo y contruiremos por partes la gráfica.
+
+## ggplot
+
+El primer paso para crear un gráfico **ggplot2** es definir un objeto `ggplot`. Hacemos esto con la función `ggplot`, que inicializa el gráfico.
+
+Esta parte podemos hacerla evaluando dentro de la función o usando el pipe, así:
+
+```{r, fig.height=2, fig.width=2, warning=FALSE, message=FALSE, eval=FALSE}
+data("ToothGrowth")
+library(dplyr)
+library(ggplot2)
+ggplot(data = ToothGrowth)
+ToothGrowth %>% ggplot()
+```
+
+```{r, echo=FALSE,fig.height=2.5, fig.width=3,warning=FALSE, message=FALSE, fig.align='center'}
+library(dplyr)
+library(ggplot2)
+ggplot(data = ToothGrowth)
+```
+
+## ggplot
+
+-   El código crea un gráfico, en este caso una pizarra en blanco ya que no se ha definido la geometría. La única opción de estilo que vemos es un fondo gris.
+
+-   También dentro de esta capa de *ggplot()* se declara algo que se conoce como ***mapeo estético*** que describe cómo las propiedades de los datos se conectan con las características del gráfico. En otras palabras, más coloquiales, qué con qué graficamos, también podemos colocar aquí si queremos colorear o llenar un factor.
+
+-   Por ejemplo, con la data de ToothGrowth, queremos graficar el tamaño o longitud de los dientes versus la dosis aplicada y destacando o coloreando el método de aplicación de la vitamina C.\
+
+## ggplot
+
+```{r,  fig.align='center', fig.height=2.5, fig.width=5.5}
+ToothGrowth %>% ggplot(aes(x = dose, y = len, fill=supp))
+```
+
+Aquí ya vemos que el eje x y el eje y ya aparecen con nombres de las variables, pero aún no nos muestra ningún gráfico, esto es porque no le indicamos aún que geometría o qué tipo de gráfico queremos.
+
+## Geometrías
+
+Esta es la siguiente capa en *ggplot2*. Los nombres de las funciones de geometría siguen el patrón: `geom_$` donde \$ es el nombre de la geometría. Algunos ejemplos incluyen `geom_bar`, `geom_point` y `geom_histogram`. Luego de cada capa de *ggplot2* en vez de usar pipe usamos el signo **+** y así vamos agregando cada capa.\
+
+```{r, fig.height=2, fig.width=4, fig.align='center'}
+ToothGrowth %>% ggplot(aes(x = dose, y = len, color=supp)) +
+  geom_point()
+```
+
+## Geometrías
+Ahora sí podemos ver lo que queríamos, cómo lucen los datos de longitud en cada dosis aplicada destacando o coloreando el modo de administración. Si en vez de puntos quisieramos, líneas, pues sólo cambiamos la capa de geometría:
+
+```{r, fig.height=2, fig.width=4, fig.align='center'}
+ToothGrowth %>% ggplot(aes(x = dose, y = len, color=supp)) +
+  geom_line()
+```
+
+## Geometrías
+
+También podemos combinar lo visto en *tidyverse* con *ggplot2* por ejemplo si queremos hacer un boxplot o barplot debemos cambiar la variable de dosis para hacerla discreta en vez de numérica o continua.
+
+```{r, fig.height=2, fig.width=4, fig.align='center'}
+ToothGrowth %>%  mutate(dose=case_when(
+  dose==0.5~"D0.5",dose==1~"D1", dose==2~"D2")) %>% ggplot(
+    aes(x = dose, y = len, color=supp)) +  geom_boxplot()
+```
+
+## Geometrías
+
+En el caso de *geom_bar* debemos cambiar poner otros argumentos como 'fill' en vez de 'color' y dentro de la geomtría escogemos una `stat` y una `position`:
+
+```{r, fig.height=2, fig.width=4, fig.align='center'}
+ToothGrowth %>%  mutate(dose=case_when( dose==0.5~"D0.5",dose==1~"D1",
+dose==2~"D2")) %>% ggplot(aes( x = dose, y = len, fill=supp))+
+  geom_bar(stat = "identity", position = "dodge")
+```
+
+## Geometrías
+
+Podemos también agregar más de una capa de geometría y así hacer gráficas combinadas, por ejemplo:
+
+```{r, fig.height=2.1, fig.width=4, fig.align='center'}
+ToothGrowth %>% ggplot(aes(x = dose, y = len, color=supp)) +
+  geom_point()+
+  geom_text(aes(label=rownames(ToothGrowth)))+
+  geom_line()
+```
+
+
+## Colores, títulos, escalas y otros ajustes.
+
+\
+Hasta ahora hemos construido gráficas con *ggplot2()* declarando el mapa estético y las diferentes geometrías. Sin embargo podemos notar de todas nuestras figuras anteriores que lucen muy parecidas en formato, mismos colores, mismo fondo y demás.
+
+Todos estos parámetros podemos modificarlos para personalizar nuestras figuras.
+
+### Colores
+
+*ggplot2()* tiene su escala personalizadas de colores, como lo vimos anteriormente. Sin embargo esto podemos cambiarlo usando una capa denominada *scale_color\_\$,* tomando *\$ varias formas, como scale_color_manual(), scale_color_continuous(),scale_color_discrete(), scale_color_brewer()*, entre otros.
+
+Todas estas opciones son depende de nuestro tipo de datos o del tipo de escala que queremos utilizar. Para declarar los colores en R podemos utilizar los nombres de los colores inglés como lo hicimos en la parte de R base o usando el formato de colores de html. También hay muchas paletas de varios paquetes ya definidas como la de `RColorBrewer` y `viridis`.
+
+Para buscar los colores en formato html pomos usar el siguiente link: [***html-colors***](https://htmlcolorcodes.com/es/ "html-colors")***.*** El código html se ve de esta manera:\
+
+## Colores
+
+```{r, echo=FALSE, out.width= "300px", fig.align='center'}
+img_path<- "../images/"
+knitr::include_graphics(file.path(img_path,"colors.jpg"))
+```
+
+## Colores
+
+\
+Y de esta manera los declaramos en nuestra gráfica usando `scale_color_manual()`:
+
+```{r, fig.height=2, fig.width=4, fig.align='center'}
+ToothGrowth %>%  mutate(dose=case_when(
+dose==0.5~"D0.5",dose==1~"D1", dose==2~"D2")) %>% ggplot(
+aes(x = dose, y = len, col=supp)) +  geom_boxplot()+
+  scale_color_manual( values = c("#FF00FF","#00FFFF"))
+```
+
+## Colores
+Los diagramas de cajas y barras son elementos huecos entonces cuando indicamos *col* lo que realmente coloreamos son los bordes, pero si queremos colorear las cajas adentro debemos usar *fill y usamos `scale_fill_$`:
+
+```{r, fig.height=2, fig.width=4, fig.align='center'}
+ToothGrowth %>%  mutate(dose=case_when( dose==0.5~"D0.5",dose==1~"D1",
+  dose==2~"D2")) %>% ggplot(    aes(x = dose, y = len, fill=supp)) + 
+  geom_boxplot()+
+  scale_fill_manual(values = c("#FF00FF","#00FFFF"))
+```
+
+## Colores
+Ahora, si dudamos mucho o no estamos seguros de cómo escoger los colores, podemos utilizar paletas de colores ya determinadas como las que mencioné `RColorBrewer` y `viridis`. Estas son las paletas de `RColorBrewer` y `viridis`:
+
+```{r,  echo=FALSE, message=FALSE, warning=FALSE}
+library(imager)
+library(cowplot)
+file1<-load.image("../images/rcolor.png")
+file2<-load.image("../images/viridis.png")
+p1 <- ggdraw() + draw_image(file1, scale = 0.7)
+p2 <- ggdraw() + draw_image(file2, scale = 0.7)
+plot_grid(p1,p2)
+```
+
+## Colores
+
+Y así las podemos usar:
+
+```{r, fig.height=2, fig.width=4, fig.align='center', eval=FALSE}
+ToothGrowth %>%  mutate(dose=case_when(
+  dose==0.5~"D0.5",dose==1~"D1", dose==2~"D2")) %>% ggplot(
+    aes(x = dose, y = len, fill=supp)) +  geom_boxplot()+
+  scale_fill_brewer(palette = "Dark2")+theme(legend.position = "none")
+
+ToothGrowth %>%  mutate(dose=case_when(
+  dose==0.5~"D0.5",dose==1~"D1", dose==2~"D2")) %>% ggplot(
+    aes(x = dose, y = len, fill=supp)) +  geom_boxplot()+
+  scale_fill_viridis_d(option = "C")+theme(legend.position = "none")
+```
+
+
+```{r, fig.height=2, fig.width=8, fig.align='center', echo=FALSE}
+c1<-ToothGrowth %>%  mutate(dose=case_when(
+  dose==0.5~"D0.5",dose==1~"D1", dose==2~"D2")) %>% ggplot(
+    aes(x = dose, y = len, fill=supp)) +  geom_boxplot()+
+  scale_fill_brewer(palette = "Dark2")+theme(legend.position = "none")
+
+c2<-ToothGrowth %>%  mutate(dose=case_when(
+  dose==0.5~"D0.5",dose==1~"D1", dose==2~"D2")) %>% ggplot(
+    aes(x = dose, y = len, fill=supp)) +  geom_boxplot()+
+  scale_fill_viridis_d(option = "C")+theme(legend.position = "none")
+cowplot::plot_grid(c1, c2)
+```
+
+
+## Títulos
+
+```{r, fig.height=2, fig.width=4, fig.align='center'}
+ToothGrowth %>%  mutate(dose=case_when(
+  dose==0.5~"D0.5",dose==1~"D1", dose==2~"D2")) %>% ggplot(
+    aes(x = dose, y = len, fill=supp)) +  geom_boxplot()+
+  ylab("Longitud diente")+
+  xlab("Dosis")+
+  ggtitle("Longitud de dientes por Dosis aplicada")
+```
+
+## Escalas
+
+```{r, fig.height=2, fig.width=4, fig.align='center'}
+ToothGrowth %>%  mutate(dose=case_when(
+  dose==0.5~"D0.5",dose==1~"D1", dose==2~"D2")) %>% ggplot(
+    aes(x = dose, y = len, fill=supp)) +  geom_boxplot()+
+  ylab("Longitud diente")+  xlab("Dosis")+
+  ggtitle("Longitud de dientes por Dosis aplicada") +
+  scale_x_discrete(limits = c("D2", "D0.5", "D1"), position ="bottom" )+
+  scale_y_continuous(breaks = c(0, 20,40))
+```
+
+
+## Otros ajustes
+
+Hay otros ajustes más generales o específicos que podemos realizar a nuestros gráficos. Por ejemplo, los temas. *ggplot2()* usa como *default* el tema `theme_grey()` pero hay otros:
+
+```{r, echo=FALSE}
+par(mfrow= c(2,3))
+a1<-ToothGrowth %>%  mutate(dose=case_when(
+  dose==0.5~"D0.5",dose==1~"D1", dose==2~"D2")) %>% ggplot(
+    aes(x = dose, y = len, fill=supp)) +  geom_boxplot()+ theme_classic()+
+  ggtitle("theme_classic()")
+
+a2<-ToothGrowth %>%  mutate(dose=case_when(
+  dose==0.5~"D0.5",dose==1~"D1", dose==2~"D2")) %>% ggplot(
+    aes(x = dose, y = len, fill=supp)) +  geom_boxplot()+ theme_linedraw()+
+  ggtitle("theme_linedraw()")
+
+a3<-ToothGrowth %>%  mutate(dose=case_when(
+  dose==0.5~"D0.5",dose==1~"D1", dose==2~"D2")) %>% ggplot(
+    aes(x = dose, y = len, fill=supp)) +  geom_boxplot()+ theme_bw()+
+  ggtitle("theme_bw()")
+
+a4<-ToothGrowth %>%  mutate(dose=case_when(
+  dose==0.5~"D0.5",dose==1~"D1", dose==2~"D2")) %>% ggplot(
+    aes(x = dose, y = len, fill=supp)) +  geom_boxplot()+ theme_get()+
+  ggtitle("theme_get()")
+
+a5<-ToothGrowth %>%  mutate(dose=case_when(
+  dose==0.5~"D0.5",dose==1~"D1", dose==2~"D2")) %>% ggplot(
+    aes(x = dose, y = len, fill=supp)) +  geom_boxplot()+ theme_dark()+
+  ggtitle("theme_dark()")
+
+a6<-ToothGrowth %>%  mutate(dose=case_when(
+  dose==0.5~"D0.5",dose==1~"D1", dose==2~"D2")) %>% ggplot(
+    aes(x = dose, y = len, fill=supp)) +  geom_boxplot()+ theme_light()+
+  ggtitle("theme_light()")
+
+library(cowplot)
+plot_grid(a1,a2,a3,a4,a5,a6, ncol = 3, nrow = 3)
+
+```
+
+Y así muchos otros más, los podemos explorar dando theme\_ y usando la tecla TAB para ver las demás opciones que nos aparecen.
+
+## Otros ajustes
+
+Otros ajustes más específicos como tamaño y color de letras, posición de la leyenda, entre otros, los hacemos usando la capa denominada `theme()`.
+
+```{r, fig.height=1.8, fig.width=3, fig.align='center'}
+ToothGrowth %>%  mutate(dose=case_when(  dose==0.5~"D0.5",dose==1~"D1",
+  dose==2~"D2")) %>% ggplot(aes(x = dose, y = len, fill=supp)) + 
+  geom_boxplot()+ 
+  theme(axis.title = element_text(size = 14, colour = "blue"),
+  title = element_text(size = 16, colour = "red"), legend.position = "top")
+```
+
+## Figuras Multi-panel / Facets
+
+Para dibujar varias figuras en una misma página o output hay varias estrategias. Varias de ellas están fuera del alcance de este curso, pero para mencionarlas:
+
+-   par (multi-panel con R base)[^1]
+
+-   cowplot (ggplot2)[^2]
+
+-   grid.arrange(ggplot2)[^3]
+
+-   Facets
+
+[^1]: <https://bookdown.org/ndphillips/YaRrr/arranging-plots-with-parmfrow-and-layout.html>
+
+[^2]: <https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html>
+
+[^3]: <https://cran.r-project.org/web/packages/egg/vignettes/Ecosystem.html>
+
+### Facets
+
+Esta forma de graficar en multi-panel es quizás la más sencilla por ser una capa de *ggplot2()*. Para esta hay dos funciones `facet_grid()`y `facet_wrap()`. Los trataremos como ejemplos porque en detalle no son del alcance del presente curso.\
+
+Para facet_grid() hay dos opciones, presentarla por columnas o por filas:\
+
+## Facet grid
+
+```{r, echo=TRUE, fig.height=2, fig.width=4, fig.align='center'}
+ToothGrowth %>%  mutate(dose=case_when(
+  dose==0.5~"D0.5",dose==1~"D1", dose==2~"D2")) %>% ggplot(
+    aes(x = dose, y = len, fill=supp)) +  geom_boxplot()+ 
+  facet_grid(supp~.)
+```
+
+## Facet grid
+
+```{r, echo=TRUE, fig.height=2, fig.width=4, fig.align='center'}
+ToothGrowth %>%  mutate(dose=case_when(
+  dose==0.5~"D0.5",dose==1~"D1", dose==2~"D2")) %>% ggplot(
+    aes(x = dose, y = len, fill=supp)) +  geom_boxplot()+ 
+  facet_grid(.~supp)
+```
+
+## Facets
+
+Y con facet_wrap() podemos combinar columnas y filas, por ejemplo:
+```{r, fig.height=3.2, fig.width=6, fig.align='center'}
+ToothGrowth %>%  mutate(dose=case_when(dose==0.5~"D0.5",dose==1~"D1", 
+dose==2~"D2")) %>% ggplot(aes(x = dose, y = len, fill=supp))+geom_boxplot()+ 
+  facet_wrap(~supp+dose, ncol = 3, nrow = 2)
+```
+
+## Guardando una gráfica en ggplot2
+
+Para guardar una gráfica de tipo *ggplot2()* usamos la función *ggsave()*
+
+```{r, eval=FALSE}
+ggsave(filename = "plot.png", plot = a1, dpi = 300,
+       width = 4, height = 3.5)
+```
+
+## Extras
+
+### stat_summary() y stat_smooth()
+
+Esta es una capa que nos permite poner desviaciones estándar o líneas que representan el promedio de los datos, por ejemplo:
+
+```{r, fig.height=2, fig.width=4, fig.align='center'}
+ToothGrowth %>% 
+  ggplot(aes(x = dose, y = len)) +
+  stat_summary(geom = "line", fun = mean, aes(group = supp, color = supp)) + 
+  stat_summary(geom = "errorbar", fun.data = mean_se, aes(group = supp))
+```
+
+## stat_summary() y stat_smoot()
+
+stat_smooth() nos permite colorear o resaltar la línea que representa nuestro modelo lineal:
+```{r, fig.height=2, fig.width=4, fig.align='center'}
+ggplot(iris, aes(x = Petal.Width, y = Sepal.Length)) + 
+  geom_point() +
+  stat_smooth(method = "lm", col = "red")
+```
+
+
+
+## *ggpubr()*
+
+*ggpubr()* es una paqutería tipo compatible con *ggplot2()* pero un poco más fácil de declarar y más intuitivo.
+
+```{r, fig.height=2.5, fig.width=3.5, fig.align='center', warning=FALSE, message=FALSE}
+library(ggpubr)
+ggboxplot(ToothGrowth, x = "dose", y = "len", color = "dose",
+          add = "jitter", shape = "dose")
+```
+## *ggpubr()*
+```{r, fig.height=2.5, fig.width=3, fig.align='center', warning=FALSE, message=FALSE}
+ggbarplot(ToothGrowth, x = "dose", y = "len", fill = "dose", add = "mean_se")
+```
+Vemos que los parámetros se definen similarmente pero con algunas diferencias, además que nos permite agregarles más elementos sin agregar más capas. 
+Y el 'output' o tipo de gráfica es igual del tipo **ggplot2()**.\
+
+
+## *ggpubr()*
+
+-   Otras funciones interesantes de este paquete son **facet.by** que es un argumento que puede ser declarado dentro de la función principal y nos permite hacer las gráficas multi-panel
+
+-   Otro que es muy útil es el de **stat_compare_means()** que nos permite agregar una capa que hace análisis estátidísticos como t.test, wilcoxon, kruskal.walis, anova, entre otros y que nos evita hacer análisis fuera y que podamos agragarlas a la gráfica en un sólo paso.\
+
+## *ggpubr()*
+
+```{r, fig.height=2.5, fig.width=3.5, fig.align='center', warning=FALSE, message=FALSE}
+ggboxplot(ToothGrowth, x = "dose", y = "len", color = "dose",
+          facet.by = "supp")
+```
+
+## *ggpubr()*
+
+```{r, fig.height=2.9, fig.width=4, fig.align='center', warning=FALSE, message=FALSE, out.width='60%'}
+comparaciones <- list( c("0.5", "1"), c("1", "2"), c("0.5", "2") )
+ggbarplot(ToothGrowth, x = "dose", y = "len", fill = "dose",
+add = "mean_sd", legend = "right")+  
+  stat_compare_means(comparisons = comparaciones, label = "p.signif")
+```
+
+## Misceláneos: *ggcats()*
+
+*ggplot2()* nos permite usar diversos paquetes desarrollados por muchos usarios con fines divertidos o misceláneos, podemos verlo en el pie de página el link para explorar todos los que hay. Veremos *ggcats()*. Estas son las opciones que podemos usar:
+
+```{r, warning=FALSE, message=FALSE, eval=FALSE}
+library(ggcats)
+grid <- expand.grid(1:5, 3:1)
+
+df <- data.frame(x = grid[, 1],
+                 y = grid[, 2],
+                 image = c("nyancat", "bongo", "colonel", "grumpy",
+                           "hipster", "lil_bub", "maru", "mouth",
+                           "pop", "pop_close", "pusheen", "pusheen_pc",
+                           "toast", "venus", "shironeko"))
+ggplot(df) +
+ geom_cat(aes(x, y, cat = image), size = 5) +
+    geom_text(aes(x, y - 0.5, label = image), size = 2.5) +
+    xlim(c(0.25, 5.5)) + 
+    ylim(c(0.25, 3.5))
+```
+
+## Misceláneos: *ggcats()*
+
+```{r, warning=FALSE, message=FALSE, eval=TRUE, echo=FALSE}
+library(ggcats)
+grid <- expand.grid(1:5, 3:1)
+
+df <- data.frame(x = grid[, 1],
+                 y = grid[, 2],
+                 image = c("nyancat", "bongo", "colonel", "grumpy",
+                           "hipster", "lil_bub", "maru", "mouth",
+                           "pop", "pop_close", "pusheen", "pusheen_pc",
+                           "toast", "venus", "shironeko"))
+ggplot(df) +
+ geom_cat(aes(x, y, cat = image), size = 5) +
+    geom_text(aes(x, y - 0.5, label = image), size = 2.5) +
+    xlim(c(0.25, 5.5)) + 
+    ylim(c(0.25, 3.5))
+```
+
+## Misceláneos: *ggcats()*
+```{r, fig.align='center', fig.height=2.3, fig.width=3.3}
+ToothGrowth$cats <- factor(ToothGrowth$dose, levels = c(0.5,1,2),
+                           labels = c("mouth", "grumpy", "pusheen_pc"))
+
+ToothGrowth %>%  ggplot(aes(y = len, x = dose)) + 
+  geom_cat(aes(cat = cats), size = 4)  +  xlim(c(0.25, 2.25))
+
+```
+
+
+
+## Misceláneos: *ggtexttable()*
+
+Esta función me permite hacer mis tablas como figuras que puedo exportar como imágenes y darle formato.
+Hace parte del paquete **ggpubr()** que vimos anteriormente.
+
+Haremos un ejemplo con los primeros cuatro datos de **iris**:
+
+```{r}
+library(dplyr)
+df<- iris %>% slice(c(1:4))
+ggtexttable(df, rows = NULL)
+```
+
+## Misceláneos: *ggtexttable()*
+
+También podemos cambiar el tema con el que se formatea la tabla, por ejemplo:
+
+```{r, eval=FALSE}
+ggtexttable(df, rows = NULL, theme = ttheme("blank"))
+ggtexttable(df, rows = NULL, theme = ttheme("light"))
+ggtexttable(df, rows = NULL, theme = ttheme("classic"))
+ggtexttable(df, rows = NULL, theme = ttheme("minimal"))
+ggtexttable(df, rows = NULL, theme = ttheme("lVioletWhite"))
+ggtexttable(df, rows = NULL, theme = ttheme("mVioletWhite"))
+
+```
+
+## Misceláneos: *ggtexttable()*
+
+```{r, eval=TRUE, echo=FALSE, warning=FALSE, message=FALSE}
+library(cowplot)
+a<-ggtexttable(df, rows = NULL, theme = ttheme("blank"))
+b<-ggtexttable(df, rows = NULL, theme = ttheme("light"))
+c<-ggtexttable(df, rows = NULL, theme = ttheme("classic"))
+d<-ggtexttable(df, rows = NULL, theme = ttheme("minimal"))
+e<-ggtexttable(df, rows = NULL, theme = ttheme("lVioletWhite"))
+f<-ggtexttable(df, rows = NULL, theme = ttheme("mVioletWhite"))
+
+plot_grid(a,b,c,d,e,f, labels=c("blank", "light", "classic", 
+                                "minimal", "lVioletWhite", "mVioletWhite"), ncol = 2, nrow = 3)
+```
+
+## Misceláneos: *ggtexttable()*
+
+Para ver otros temas: <https://rpkgs.datanovia.com/ggpubr/files/ggtexttable-theme.pdf>
+
+Otros formateos:
+
+-   Poner en negrita una celda:
+
+    ```{r}
+    ggtexttable(df, rows = NULL,  theme = ttheme("classic")) %>%  
+      table_cell_font(row = 3, column = 2, face = "bold", color = "red")
+    ```
+
+## Misceláneos: *ggtexttable()*
+
+-   Resaltar una columna:
+
+    ```{r}
+    ggtexttable(df, rows = NULL,  theme = ttheme("classic")) %>% 
+      table_cell_bg(row = 2:5, column = 3, fill="yellow")
+    ```
+
+## Misceláneos: *ggtexttable()*
+
+-   Poner títulos y pies de notas:
+
+    ```{r}
+    ggtexttable(df, rows = NULL,  theme = ttheme("classic")) %>% 
+      tab_add_title(text = "Data iris",  size = 14, face="bold") %>%
+      tab_add_footnote(text = "*Alguna nota", size = 10, face = "italic")
+    ```
+
+
+
+## Muchas gracias...
+
+```{r, echo=FALSE, out.width= "45%"}
+img_path<- "../images/"
+knitr::include_graphics(file.path(img_path,"gg1.jpg"))
+knitr::include_graphics(file.path(img_path,"gg3.jpeg"))
+```
