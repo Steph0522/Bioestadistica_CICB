@@ -94,7 +94,9 @@ xaringanExtra::use_share_again()
 ---
 # RStudio
 
-RStudio será nuestra plataforma para los proyectos usados con el lenguaje R. Nos provee un editor visual e interactivo para crear y editar nuestros *scripts*, además de otras herramientas útiles que iremos viendo con el pasar de los temas.
+- RStudio será nuestra plataforma para los proyectos usados con el lenguaje R. 
+
+- Nos provee un editor visual e interactivo para crear y editar nuestros *scripts*, además de otras herramientas útiles que iremos viendo con el pasar de los temas.
 
 ---
 ### Paneles
@@ -109,7 +111,7 @@ knitr::include_graphics(file.path("../images/Consola2.jpg"))
 
 ## *Scripts*
 
-Una de las grandes ventajas de R y Rstudio es que se pueden guardar los diversos códigos e instrucciones, los llamados *scripts*, que entonces se pueden editar y guardar con un editor de texto. Para iniciar un nuevo *script*, hagan clic en *Archivo*, entonces *Nuevo Archivo* y luego *R Script*.
+Una de las grandes ventajas de R y Rstudio es que se pueden guardar los diversos  códigos e instrucciones, los llamados *scripts*, que entonces se pueden editar y guardar con un editor de texto. Para iniciar un nuevo *script*, hagan clic en *Archivo*, entonces *Nuevo Archivo* y luego *R Script*.
 
 ```{r, echo=FALSE,   out.width="45%"}
 knitr::include_graphics(file.path("../images/script.jpeg"))
@@ -144,18 +146,18 @@ data(iris)
 ---
 ## Cómo ejecutar comandos mientras editan *scripts*
 
-Empezamos por abrir un nuevo *script* y luego nombramos el *script*. Podemos hacer esto a través del editor guardando el nuevo *script* actual sin nombre. Al guardar el script por primera vez use un nombre descriptivo, con letras minúsculas, sin espacios, preferiblemente o con guión bajo "\_" para separar palabras, evitar guiones medios "-" para separar las palabras. Llamaremos a este *script*: *mi_script.R*.
+Empezamos por abrir un nuevo *script*, luego lo guardamos y le dabmos un nombre descriptivo.  Ahora podemos editar nuestro primer *script*.
 
 ```{r, echo=FALSE, out.width= "300px", fig.align='center'}
 knitr::include_graphics(file.path("../images/save.png"))
 
 ```
 
-Ahora podemos editar nuestro primer *script*.
+---
 
 ## Cómo ejecutar comandos mientras editan *scripts*
 
-Ahora podemos continuar escribiendo código. Como ejemplo, trabajaremos con el dataset: *"iris"*. Cargarmos la librería *"datasets"*, cargamos los datos, luego veremos el resumen de los datos y por último graficaremos un boxplot. Para hacer esto, escribimos cada línea de código y luego hacemos click en el botón *Run* en la parte derecha superior del panel de edición. Para ejecutar una línea a la pueden usar Control+Enter en Windows y Linux y Command+Return en Mac.
+Para hacer esto, escribimos cada línea de código y luego hacemos click en el botón *Run* en la parte derecha superior del panel de edición. Para ejecutar una línea a la pueden usar Control+Enter en Windows y Linux y Command+Return en Mac.
 
 Estas son las líneas del código:
 
@@ -166,20 +168,27 @@ summary(iris)
 boxplot(iris)
 ```
 
-Tan pronto se corra el código, inmediatamente aparece en en panel de la consola y el gráfico aparece en en panel de *"Plots"* . En el panel de *"Plots"* se puede hacer click hacia delante o hacia atrás en diferentes gráficos, hacer zoom en el gráfico o guardar los gráficos como archivos.
+---
 
 ## Cómo ejecutar comandos mientras editan *scripts*
 
 Y así luce al correrlo:
 
-```{r, echo=TRUE, out.width= "320px",echo=FALSE, out.height="160px"}
+```{r, echo=TRUE, out.width= "600px",echo=FALSE, fig.align='center'}
 knitr::include_graphics(file.path("../images/code.png"))
 
 ```
 
+---
+
 ## Directorio de trabajo
 
-El *directorio de trabajo* es el lugar en nuestra computadora en el que se encuentran los archivos con los que estamos trabajando en R. Este es el lugar donde R busca los archivos para importarlos y al que serán exportados o guardados, a menos que se indique otra cosa.
+- El *directorio de trabajo* es el lugar en nuestra computadora en el que se encuentran los archivos con los que estamos trabajando en R. 
+
+- Este es el lugar donde R busca los archivos para importarlos y al que serán exportados o guardados, a menos que se indique otra cosa.
+---
+
+## Directorio de trabajo
 
 Para saber donde está ubicado tu directorio de trabajo, puedes poner el código:
 
@@ -193,22 +202,9 @@ Y para establecer o cambiar este directorio de trabajo, correr el siguiente cód
 setwd("/home/steph/Desktop/")
 ```
 
-Por ejemplo en este caso estoy estableciendo mi directorio de trabajo en la carpeta "Escritorio". También si quieres conocer el contenido de tu directorio, como archivos o directorios puedes usar los siguientes códigos:
 
-```{r, eval=FALSE}
-list.files()
-list.dirs()
-```
-
-## Sesión
-
-Los objetos y funciones de R son almacenados en la memoria de nuestra computadora. Cuando ejecutamos R, ya estamos creando una instancia del entorno computacional de este lenguaje de programación, cada instancia es una *sesión*.
-
-Todos los objetos, tablas, gráficas y funciones creadas en una sesión, permanecen sólo en ella, no son compartidos entre sesiones. Si se quiere guardar toda esta data generada en la sesión antes de cerrar el R hay que indicar que se guarde, si no, aunque se guarden los scripts, los objetos (que algunos pueden ser muy pesados y ocupar memoria) no se guardarán. Lo cual es una opción si no se tiene mucho espacio en el disco. Es posible tener más de una sesión de R activa en la misma computadora. Esto se guarda en un archivo con extensión **.Rdata** en tu directorio de trabajo.
-
-Con la función *ls()* conoceremos una lista con los nombres de todo lo guardado en la sesión.
-
-## *Proyecto*
+---
+### *Proyecto*
 
 -   Un proyecto de R (extensión .Rproj) identifica todos los archivos y contenido asociados.
 
@@ -216,17 +212,14 @@ Con la función *ls()* conoceremos una lista con los nombres de todo lo guardado
 
 -   Al crear un proyecto todos los ficheros o carpetas quedan vinculados directamente a él.
 
-```{r, echo=FALSE,   out.width="49%", out.height="90px"}
-knitr::include_graphics(file.path("../images/new_directory.png"))
+---
+### *Proyecto*
+
+```{r, echo=FALSE}
 knitr::include_graphics(file.path("../images/new_directory2.png"))
 ```
 
-## Proyecto
-
-```{r, echo=FALSE, out.width= "300px", echo=FALSE}
-knitr::include_graphics(file.path("../images/new_directory3.png"))
-```
-
+---
 ## Instalación de paquetes de R
 
 -   Dentro de las ventajas de R está que muchos desarrolladores y programadores elaboran constantemente *paquetes* que nos permiten usar en acceso libre con muchas funcionalidades.
@@ -239,17 +232,21 @@ knitr::include_graphics(file.path("../images/new_directory3.png"))
 install.packages("tidyverse")
 ```
 
+---
+## Instalación de paquetes de R
+
 En RStudio pueden navegar a la pestaña *Pakages* y seleccionar *Install*. Luego, escribir el paquete que queremos siempre y cuando esté en CRAN. Para cargar una librería como lo vimos anteriormente se usa la función, `library()`:
 
 ```{r, eval=FALSE}
 library(tidyverse)
 ```
 
-## Instalación de paquetes de R
 
 Una vez que se instalan los paquetes una vez, no deben instalarlo de nuevo. Sin embargo, cada vez que cerramos sesión, reiniciamos sesión o abrimos un nuevo proyecto o sesión tenemos que volver a cargarlos.
 
-Debemos tener en cuenta que la instalación de **tidyverse** instala varios paquetes. Esto ocurre comúnmente cuando un paquete tiene *dependencias*, es decir usa funciones de otros paquetes. Así mismo, cuando cargan un paquete usando `library`, también cargan sus dependencias.
+---
+
+## Instalación de paquetes de R
 
 Hay paquetes que no se encuentra en CRAN o que si queremos su versión en desarrollo, se necesitan de otros paquetes para ser instalados. Por ejemplo, si queremos instalar la versión en desarrollo del paquete *"rmarkdown"*, que se encuentra en github, se utiliza el paquete devtools:
 
@@ -258,6 +255,8 @@ devtools::install_github('rstudio/rmarkdown')
 ```
 
 Los dos pares puntos *"::"* se utilizan para denotar que llamamos la función de un paquete pero sin llamarla permanentemente en nuestra sesión.
+
+---
 
 ## Tipos de objetos en R
 
@@ -269,10 +268,14 @@ La información que manipulamos en R se estructura en forma de objetos y los pod
 
 -   Dataframes, tablas y listas
 
-Más adelante detallaremos este tipo de objetos o datos en R. Aquí unos ejemplos:
+Más adelante detallaremos este tipo de objetos o datos en R. 
+---
+
+## Tipos de objetos en R
+
+Aquí unos ejemplos:
 
 ```{r}
-
 a <- 1                                                   #escalar
 letra <- "a"                                             #caracter
 b <- c(1,2,3)                                            #vector
@@ -281,48 +284,25 @@ d<- data.frame(Especie=c("A", "B"), Longitud=c(c(1,2)))  #dataframe
 e<- list(c(1:20), c(1:10))                               #lista
 ```
 
-## Definiendo variables
-
--   Una ventaja de los lenguajes de programación es poder definir variables y escribir expresiones como estas, como se hace en las matemáticas y así almacenar los valores para su uso posterior.
-
--   Usamos **\<-** para asignar valores a las variables. También podemos asignar valores usando **=**, pero recomiendo no usar **=**.
-
--   Esto, debido a que en R el signo **=** implica igualdad en términos lógicos y esto puede evitarnos confusiones en el futuro.
-
--   Para ver el valor almacenado en una variable, simplemente le pedimos a R que evalúe `a` y R nos muestra el valor almacenado:
-
-```{r}
-#valor declarado en el paso anterior
-a
-```
-
-Una forma explícita de pedirle a R que nos muestre el valor almacenado en **a** es usar `print` así:
-
-```{r}
-print(a)
-```
+----
 
 ## Visualizando variables asignadas
 
-Otra forma de examinar los objetos es buscarlos en el *Enviorment* o ambiente de trabajo y visualizarlos desde allí. Deberíamos ver en el ambiente a **a**, **b**, **c**, **d** y **e**. Si intentamos imprimir o visualizar el valor de un objeto que no está definido en el ambiente se recibirá un mensaje de error. Por ejemplo, si escriben **f**, verán lo siguiente: `Error: object 'f' not found`.
+Podemos poner el nombre o print(). Otra forma de examinar los objetos es buscarlos en el *Enviorment* o ambiente de trabajo y visualizarlos desde allí. 
 
-### Algunos tips para asignar variables u objetos en R...
+Por ejemplo, si escriben **f**, verán lo siguiente: `Error: object 'f' not found`.
 
--   Los nombres de variables tienen que comenzar con una letra, no pueden contener espacios y no deben ser variables predefinidas en R (como funciones o argumentos de funciones). Por ejemplo, no nombren una de sus variables `install.packages` escribiendo algo como: `install.packages <- 2`. Esto reescribe la función o causa confusiones para R.
-
--   Que tus nombres sean descriptivos y/o significativos para lo que se está almacenado.
-
--   Usar preferiblemente solo minúsculas y guiones bajos *( \_ )* como sustituto de espacios.
-
--   Evitar caracteres especiales (- ; . \@ ?).
-
+---
 ## Guardar los espacios de trabajo y exportar objetos de R
 
-Los objetos evaluados permanecen en el espacio de trabajo hasta que finalicen sus sesiones sin guardar. Pero los espacios de trabajo también se pueden guardar para su uso posterior. De hecho, al salir de R, el programa les pregunta si desean guardar su espacio de trabajo. Si lo guardan, la próxima vez que inicien R, el programa restaurará el espacio de trabajo con todos los objetos en él.
+- Los objetos evaluados permanecen en el espacio de trabajo hasta que finalicen sus sesiones sin guardar. Pero los espacios de trabajo también se pueden guardar para su uso posterior. De hecho, al salir de R, el programa les pregunta si desean guardar su espacio de trabajo. Si lo guardan, la próxima vez que inicien R, el programa restaurará el espacio de trabajo con todos los objetos en él.
 
-NO SE RECOMIENDA guardar el espacio de trabajo porque si no se trabaja con diferentes proyectos será más difícil darle seguimiento a lo que guardan y ocupará mucho espacio en la memoria de su disco. 
+- NO SE RECOMIENDA guardar el espacio de trabajo porque si no se trabaja con diferentes proyectos será más difícil darle seguimiento a lo que guardan y ocupará mucho espacio en la memoria de su disco. 
 
-En cambio, ES RECOMENDABLE en gran medida realizar un proyecto por trabajo o tarea y así tener un espacio de trabajo para cada uno. Decidiendo si guardas o no las sesiones y no entrar en confusiones entre las diferentes sesiones.
+- En cambio, ES RECOMENDABLE en gran medida realizar un proyecto por trabajo o tarea y así tener un espacio de trabajo para cada uno. Decidiendo si guardas o no las sesiones y no entrar en confusiones entre las diferentes sesiones.
+
+
+---
 
 ## Guardar los espacios de trabajo y exportar objetos de R
 
@@ -333,19 +313,10 @@ library(readr)
 write_tsv(d, "data.tsv")
 write.table(d, "data.txt", sep = "\t")
 write_csv(d, "data.csv")
-```
-
-Estas funciones guardan tus tablas u objetos con formatos de texto. También hay una forma de guardar objetos de R sin declararlos como texto sino que se queden con la identidad de R:
-
-```{r, eval=FALSE}
 saveRDS(d, "data.RDS")
 ```
 
-Y para abrir o cargar este tipo de objetos con extensión .RDS usamos la siguiente función:
-
-```{r, eval=FALSE}
-readRDS("data.RDS")
-```
+---
 
 ## Funciones
 
@@ -874,10 +845,9 @@ El reto de la primera opción es permitir que las funciones de importación de R
 
 Para descargar algún archivo en la web podemos correr el siguiente código:
 
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 download.file(
-  url = "https://archive.ics.uci.edu/ml/machine-learning-databases/
-  iris/iris.data", 
+  url = "https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data", 
   destfile = "iris.data")
 
 ```
