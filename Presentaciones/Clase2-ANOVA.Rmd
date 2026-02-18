@@ -1,0 +1,128 @@
+---
+title: "ANOVA"
+subtitle: "![](logo.jpg){width=2in}"
+author: "Dra. Stephanie Hereira Pacheco"
+institute: "CICB, UATx"
+date: 02-03-2024
+output:
+  xaringan::moon_reader:
+    css: xaringan-themer.css
+nature:
+  ratio: "16:9"
+---
+
+
+```{r, echo=FALSE}
+htmltools::tagList(rmarkdown::html_dependency_jquery())
+```
+
+
+```{r, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_mono_accent(
+  base_color = "#5E2129",
+  code_highlight_color = "#E3906F", 
+  code_inline_color = "#0E2B54",
+  text_font_size = "1.3rem",
+  
+)
+```
+
+```{r, xaringanExtra-clipboard, echo=FALSE}
+htmltools::tagList(
+  xaringanExtra::use_clipboard(
+    button_text = "<i class=\"fa fa-clipboard\"></i>",
+    success_text = "<i class=\"fa fa-check\" style=\"color: #90BE6D\"></i>",
+  ),
+  rmarkdown::html_dependency_font_awesome()
+)
+
+xaringanExtra::use_logo(
+  image_url = "https://www.ciisder.mx/images/logos/logo_uatx_2019.png",
+  position = xaringanExtra::css_position(top = "1em", right = "1em")
+)
+
+xaringanExtra::use_tile_view()
+
+xaringanExtra::use_share_again()
+
+
+```
+
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+```
+
+# Contenido
+
++ Análisis de varianza - ANOVA
+
++ Análisis de varianza de una vía
+
+    
+---
+## Análisis de varianza - ANOVA
+
+<uw-blockquote> La técnica de análisis de varianza (**ANOVA**) también conocida como análisis factorial y desarrollada por Fisher en 1930, constituye la herramienta básica para el estudio del efecto de una o más varaibles independientes (cada uno con dos o más niveles) sobre la media de una variable continua. 
+
+
+<uw-blockquote>El análisis de varianza nos permite evaluar el efecto de $k$ variables independientes y su interacción en un experimento. En el ANOVA las variables independientes se denominan **factores**.
+
+
+---
+
+## Pero antes de seguir....
+
+¿Sabes qué es una variable dependiente e independiente?
+
+¿Qué es un factor y cuáles son sus niveles?
+
+¿Qué es una variable continua y una variable discreta?
+
+¿Qué es una interacción entre factores?
+
+---
+## Análisis de varianza - ANOVA
+
+<uw-blockquote> Cuando existe una única variable independiente se denomina **Anova de un factor** (one way anova, en inglés) y cuando son dos o más se denomina como **Anova factorial**.
+
+Los supuestos del ANOVA son:
+
+- Distribución normal de los residuales
+
+- Homocedasticidad
+
+- Aleatoriedad e independencia
+
+- Otros: Mismo número de observaciones por grupos, variable dependiente continua y variable independiente con tres o más grupos o niveles. 
+
+---
+# Análisis de varianza de una vía
+- El ANOVA de una vía es el tipo de análisis que se emplea cuando los datos no están pareados y se quiere estudiar si existen diferencias significativas entre las medias de una variable aleatoria continua en los diferentes niveles de otra variable cualitativa o factor.
+
++ Las hipótesis contrastadas en un ANOVA de un factor son:
+  - $H_{0}$ : No existen diferencias entre las medias de los grupos, es decir $\mu_{1}=\mu_{2}=....\mu_{k}$
+  - $H_{1}$ : Al menos un par de medias es significativamente diferente una de la otra
+
+
+---
+# Análisis de varianza de una vía
++ El ANOVA de una vía, crea una comparación entre la varianza en los datos que provienen de las diferencias entre grupos y la varianza en los datos que provienen de las diferencias dentro de los grupos.
+
+ - $H_{0}$ : $\sigma^2_{entre} = 0$    $\rightarrow$ $\sigma^2_{entre}$ + $\sigma^2_{dentro}$ =  $\sigma^2_{dentro}$
+ 
+ - $H_{1}$ : $\sigma^2_{entre} > 0$   $\rightarrow$ $\sigma^2_{entre}$ + $\sigma^2_{dentro}$ >  $\sigma^2_{dentro}$
+ 
+- La forma en que el ANOVA hace esta comparación es evaluando las razones de las varianzas entre grupos y las varianzas dentro de los grupos: a nivel de población, si la razón es igual a 1, entonces las dos cosas son iguales, si la razón es mayor que uno, entonces la varianza entre grupos es al menos un poco mayor que 0 y esto lo conocemos como el **el estadístico F**.
+---
+# Análisis de varianza de una vía
+
+### El estadístico F se calcula así: 
+
+$$
+\begin{aligned}
+F = \frac{\sigma^2_{entre}}{\sigma^2_{dentro}} = \frac{intervarianza}{intravarianza}= \frac{\frac{n\Sigma(\bar{x}_{k}-\bar{x})^2}{k-1}}{\frac{\Sigma(x_{k}-\bar{x_{k}})^2}{N-k}} = \frac{\frac{SCT}{k-1}}{\frac{SCE}{gl}}
+\end{aligned}
+$$

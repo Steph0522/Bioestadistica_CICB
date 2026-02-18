@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>ANOVA</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dra. Stephanie Hereira Pacheco" />
+    <script src="Clase2-ANOVA_files/header-attrs-2.30/header-attrs.js"></script>
+    <script src="Clase2-ANOVA_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+    <script src="Clase2-ANOVA_files/clipboard-2.0.6/clipboard.min.js"></script>
+    <link href="Clase2-ANOVA_files/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="Clase2-ANOVA_files/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"<i class=\"fa fa-clipboard\"><\/i>","success":"<i class=\"fa fa-check\" style=\"color: #90BE6D\"><\/i>","error":"Press Ctrl+C to Copy"})</script>
+    <link href="Clase2-ANOVA_files/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+    <link href="Clase2-ANOVA_files/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+    <link href="Clase2-ANOVA_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
+    <script src="Clase2-ANOVA_files/tile-view-0.2.6/tile-view.js"></script>
+    <link href="Clase2-ANOVA_files/shareon-1.4.1/shareon.min.css" rel="stylesheet" />
+    <script src="Clase2-ANOVA_files/shareon-1.4.1/shareon.min.js"></script>
+    <link href="Clase2-ANOVA_files/xaringanExtra-shareagain-0.2.6/shareagain.css" rel="stylesheet" />
+    <script src="Clase2-ANOVA_files/xaringanExtra-shareagain-0.2.6/shareagain.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# ANOVA
+]
+.subtitle[
+## <img src="logo.jpg" style="width:2in" />
+]
+.author[
+### Dra. Stephanie Hereira Pacheco
+]
+.institute[
+### CICB, UATx
+]
+.date[
+### 02-03-2024
+]
+
+---
+
+
+
+
+
+
+
+
+<div>
+<style type="text/css">.xaringan-extra-logo {
+width: 110px;
+height: 128px;
+z-index: 0;
+background-image: url(https://www.ciisder.mx/images/logos/logo_uatx_2019.png);
+background-size: contain;
+background-repeat: no-repeat;
+position: absolute;
+top:1em;right:1em;
+}
+</style>
+<script>(function () {
+  let tries = 0
+  function addLogo () {
+    if (typeof slideshow === 'undefined') {
+      tries += 1
+      if (tries < 10) {
+        setTimeout(addLogo, 100)
+      }
+    } else {
+      document.querySelectorAll('.remark-slide-content:not(.title-slide):not(.inverse):not(.hide_logo)')
+        .forEach(function (slide) {
+          const logo = document.createElement('div')
+          logo.classList = 'xaringan-extra-logo'
+          logo.href = null
+          slide.appendChild(logo)
+        })
+    }
+  }
+  document.addEventListener('DOMContentLoaded', addLogo)
+})()</script>
+</div>
+
+
+
+
+
+# Contenido
+
++ Análisis de varianza - ANOVA
+
++ Análisis de varianza de una vía
+
+    
+---
+## Análisis de varianza - ANOVA
+
+&lt;uw-blockquote&gt; La técnica de análisis de varianza (**ANOVA**) también conocida como análisis factorial y desarrollada por Fisher en 1930, constituye la herramienta básica para el estudio del efecto de una o más varaibles independientes (cada uno con dos o más niveles) sobre la media de una variable continua. 
+
+
+&lt;uw-blockquote&gt;El análisis de varianza nos permite evaluar el efecto de `\(k\)` variables independientes y su interacción en un experimento. En el ANOVA las variables independientes se denominan **factores**.
+
+
+---
+
+## Pero antes de seguir....
+
+¿Sabes qué es una variable dependiente e independiente?
+
+¿Qué es un factor y cuáles son sus niveles?
+
+¿Qué es una variable continua y una variable discreta?
+
+¿Qué es una interacción entre factores?
+
+---
+## Análisis de varianza - ANOVA
+
+&lt;uw-blockquote&gt; Cuando existe una única variable independiente se denomina **Anova de un factor** (one way anova, en inglés) y cuando son dos o más se denomina como **Anova factorial**.
+
+Los supuestos del ANOVA son:
+
+- Distribución normal de los residuales
+
+- Homocedasticidad
+
+- Aleatoriedad e independencia
+
+- Otros: Mismo número de observaciones por grupos, variable dependiente continua y variable independiente con tres o más grupos o niveles. 
+
+---
+# Análisis de varianza de una vía
+- El ANOVA de una vía es el tipo de análisis que se emplea cuando los datos no están pareados y se quiere estudiar si existen diferencias significativas entre las medias de una variable aleatoria continua en los diferentes niveles de otra variable cualitativa o factor.
+
++ Las hipótesis contrastadas en un ANOVA de un factor son:
+  - `\(H_{0}\)` : No existen diferencias entre las medias de los grupos, es decir `\(\mu_{1}=\mu_{2}=....\mu_{k}\)`
+  - `\(H_{1}\)` : Al menos un par de medias es significativamente diferente una de la otra
+
+
+---
+# Análisis de varianza de una vía
++ El ANOVA de una vía, crea una comparación entre la varianza en los datos que provienen de las diferencias entre grupos y la varianza en los datos que provienen de las diferencias dentro de los grupos.
+
+ - `\(H_{0}\)` : `\(\sigma^2_{entre} = 0\)`    `\(\rightarrow\)` `\(\sigma^2_{entre}\)` + `\(\sigma^2_{dentro}\)` =  `\(\sigma^2_{dentro}\)`
+ 
+ - `\(H_{1}\)` : `\(\sigma^2_{entre} &gt; 0\)`   `\(\rightarrow\)` `\(\sigma^2_{entre}\)` + `\(\sigma^2_{dentro}\)` &gt;  `\(\sigma^2_{dentro}\)`
+ 
+- La forma en que el ANOVA hace esta comparación es evaluando las razones de las varianzas entre grupos y las varianzas dentro de los grupos: a nivel de población, si la razón es igual a 1, entonces las dos cosas son iguales, si la razón es mayor que uno, entonces la varianza entre grupos es al menos un poco mayor que 0 y esto lo conocemos como el **el estadístico F**.
+---
+# Análisis de varianza de una vía
+
+### El estadístico F se calcula así: 
+
+$$
+`\begin{aligned}
+F = \frac{\sigma^2_{entre}}{\sigma^2_{dentro}} = \frac{intervarianza}{intravarianza}= \frac{\frac{n\Sigma(\bar{x}_{k}-\bar{x})^2}{k-1}}{\frac{\Sigma(x_{k}-\bar{x_{k}})^2}{N-k}} = \frac{\frac{SCT}{k-1}}{\frac{SCE}{gl}}
+\end{aligned}`
+$$
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create();
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
