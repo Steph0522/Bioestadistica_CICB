@@ -17,7 +17,7 @@ htmltools::tagList(rmarkdown::html_dependency_jquery())
 ```
 
 
-```{r, include=FALSE, warning=FALSE}
+```{r, include=FALSE, warning=FALSE, eval=FALSE}
 library(xaringanthemer)
 style_mono_accent(
   base_color = "#5E2129",
@@ -65,38 +65,301 @@ library(tidyverse)
 ---
 ## Análisis de varianza - ANOVA
 
-<uw-blockquote> La técnica de análisis de varianza (**ANOVA**) también conocida como análisis factorial y desarrollada por Fisher en 1930, constituye la herramienta básica para el estudio del efecto de una o más varaibles independientes (cada uno con dos o más niveles) sobre la media de una variable continua. 
+<uw-blockquote> La técnica de análisis de varianza (**ANOVA**) también conocida como análisis factorial y desarrollada por Fisher en 1930
 
+<uw-blockquote> Este análisis constituye la herramienta básica para el estudio del **efecto de una o más variables independientes** (cada uno con dos o más niveles) sobre la media de **una variable continua**. 
 
-<uw-blockquote>El análisis de varianza nos permite evaluar el efecto de $k$ variables independientes y su interacción en un experimento. En el ANOVA las variables independientes se denominan **factores**.
+---
+## Análisis de varianza - ANOVA
+
+<uw-blockquote>El análisis de varianza nos permite evaluar el efecto de $k$ variables independientes y su interacción en un experimento. 
+
+<uw-blockquote> En el ANOVA las variables independientes se denominan **factores**.
 
 
 ---
 
 ## Pero antes de seguir....
 
-¿Sabes qué es una variable dependiente e independiente?
+- ¿Sabes qué es una variable dependiente e independiente?
 
-¿Qué es un factor y cuáles son sus niveles?
+- ¿Qué es un factor y cuáles son sus niveles?
 
-¿Qué es una variable continua y una variable discreta?
+- ¿Qué es una variable continua y una variable discreta?
 
-¿Qué es una interacción entre factores?
+- ¿Qué es una interacción entre factores?
 
 ---
 ## Análisis de varianza - ANOVA
 
-<uw-blockquote> Cuando existe una única variable independiente se denomina **Anova de un factor** (one way anova, en inglés) y cuando son dos o más se denomina como **Anova factorial**.
+<uw-blockquote> Cuando existe una única variable independiente se denomina **Anova de un factor** (one way anova, en inglés), cuando son dos **Anova de dos vías** y cuando son más de dos, se denomina como **Anova factorial**.
+
+---
+# Pruebas paramétricas y supuestos estadísticos
+
+Antes de comenzar, todas las pruebas estadísticas tienen supuestos...
+
+- ¿Ya conocen alguna prueba estadística?
+
+- ¿Qué supuestos tienen estas pruebas?
+
+---
+# Pruebas paramétricas 
+
+<uw-blockquote>  Se conoce como estadística paramétrica a aquella que se basa en el muestreo de una población con una distribución conocida (**normal**) y con  parámetros fijos (**media poblacional, varianza o desviación estándar**). 
+
+---
+# Pruebas paramétricas
+
+
+|VENTAJAS    | DESVENTAJAS     | 
+|-------------------|-------|
+| - Sensibles a rasgos de los datos recolectados  | - Más complicadas de calcular | 
+| - Estimaciones probabilísticas más exactas       |- Solo se pueden aplicar si se cumplen sus supuestos   | 
+| - Tienen una mayor eficiencia y poder estadístico      | - Los datos que se pueden observar son limitados| 
+
+---
+# Pruebas paramétricas
+
+|TIPO    |   PRUEBA     | 
+|:-------------------:|:-------:|
+| Comparación de 2 grupos	  |   t de Student/Welch  | 
+| Comparación de >2 grupos       | **Anova**   | 
+| Correlación de dos variables     | Coeficiente de Pearson| 
+| Variables cualitativas     | Prueba de Z| 
+
+---
+# Pruebas paramétricas y supuestos estadísticos
+
+Los supuestos de las pruebas paramétricas en general son:
+
+- Distribución conocida (**normal**): visual y pruebas numéricas.
+
+- Homocedasticidad: visual y pruebas numéricas.
+
+- Otros: tamaño de la muestra, variables cuantitativas o continuas, outliers, aleatoriedad, independencia de las observaciones, linealidad. 
+
+.
+
+.center[*** Cada tipo de prueba paramétrica tiene sus propios supuestos***]
+---
+
+
+## Supuestos estadísticos del ANOVA
 
 Los supuestos del ANOVA son:
 
-- Distribución normal de los residuales
+- **Distribución normal de los residuales:** $\epsilon_{i,j} ∼ N(0,\sigma^2)$. Es decir, los errores (residuos) deben distribuirse normalmente con media 0 y varianza constante.
 
-- Homocedasticidad
+- **Homocedasticidad**: Todos los grupos comparten la misma varianza poblacional $σ²$
 
-- Aleatoriedad e independencia
+- **Aleatoriedad e independencia**
+ 
+- **Otros**: Mismo número de observaciones por grupos, variable dependiente continua y variable independiente con tres o más grupos o niveles. 
 
-- Otros: Mismo número de observaciones por grupos, variable dependiente continua y variable independiente con tres o más grupos o niveles. 
+---
+
+### Distribución normal: métodos visuales
+
+.pull-left[
+```{r, echo=FALSE}
+set.seed(123)
+
+```
+
+```{r, fig.align='center', fig.height=6}
+data_normal<- rnorm(200)
+hist(data_normal, col='steelblue', main='Normal')
+```
+]
+.pull-right[
+```{r, echo=FALSE}
+set.seed(1254)
+```
+
+```{r, fig.align='center', fig.height=6}
+data_no_normal<- rexp(100, rate=3)
+hist(data_no_normal, col='red', main='No normal')
+```
+]
+---
+### Distribución normal: métodos visuales
+
+.pull-left[
+```{r, echo=FALSE}
+set.seed(123)
+
+```
+
+```{r, fig.align='center', fig.height=6}
+plot(density(data_normal), main="Normal")
+```
+]
+.pull-right[
+
+```{r, fig.align='center', fig.height=6}
+plot(density(data_no_normal), main="No Normal")
+```
+]
+
+---
+### Distribución normal: métodos visuales
+
+.pull-left[
+```{r, echo=FALSE}
+set.seed(123)
+
+```
+
+```{r, fig.align='center', fig.height=6}
+qqnorm(data_normal)
+qqline(data_normal)
+```
+]
+.pull-right[
+
+```{r, fig.align='center', fig.height=6}
+qqnorm(data_no_normal)
+qqline(data_no_normal)
+```
+]
+---
+### Distribución normal: métodos numéricos
+
+.pull-left[
+```{r, echo=FALSE}
+set.seed(124)
+
+```
+
+```{r, fig.align='center', fig.height=6, message=FALSE, warning=FALSE}
+shapiro.test(data_normal)
+```
+
+
+```{r, fig.align='center', fig.height=6, message=FALSE, warning=FALSE}
+ks.test(data_normal, "pnorm")
+```
+]
+.pull-right[
+
+```{r, fig.align='center', fig.height=6}
+shapiro.test(data_no_normal)
+
+```
+
+```{r, fig.align='center', fig.height=6, message=FALSE, warning=FALSE}
+ks.test(data_no_normal, "pnorm")
+```
+
+]
+---
+### Probando heterocedasticidad
+- Métodos visuales = Pruebas estadísticas de comparación y modelos lineales
+
+.pull-left[
+```{r, echo=FALSE}
+data("ToothGrowth")
+data("iris")
+```
+
+
+```{r, fig.align='center', fig.height=5,fig.width=4, message=FALSE, warning=FALSE}
+data("ToothGrowth")
+boxplot(len ~ supp, data=ToothGrowth, col=c("red", "blue"), main="Dientes")
+```
+
+]
+.pull-right[
+
+```{r, fig.align='center', fig.height=5,fig.width=4, message=FALSE, warning=FALSE}
+data("iris")
+boxplot(Petal.Width ~ Species, data=iris, col=c("pink", "purple", "cyan"), main="Flores")
+```
+
+]
+---
+## Probando heterocedasticidad
+- Métodos visuales = Pruebas estadísticas de comparación y modelos lineales
+
+.pull-left[
+```{r, fig.align='center', fig.height=5,fig.width=4, message=FALSE, warning=FALSE}
+aggregate(len ~ supp, data = ToothGrowth, var)
+```
+Ratio
+```{r}
+68.32 /  43.63
+```
+
+]
+.pull-right[
+```{r, fig.align='center', fig.height=5,fig.width=4, message=FALSE, warning=FALSE}
+aggregate(Petal.Width ~ Species, data = iris, var)
+
+```
+Ratio
+```{r}
+r1<-0.03910612 / 0.01110612 #versicolor vs setosa
+r2<-0.07543265 / 0.01110612 #virginca vs setosa
+r3<-0.07543264 / 0.03910612 #virginica vs versicolor
+cbind(r1,r2,r3)
+```
+]
+---
+### Probando heterocedasticidad
+.pull-left[
+```{r, fig.align='center', fig.height=5,fig.width=8, message=FALSE, warning=FALSE}
+m1<-lm(len ~ supp, data=ToothGrowth)
+par(mfrow = c(1, 2))
+plot(m1, which=c(1,3))
+```
+
+]
+.pull-right[
+
+```{r, fig.align='center', fig.height=5,fig.width=8, message=FALSE, warning=FALSE}
+m2<-lm(Petal.Width ~ Species, data=iris)
+par(mfrow = c(1, 2))
+plot(m2, which=c(1,3))
+```
+
+]
+
+---
+### Probando heterocedasticidad
+
+
+.pull-left[
+Prueba para dos niveles = F
+
+
+```{r, fig.align='center', fig.height=5,fig.width=8, message=FALSE, warning=FALSE}
+
+var.test(len ~ supp, data = ToothGrowth) 
+
+```
+]
+
+
+.pull-right[
+
+```{r, fig.align='center', fig.height=5,fig.width=8, message=FALSE, warning=FALSE}
+lmtest::bptest(m2) #sobre un modelo
+
+library(car)
+leveneTest(m2)
+```
+
+```{r, eval=FALSE}
+?fligner.test
+```
+
+
+]
+
+>- Otras pruebas: Prueba de Goldfeld-Quand, White, entre otras.
+
+
 
 ---
 # Análisis de varianza de una vía

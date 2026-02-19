@@ -97,38 +97,410 @@ top:1em;right:1em;
 ---
 ## Análisis de varianza - ANOVA
 
-&lt;uw-blockquote&gt; La técnica de análisis de varianza (**ANOVA**) también conocida como análisis factorial y desarrollada por Fisher en 1930, constituye la herramienta básica para el estudio del efecto de una o más varaibles independientes (cada uno con dos o más niveles) sobre la media de una variable continua. 
+&lt;uw-blockquote&gt; La técnica de análisis de varianza (**ANOVA**) también conocida como análisis factorial y desarrollada por Fisher en 1930
 
+&lt;uw-blockquote&gt; Este análisis constituye la herramienta básica para el estudio del **efecto de una o más variables independientes** (cada uno con dos o más niveles) sobre la media de **una variable continua**. 
 
-&lt;uw-blockquote&gt;El análisis de varianza nos permite evaluar el efecto de `\(k\)` variables independientes y su interacción en un experimento. En el ANOVA las variables independientes se denominan **factores**.
+---
+## Análisis de varianza - ANOVA
+
+&lt;uw-blockquote&gt;El análisis de varianza nos permite evaluar el efecto de `\(k\)` variables independientes y su interacción en un experimento. 
+
+&lt;uw-blockquote&gt; En el ANOVA las variables independientes se denominan **factores**.
 
 
 ---
 
 ## Pero antes de seguir....
 
-¿Sabes qué es una variable dependiente e independiente?
+- ¿Sabes qué es una variable dependiente e independiente?
 
-¿Qué es un factor y cuáles son sus niveles?
+- ¿Qué es un factor y cuáles son sus niveles?
 
-¿Qué es una variable continua y una variable discreta?
+- ¿Qué es una variable continua y una variable discreta?
 
-¿Qué es una interacción entre factores?
+- ¿Qué es una interacción entre factores?
 
 ---
 ## Análisis de varianza - ANOVA
 
-&lt;uw-blockquote&gt; Cuando existe una única variable independiente se denomina **Anova de un factor** (one way anova, en inglés) y cuando son dos o más se denomina como **Anova factorial**.
+&lt;uw-blockquote&gt; Cuando existe una única variable independiente se denomina **Anova de un factor** (one way anova, en inglés), cuando son dos **Anova de dos vías** y cuando son más de dos, se denomina como **Anova factorial**.
+
+---
+# Pruebas paramétricas y supuestos estadísticos
+
+Antes de comenzar, todas las pruebas estadísticas tienen supuestos...
+
+- ¿Ya conocen alguna prueba estadística?
+
+- ¿Qué supuestos tienen estas pruebas?
+
+---
+# Pruebas paramétricas 
+
+&lt;uw-blockquote&gt;  Se conoce como estadística paramétrica a aquella que se basa en el muestreo de una población con una distribución conocida (**normal**) y con  parámetros fijos (**media poblacional, varianza o desviación estándar**). 
+
+---
+# Pruebas paramétricas
+
+
+|VENTAJAS    | DESVENTAJAS     | 
+|-------------------|-------|
+| - Sensibles a rasgos de los datos recolectados  | - Más complicadas de calcular | 
+| - Estimaciones probabilísticas más exactas       |- Solo se pueden aplicar si se cumplen sus supuestos   | 
+| - Tienen una mayor eficiencia y poder estadístico      | - Los datos que se pueden observar son limitados| 
+
+---
+# Pruebas paramétricas
+
+|TIPO    |   PRUEBA     | 
+|:-------------------:|:-------:|
+| Comparación de 2 grupos	  |   t de Student/Welch  | 
+| Comparación de &gt;2 grupos       | **Anova**   | 
+| Correlación de dos variables     | Coeficiente de Pearson| 
+| Variables cualitativas     | Prueba de Z| 
+
+---
+# Pruebas paramétricas y supuestos estadísticos
+
+Los supuestos de las pruebas paramétricas en general son:
+
+- Distribución conocida (**normal**): visual y pruebas numéricas.
+
+- Homocedasticidad: visual y pruebas numéricas.
+
+- Otros: tamaño de la muestra, variables cuantitativas o continuas, outliers, aleatoriedad, independencia de las observaciones, linealidad. 
+
+.
+
+.center[*** Cada tipo de prueba paramétrica tiene sus propios supuestos***]
+---
+
+
+## Supuestos estadísticos del ANOVA
 
 Los supuestos del ANOVA son:
 
-- Distribución normal de los residuales
+- **Distribución normal de los residuales:** `\(\epsilon_{i,j} ∼ N(0,\sigma^2)\)`. Es decir, los errores (residuos) deben distribuirse normalmente con media 0 y varianza constante.
 
-- Homocedasticidad
+- **Homocedasticidad**: Todos los grupos comparten la misma varianza poblacional `\(σ²\)`
 
-- Aleatoriedad e independencia
+- **Aleatoriedad e independencia**
+ 
+- **Otros**: Mismo número de observaciones por grupos, variable dependiente continua y variable independiente con tres o más grupos o niveles. 
 
-- Otros: Mismo número de observaciones por grupos, variable dependiente continua y variable independiente con tres o más grupos o niveles. 
+---
+
+### Distribución normal: métodos visuales
+
+.pull-left[
+
+
+
+``` r
+data_normal&lt;- rnorm(200)
+hist(data_normal, col='steelblue', main='Normal')
+```
+
+&lt;img src="Clase2-ANOVA_files/figure-html/unnamed-chunk-5-1.png" alt="" style="display: block; margin: auto;" /&gt;
+]
+.pull-right[
+
+
+
+``` r
+data_no_normal&lt;- rexp(100, rate=3)
+hist(data_no_normal, col='red', main='No normal')
+```
+
+&lt;img src="Clase2-ANOVA_files/figure-html/unnamed-chunk-7-1.png" alt="" style="display: block; margin: auto;" /&gt;
+]
+---
+### Distribución normal: métodos visuales
+
+.pull-left[
+
+
+
+``` r
+plot(density(data_normal), main="Normal")
+```
+
+&lt;img src="Clase2-ANOVA_files/figure-html/unnamed-chunk-9-1.png" alt="" style="display: block; margin: auto;" /&gt;
+]
+.pull-right[
+
+
+``` r
+plot(density(data_no_normal), main="No Normal")
+```
+
+&lt;img src="Clase2-ANOVA_files/figure-html/unnamed-chunk-10-1.png" alt="" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Distribución normal: métodos visuales
+
+.pull-left[
+
+
+
+``` r
+qqnorm(data_normal)
+qqline(data_normal)
+```
+
+&lt;img src="Clase2-ANOVA_files/figure-html/unnamed-chunk-12-1.png" alt="" style="display: block; margin: auto;" /&gt;
+]
+.pull-right[
+
+
+``` r
+qqnorm(data_no_normal)
+qqline(data_no_normal)
+```
+
+&lt;img src="Clase2-ANOVA_files/figure-html/unnamed-chunk-13-1.png" alt="" style="display: block; margin: auto;" /&gt;
+]
+---
+### Distribución normal: métodos numéricos
+
+.pull-left[
+
+
+
+``` r
+shapiro.test(data_normal)
+```
+
+```
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  data_normal
+## W = 0.99076, p-value = 0.2298
+```
+
+
+
+``` r
+ks.test(data_normal, "pnorm")
+```
+
+```
+## 
+## 	Asymptotic one-sample Kolmogorov-Smirnov test
+## 
+## data:  data_normal
+## D = 0.053155, p-value = 0.6243
+## alternative hypothesis: two-sided
+```
+]
+.pull-right[
+
+
+``` r
+shapiro.test(data_no_normal)
+```
+
+```
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  data_no_normal
+## W = 0.89131, p-value = 5.641e-07
+```
+
+
+``` r
+ks.test(data_no_normal, "pnorm")
+```
+
+```
+## 
+## 	Asymptotic one-sample Kolmogorov-Smirnov test
+## 
+## data:  data_no_normal
+## D = 0.50783, p-value &lt; 2.2e-16
+## alternative hypothesis: two-sided
+```
+
+]
+---
+### Probando heterocedasticidad
+- Métodos visuales = Pruebas estadísticas de comparación y modelos lineales
+
+.pull-left[
+
+
+
+
+``` r
+data("ToothGrowth")
+boxplot(len ~ supp, data=ToothGrowth, col=c("red", "blue"), main="Dientes")
+```
+
+&lt;img src="Clase2-ANOVA_files/figure-html/unnamed-chunk-20-1.png" alt="" style="display: block; margin: auto;" /&gt;
+
+]
+.pull-right[
+
+
+``` r
+data("iris")
+boxplot(Petal.Width ~ Species, data=iris, col=c("pink", "purple", "cyan"), main="Flores")
+```
+
+&lt;img src="Clase2-ANOVA_files/figure-html/unnamed-chunk-21-1.png" alt="" style="display: block; margin: auto;" /&gt;
+
+]
+---
+## Probando heterocedasticidad
+- Métodos visuales = Pruebas estadísticas de comparación y modelos lineales
+
+.pull-left[
+
+``` r
+aggregate(len ~ supp, data = ToothGrowth, var)
+```
+
+```
+##   supp      len
+## 1   OJ 43.63344
+## 2   VC 68.32723
+```
+Ratio
+
+``` r
+68.32 /  43.63
+```
+
+```
+## [1] 1.565895
+```
+
+]
+.pull-right[
+
+``` r
+aggregate(Petal.Width ~ Species, data = iris, var)
+```
+
+```
+##      Species Petal.Width
+## 1     setosa  0.01110612
+## 2 versicolor  0.03910612
+## 3  virginica  0.07543265
+```
+Ratio
+
+``` r
+r1&lt;-0.03910612 / 0.01110612 #versicolor vs setosa
+r2&lt;-0.07543265 / 0.01110612 #virginca vs setosa
+r3&lt;-0.07543264 / 0.03910612 #virginica vs versicolor
+cbind(r1,r2,r3)
+```
+
+```
+##            r1       r2       r3
+## [1,] 3.521132 6.791989 1.928922
+```
+]
+---
+### Probando heterocedasticidad
+.pull-left[
+
+``` r
+m1&lt;-lm(len ~ supp, data=ToothGrowth)
+par(mfrow = c(1, 2))
+plot(m1, which=c(1,3))
+```
+
+&lt;img src="Clase2-ANOVA_files/figure-html/unnamed-chunk-26-1.png" alt="" style="display: block; margin: auto;" /&gt;
+
+]
+.pull-right[
+
+
+``` r
+m2&lt;-lm(Petal.Width ~ Species, data=iris)
+par(mfrow = c(1, 2))
+plot(m2, which=c(1,3))
+```
+
+&lt;img src="Clase2-ANOVA_files/figure-html/unnamed-chunk-27-1.png" alt="" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+### Probando heterocedasticidad
+
+
+.pull-left[
+Prueba para dos niveles = F
+
+
+
+``` r
+var.test(len ~ supp, data = ToothGrowth) 
+```
+
+```
+## 
+## 	F test to compare two variances
+## 
+## data:  len by supp
+## F = 0.6386, num df = 29, denom df = 29, p-value = 0.2331
+## alternative hypothesis: true ratio of variances is not equal to 1
+## 95 percent confidence interval:
+##  0.3039488 1.3416857
+## sample estimates:
+## ratio of variances 
+##          0.6385951
+```
+]
+
+
+.pull-right[
+
+
+``` r
+lmtest::bptest(m2) #sobre un modelo
+```
+
+```
+## 
+## 	studentized Breusch-Pagan test
+## 
+## data:  m2
+## BP = 25.099, df = 2, p-value = 3.546e-06
+```
+
+``` r
+library(car)
+leveneTest(m2)
+```
+
+```
+## Levene's Test for Homogeneity of Variance (center = median)
+##        Df F value    Pr(&gt;F)    
+## group   2  19.892 2.261e-08 ***
+##       147                      
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+
+``` r
+?fligner.test
+```
+
+
+]
+
+&gt;- Otras pruebas: Prueba de Goldfeld-Quand, White, entre otras.
+
+
 
 ---
 # Análisis de varianza de una vía
