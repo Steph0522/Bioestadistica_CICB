@@ -59,7 +59,11 @@ library(tidyverse)
 
 + Análisis de varianza - ANOVA
 
-+ Análisis de varianza de una vía
++ Pruebas paramétricas y supuestos estadísticos
+
++ Supuestos del ANOVA
+
++ ANOVA de una vía
 
     
 ---
@@ -81,11 +85,16 @@ library(tidyverse)
 
 ## Pero antes de seguir....
 
+--
+
 - ¿Sabes qué es una variable dependiente e independiente?
+--
 
 - ¿Qué es un factor y cuáles son sus niveles?
+--
 
 - ¿Qué es una variable continua y una variable discreta?
+--
 
 - ¿Qué es una interacción entre factores?
 
@@ -99,7 +108,10 @@ library(tidyverse)
 
 Antes de comenzar, todas las pruebas estadísticas tienen supuestos...
 
+--
 - ¿Ya conocen alguna prueba estadística?
+--
+
 
 - ¿Qué supuestos tienen estas pruebas?
 
@@ -132,10 +144,13 @@ Antes de comenzar, todas las pruebas estadísticas tienen supuestos...
 # Pruebas paramétricas y supuestos estadísticos
 
 Los supuestos de las pruebas paramétricas en general son:
+--
 
 - Distribución conocida (**normal**): visual y pruebas numéricas.
+--
 
 - Homocedasticidad: visual y pruebas numéricas.
+--
 
 - Otros: tamaño de la muestra, variables cuantitativas o continuas, outliers, aleatoriedad, independencia de las observaciones, linealidad. 
 
@@ -151,7 +166,7 @@ Los supuestos del ANOVA son:
 
 - **Distribución normal de los residuales:** $\epsilon_{i,j} ∼ N(0,\sigma^2)$. Es decir, los errores (residuos) deben distribuirse normalmente con media 0 y varianza constante.
 
-- **Homocedasticidad**: Todos los grupos comparten la misma varianza poblacional $σ²$
+- **Homocedasticidad**: Todos los grupos comparten la misma varianza poblacional $σ²$.
 
 - **Aleatoriedad e independencia**
  
@@ -226,6 +241,41 @@ qqline(data_no_normal)
 ---
 ### Distribución normal: métodos numéricos
 
+**Prueba de Shapiro–Wilk**
+
+Hipótesis
+
+$𝐻_{0}$: Los datos provienen de una distribución normal
+
+$𝐻_{1}$: Los datos no provienen de una distribución normal
+
+
+$$W = \frac{\left(\sum_{i=1}^{n} a_i x_{(i)} \right)^2}{\sum_{i=1}^{n} (x_i - \bar{x})^2}$$
+Dónde:
+$x_{(i)}$ = datos ordenados, $\bar{x}$ = media muestral, $a_{i}$ = constantes derivadas de la normal teórica, $n$ = tamaño de muestra
+---
+### Distribución normal: métodos numéricos
+
+**Prueba de Kolmogorov–Smirnov**
+
+Hipótesis
+
+$$𝐻_{0}: F(x) = F_{0}(x)$$ 
+
+$$𝐻_{1}: F(x) \neq F_{0}(x)$$ 
+$F(x)$ = distribución acumulada de la muestra
+
+$F_{0}(x)$ = distribución teórica
+
+$$
+D = \sup_{x} \left| F_n(x) - F_0(x) \right|
+$$
+Dónde: $F_n(x)$ es la función empírica, $F_0(x)$ es la función teórica y supp la mayor diferencia teórica. 
+
+
+
+---
+### Distribución normal: métodos numéricos
 .pull-left[
 ```{r, echo=FALSE}
 set.seed(124)
@@ -279,8 +329,7 @@ boxplot(Petal.Width ~ Species, data=iris, col=c("pink", "purple", "cyan"), main=
 
 ]
 ---
-## Probando heterocedasticidad
-- Métodos visuales = Pruebas estadísticas de comparación y modelos lineales
+### Probando heterocedasticidad
 
 .pull-left[
 ```{r, fig.align='center', fig.height=5,fig.width=4, message=FALSE, warning=FALSE}
@@ -324,28 +373,85 @@ plot(m2, which=c(1,3))
 ```
 
 ]
+---
+### Probando heterocedasticidad
+
+**Prueba F para igualdad de varianzas (2 grupos)**
+
+Hipótesis
+
+$$
+H_0: \sigma_1^2 = \sigma_2^2 \qquad
+H_1: \sigma_1^2 \neq \sigma_2^2
+$$
+$$
+F = \frac{s_1^2}{s_2^2}
+$$
+
+Dónde:
+
+${s_1^2}$ = varianza muestral del grupo 1
+
+${s_2^2}$ = varianza muestral del grupo 2
+
+---
+### Probando heterocedasticidad
+
+```{r, fig.align='center', fig.height=5,fig.width=8, message=FALSE, warning=FALSE}
+var.test(len ~ supp, data = ToothGrowth) 
+```
+
+---
+### Probando heterocedasticidad
+Para más de dos niveles
+
+- **Prueba de Breusch–Pagan**: Evalúa si la varianza de los residuos depende de los predictores.
+
+$$
+H_0: \operatorname{Var}(\varepsilon_i) = \sigma^2
+\qquad
+$$
+
+$$
+BP = nR^2
+$$
+
+Dónde:
+
+$n$ = tamaño de la muestra
+
+$R^2$ = coeficiente de determinación de una regresión auxiliar
+(residuos cuadrados contra los predictores)
+
 
 ---
 ### Probando heterocedasticidad
 
 
-.pull-left[
-Prueba para dos niveles = F
-
-
-```{r, fig.align='center', fig.height=5,fig.width=8, message=FALSE, warning=FALSE}
-
-var.test(len ~ supp, data = ToothGrowth) 
-
-```
-]
-
-
-.pull-right[
-
 ```{r, fig.align='center', fig.height=5,fig.width=8, message=FALSE, warning=FALSE}
 lmtest::bptest(m2) #sobre un modelo
+```
 
+
+---
+### Probando heterocedasticidad
+
+- **Prueba de Levene**: Compara cuánto se dispersan los datos alrededor de su media  en cada grupo.
+
+Si las dispersiones son similares → homocedasticidad.
+
+Hipótesis: $H_{0}:\sigma^2 = \sigma^2_{1} = \sigma^2_{2} = ... = \sigma^2_{k}$
+
+$$Z_{ij} = |Y_{ij} - \bar{Y}_{i\cdot}|$$
+
+$Z_{ij}$ = distancia absoluta del dato respecto a la media de su grupo
+
+$$F = \frac{MS_{\text{entre grupos}}}{MS_{\text{dentro de grupos}}}$$
+
+
+---
+### Probando heterocedasticidad
+```{r, fig.align='center', fig.height=5,fig.width=8, message=FALSE, warning=FALSE}
 library(car)
 leveneTest(m2)
 ```
@@ -355,15 +461,9 @@ leveneTest(m2)
 ```
 
 
-]
-
->- Otras pruebas: Prueba de Goldfeld-Quand, White, entre otras.
-
-
-
 ---
 # Análisis de varianza de una vía
-- El ANOVA de una vía es el tipo de análisis que se emplea cuando los datos no están pareados y se quiere estudiar si existen diferencias significativas entre las medias de una variable aleatoria continua en los diferentes niveles de otra variable cualitativa o factor.
+- El **ANOVA de una vía** es el tipo de análisis que se emplea cuando los datos no están pareados y se quiere estudiar si existen diferencias significativas entre las medias de una variable aleatoria continua en los diferentes niveles de otra variable cualitativa o factor.
 
 + Las hipótesis contrastadas en un ANOVA de un factor son:
   - $H_{0}$ : No existen diferencias entre las medias de los grupos, es decir $\mu_{1}=\mu_{2}=....\mu_{k}$
@@ -378,7 +478,16 @@ leveneTest(m2)
  
  - $H_{1}$ : $\sigma^2_{entre} > 0$   $\rightarrow$ $\sigma^2_{entre}$ + $\sigma^2_{dentro}$ >  $\sigma^2_{dentro}$
  
-- La forma en que el ANOVA hace esta comparación es evaluando las razones de las varianzas entre grupos y las varianzas dentro de los grupos: a nivel de población, si la razón es igual a 1, entonces las dos cosas son iguales, si la razón es mayor que uno, entonces la varianza entre grupos es al menos un poco mayor que 0 y esto lo conocemos como el **el estadístico F**.
+ 
+ 
+---
+# Análisis de varianza de una vía
+ 
+La forma en que el ANOVA hace esta comparación es evaluando las razones de las varianzas entre grupos y las varianzas dentro de los grupos:
+
+- a nivel de población, si la razón es igual a 1, entonces las dos cosas son iguales
+
+- si la razón es mayor que uno, entonces la varianza entre grupos es al menos un poco mayor que 0 y esto lo conocemos como el **el estadístico F**.
 ---
 # Análisis de varianza de una vía
 
@@ -389,3 +498,137 @@ $$
 F = \frac{\sigma^2_{entre}}{\sigma^2_{dentro}} = \frac{intervarianza}{intravarianza}= \frac{\frac{n\Sigma(\bar{x}_{k}-\bar{x})^2}{k-1}}{\frac{\Sigma(x_{k}-\bar{x_{k}})^2}{N-k}} = \frac{\frac{SCT}{k-1}}{\frac{SCE}{gl}}
 \end{aligned}
 $$
+
+
+siendo $k$ los niveles, $N-k$ y $k - 1$ los grados de libertad y $SC$ la suma de cuadrados del error (intravarianza) y de los tratamientos (intervarianza).
+
+
+---
+# Análisis de varianza de una vía : Tabla
+
+|Fuente de variación|Suma de cuadrados|Grados de libertad|Cuadros promedios|F|
+|:--------:|:---------------:|:----------------:||:--------------:||:-:|
+|Entre Grupos|SCT|k-1|CMT = SCT/k-1|F=CMT/CME|
+|Dentro de los grupos o Error|SCE|N-k|CME = SCE/N-k|
+|Total|STT|N-1|
+
+---
+# Ejemplo aplicado
+```{r}
+datos<- data.frame(Tratamiento1=c(-3.10,0.18,-0.72,0.09,-1.66),
+                  Tratamiento2=c(7.28,3.06,4.74,5.29,7.88),
+                  Tratamiento3=c(0.12,5.51,5.72,5.93,6.56),
+                  Tratamiento4=c(8.18,9.05,11.21,7.31,8.83))
+```
+```{r, echo=FALSE, fig.align='center'}
+knitr::kable(datos, align = "c")
+```
+---
+## Probemos los supuestos
+.pull-left[
+### Normalidad
+
+```{r, echo=TRUE, fig.align='center'}
+ro1<- datos$Tratamiento1-mean(as.matrix(datos))
+ro2<- datos$Tratamiento2-mean(as.matrix(datos))
+ro3<- datos$Tratamiento3-mean(as.matrix(datos))
+ro4<- datos$Tratamiento4-mean(as.matrix(datos))
+
+
+shapiro.test(c(ro1,ro2, ro3, ro4))
+```
+]
+.pull-right[
+### Homocedasticidad
+```{r}
+library(tidyverse)
+datost<- datos %>% pivot_longer(cols = everything(), names_to = "Tratamiento", values_to = "Valor")
+
+lmtest::bptest(lm(Valor~Tratamiento, data = datost))
+
+
+```
+]
+
+
+---
+### Calculemos los grados de libertad
+
+- Hay cuatro niveles entonces $k-1$ = 3
+- Hay cinco observaciones en cada grupo entonces $N - k$ = (4*5)-3 = 16
+- Los grados de libertad totales son $N - 1$ = 20-1 = 19
+
+### Calculemos SCT
+SCT = $n\Sigma(\bar{x}_{k}-\bar{x})^2$
+```{r}
+SCT1= 5*(mean(datos$Tratamiento1)-mean(as.matrix(datos)))^2
+SCT2= 5*(mean(datos$Tratamiento2)-mean(as.matrix(datos)))^2
+SCT3= 5*(mean(datos$Tratamiento3)-mean(as.matrix(datos)))^2
+SCT4= 5*(mean(datos$Tratamiento4)-mean(as.matrix(datos)))^2
+
+SCT= (SCT1+SCT2+SCT3+SCT4); SCT
+```
+ 
+---
+### Calculemos SCE
+.pull-left[SCE = $\Sigma(x_{k}-\bar{x_{k}})^2$
+```{r}
+SCE1= sum((datos$Tratamiento1-mean(datos$Tratamiento1))^2)
+SCE2= sum((datos$Tratamiento2-mean(datos$Tratamiento2))^2)
+SCE3= sum((datos$Tratamiento3-mean(datos$Tratamiento3))^2)
+SCE4= sum((datos$Tratamiento4-mean(datos$Tratamiento4))^2)
+
+SCE = (SCE1+SCE2+SCE3+SCE4); SCE
+```
+]
+
+### Calculemos STT 
+
+.pull-right[
+STT = $\Sigma(x_{k}-\bar{x})^2$
+```{r}
+STT1= sum((datos$Tratamiento1-mean(as.matrix(datos)))^2)
+STT2= sum((datos$Tratamiento2-mean(as.matrix(datos)))^2)
+STT3= sum((datos$Tratamiento3-mean(as.matrix(datos)))^2)
+STT4= sum((datos$Tratamiento4-mean(as.matrix(datos)))^2)
+
+STT = (STT1+STT2+STT3+STT4); STT
+```
+]
+---
+
+.pull-left[
+### Calculemos CMT
+```{r}
+CMT=SCT/(4-1);CMT
+```
+### Calculemos CME
+```{r}
+CME=SCE/(20-4);CME
+```
+]
+.pull-right[
+### Calculemos F
+
+```{r}
+valor_F= CMT/CME; valor_F
+```
+
+### Calculemos el valor p
+```{r}
+valor_p<-pf(valor_F, df1=4-1, df2=20-4, lower.tail=FALSE); valor_p
+
+```
+]
+---
+# Hagámoslo en R
+```{r}
+anova_R<- aov(Valor~Tratamiento, data = datost)
+summary(anova_R)    
+
+```
+#### Comparando...
+```{r}
+valor_F;valor_p
+```
+
