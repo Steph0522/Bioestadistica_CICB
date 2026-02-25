@@ -1,0 +1,406 @@
+---
+title: "ANOVA y Tukey"
+subtitle: "![](logo.jpg){width=2in}"
+author: "Dra. Stephanie Hereira Pacheco"
+institute: "CICB, UATx"
+date: 09-03-2024
+output:
+  xaringan::moon_reader:
+    css: xaringan-themer.css
+nature:
+  ratio: "16:9"
+---
+
+
+```{r, echo=FALSE}
+htmltools::tagList(rmarkdown::html_dependency_jquery())
+```
+
+
+```{r, include=FALSE, warning=FALSE, eval=FALSE}
+library(xaringanthemer)
+style_mono_accent(
+  base_color = "#5E2129",
+  code_highlight_color = "#E3906F", 
+  code_inline_color = "#0E2B54",
+  text_font_size = "1.3rem",
+  
+)
+```
+
+```{r, xaringanExtra-clipboard, echo=FALSE}
+htmltools::tagList(
+  xaringanExtra::use_clipboard(
+    button_text = "<i class=\"fa fa-clipboard\"></i>",
+    success_text = "<i class=\"fa fa-check\" style=\"color: #90BE6D\"></i>",
+  ),
+  rmarkdown::html_dependency_font_awesome()
+)
+
+xaringanExtra::use_logo(
+  image_url = "https://www.ciisder.mx/images/logos/logo_uatx_2019.png",
+  position = xaringanExtra::css_position(top = "1em", right = "1em")
+)
+
+xaringanExtra::use_tile_view()
+
+xaringanExtra::use_share_again()
+
+
+```
+
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+```
+
+# Contenido
+
++ Análisis de varianza - ANOVA
+
++ Pruebas de comaparaciones múltiples para ANOVA
+
++ Tukey
+
++ ANOVA de dos vías
+
++ ANOVA para medidas repetidas
+
+    
+---
+## Análisis de varianza - ANOVA
+
+<uw-blockquote> Este análisis constituye la herramienta básica para el estudio del **efecto de una o más variables independientes** (cada uno con dos o más niveles) sobre la media de **una variable continua**.
+
+
+---
+
+## Pruebas de comparaciones múltiples para ANOVA
+
+<uw-blockquote> *post hoc* viene del latín y significa **para después de esto**. 
+
+<uw-blockquote> Las pruebas *post hoc* se realizan después de que se ha establecido un efecto significativo de un factor
+
+---
+## Pruebas de comparaciones múltiples para ANOVA
+
+<uw-blockquote> Se usa para obtener más información sobre la naturaleza de un efecto, es decir, ¿qué niveles del factor están asociados con puntajes más altos o más bajos?
+
+<uw-blockquote> Las pruebas *post hoc* pueden ayudar a contar la historia de los datos más allá de una simple diferencia.
+---
+## Pruebas de comparaciones múltiples para ANOVA
+<uw-blockquote> Para identificar las diferencias hay que comparar dos a dos las medias de todos los grupos introducidos en el análisis mediante pruebas que comparen 2 grupos, a esto se le conoce como análisis *post-hoc*.
+
+<uw-blockquote> Los niveles de significancia pueden ser ajustados en función del número de comparaciones. Debido a la inflación del error de tipo I, cuantas más comparaciones se hagan más aumenta la probabilidad de encontrar diferencias significativas 
+
+---
+### Pruebas de comparaciones múltiples para ANOVA
+La siguiente tabla ilustra cuántas comparaciones por pares están asociadas con cada número de grupos junto con la tasa de error por familia:
+
+```{r, echo=FALSE, fig.align='center'}
+knitr::include_graphics("https://statologos.com/ezoimgfmt/fourpillarfreedom.com/wp-content/uploads/2019/04/post_hoc1.jpg?ezimgfmt=rs:386x298/rscb1/ng:webp/ngcb1")
+```
+
+Afortunadamente,muchas de las pruebas *post hoc* nos brindan una forma de hacer múltiples comparaciones entre grupos mientras se controla la tasa de error familiar.
+
+
+
+---
+# Tukey - HSD
+
+<uw-blockquote> La prueba de **diferencia honestamente significativa** (HSD) de Tukey es una forma de determinar si la diferencia entre dos medias de condición es (honestamente) significativa. 
+
+<uw-blockquote> La prueba de Tukey es muy similar a un t-test, excepto que corrige la tasa de error del experimento. Esto lo consigue empleando un estadístico que sigue una distribución llamada **studentized range distribution** en lugar de una distribución t. 
+
+---
+# Tukey - HSD
+
+- El estadístico de prueba para la prueba HSD de Tukey es el estadístico de rango estudentizado $HSD$ se define como:
+$$
+\begin{aligned}
+HSD_{crítico}=q_{crit, \alpha,k, N-k}\sqrt{\frac{CME}{n}}
+\end{aligned}
+$$
+- Dónde: $q_{crit, \alpha,k, N-k}$ es el valor crítico q, CME es la suma de cuadrados del error calculado anteriormente y n el número de observaciones de un grupo.
+
+- La diferencia entre cada promedio de grupos se compara con el valor obtenido de $HSD$ y los valores mayores que este son considerados significativos.
+
+---
+# Tukey - HSD
+
+- La otra forma es calcular el valor observado de $q$ y compararlo directamente con el valor $q_{crítico}$ siguiendo la misma lógica que el valor observado debe ser mayor al valor crítico para ser considerado significativo. La fórmula del valor observado es:
+$$
+\begin{aligned}
+q_{observado}= \frac{\bar{x_{1}}- \bar{x_{2}}}{\sqrt{\frac{CME}{n}}}
+\end{aligned}
+$$
+
+
+
+
+- Para calcular los intervalos de confianza, se realiza con la siguiente fórmula:
+
+$$
+\begin{aligned}
+(\bar{x_{1}}-\bar{x_{2}})\pm q_{crit}\sqrt{CME/n}
+\end{aligned}
+$$
+
+- Dónde $\bar{x_{1}}-\bar{x_{2}}$ es la diferencia entre las medias de los dos grupos que se están comparando y los demás parámetros son idénticos a los calculados en la fórmula del $HSD$.
+
+---
+## Ejemplo aplicado
+```{r, echo=FALSE, fig.align='center'}
+knitr::kable(datos, align = "c")
+```
+---
+## Ejemplo aplicado
+.pull-left[
+```{r}
+qcri<-qtukey(p = 0.95, nmeans = 4, df = 16)
+
+sqme<- sqrt(CME/5)
+
+HSD_val<- qcri*sqme
+
+
+qcri; HSD_val
+```
+
+
+```{r}
+dif1<- mean(datos$Tratamiento3)-mean(datos$Tratamiento1)
+dif2<- mean(datos$Tratamiento2)-mean(datos$Tratamiento1)
+dif3<- mean(datos$Tratamiento4)-mean(datos$Tratamiento1)
+dif4<- mean(datos$Tratamiento2)-mean(datos$Tratamiento3)
+dif5<- mean(datos$Tratamiento4)-mean(datos$Tratamiento3)
+dif6<- mean(datos$Tratamiento4)-mean(datos$Tratamiento2)
+
+```
+
+
+]
+
+.pull-right[
+```{r}
+dif1>HSD_val;dif2>HSD_val;dif3>HSD_val;dif4>HSD_val;dif5>HSD_val;dif6>HSD_val
+up<-dif1+(qcri*sqme)
+low<-dif1-(qcri*sqme)
+data.frame(up,low)
+```
+
+]
+---
+## Ejemplo aplicado
+
+```{r}
+anov<- aov(Valor~Tratamiento,data = datost)
+TukeyHSD(anov, "Tratamiento", ordered = T)
+```
+---
+## Ejemplo aplicado
+
+.pull-left[
+```{r, fig.align='center', fig.height=6}
+plot(TukeyHSD(anov, "Tratamiento", ordered = T))
+```
+]
+
+.pull-right[
+```{r, fig.align='center', fig.height=5}
+library(agricolae)
+hsd_agricolae<-HSD.test(anov, "Tratamiento", group = TRUE)
+plot(hsd_agricolae)
+```
+
+]
+---
+## Newman-Keuls (student)
+
++ Es una prueba *post hoc* para probar las diferencias en las medias de varios grupos. Se realiza después que una ANOVA haya dado significativo y sé usa para identificar qué par de medias son diferentes. La prueba se basa también en la **distribución de rango estudentizada**.
+
+- El método Newman-Keuls fue introducido por Newman en 1939 y desarrollado por Keuls en 1952.
+
++ Las hipótesis que manjea son:
+ - $H_{o}$: media 1 = media 2
+ - $H_{a}$: media 1 ≠ media 2
+
+---
+## Newman-Keuls
+1. Ordenar las medias de la más grande a la más pequeña.
+2. Calcular el error estándar como anteriormente $\sqrt{\frac{CME}{n}}$
+3. Cacular el valor crítico *q* con la fórmula:
+$$
+\begin{aligned}
+q_{crítico} = \frac{\bar{x_{1}}-\bar{x_{2}}}{S_{12}}
+\end{aligned}
+$$
+4. Encontrar el valor crítico en la tabla de valores críticos con los $k$ y los grados de libertad del error. [Tabla1](https://elvers.us/stats/tables/qprobability.html), [Tabla2](https://www.statisticshowto.com/studentized-range-distribution/#qtable) `r fontawesome::fa("link", fill = "#103261")`
+  - Si las dos primeras medias no son diferentes entonces para la prueba
+  - Si la dos primeras son diferentes sigue con los siguientes pares de medias desde el paso 2, para cuando no encuentres diferencias.
+5. En cada comparación de medias corrige los grados de libertad según el número de grupos comparados. 
+
+---
+#[Newman-Keuls](https://methods.sagepub.com/reference/encyc-of-research-design/n266.xml) `r fontawesome::fa("link", fill = "#103261")`
+
+.pull-left[
+```{r, fig.align='center', echo=FALSE}
+knitr::include_graphics("https://pltfrmrsrcscdn.sagepub.com/srm/images/encyc-of-research-design/p900-1.jpg")
+```
+]
+
+.pull-right[
+
+```{r, fig.align='center', echo=FALSE}
+knitr::include_graphics("https://pltfrmrsrcscdn.sagepub.com/srm/images/encyc-of-research-design/p901-2.jpg")
+```
+
+ > Con 40 df y 5 k. 
+ 
+]
+
+---
+.pull-left[
+```{r, out.height=5, out.width="80%"}
+library(agricolae)
+SNK.test(anov, "Tratamiento", console = TRUE)
+```
+]
+
+
+
+.pull-right[
+```{r, out.width="50%", fig.align='center'}
+library(agricolae)
+snk<-SNK.test(anov, "Tratamiento", console = FALSE)
+plot(snk)
+```
+]
+---
+## Tukey-HSD vs Newman-Keuls
+
+- Aunque el punto importante de las pruebas *post hoc* es disminuir los errores tipo I, en algunos casos Newman-Keuls con más de 4 grupos incrementa ligeramente este tipo de error en mayor medida que Tukey-HSD.
+
+- Newman-Keuls trabaja de forma secuencial por lo que por esta razón no puede producir intervalos de confianza al 95% para cada diferencia ni valores de p justados como lo hace Tukey-HSD.
+
+- Newman-Keuls es más conservadora que Tukey-HSD por su umbral móvil y el valor de alfa o significancia es el mismo del ANOVA (0.05).
+
+---
+# Prueba de Duncan
+
++ Es una variante de Newman-Keuls pero a diferencia de esta, usa niveles de alfa que se van incrementando en cada paso del procedimiento, siendo menos suceptible a errores de Tipo I.
+
+- Fue propuesto por David B. Duncan en 1955 como una modificación del método anterior pero con más poder estadístico. 
+
+- El resultado de la prueba es un conjunto de subconjuntos de medias, donde en cada subconjunto se ha encontrado que las medias no son significativamente diferentes entre sí.
+
+- Tiene los mismos supuestos que las anteriores y requiere un resultado significativo en el ANOVA.
+
+
+
+---
+#### Prueba de Duncan
+1. Ordenar las medias de la más grande a la más pequeña.
+2. Cacular el valor crítico *q*, aquí denominad como $r$, como las pruebas anteriores
+3. Encontrar el valor crítico en la tabla de valores críticos con los $k$ y los grados de libertad del error. 
+4. Calcular el valor crítico de Duncan, denotado por:
+
+$$
+\begin{aligned}
+R_{(k,\nu,\alpha_{p})}=r_{k, \alpha_{p},k, v}\sqrt{\frac{CME}{n}}
+\end{aligned}
+$$
+- Este $r$ (antes $q_{crítico}$) es variable como anteriormente vimos en la prueba de Newman-Keuls y las diferencias de los promedios:
+  - Si las dos primeras medias no son diferentes entonces para la prueba
+  - Si la dos primeras son diferentes sigue con los siguientes pares de medias desde el paso 2, para cuando no encuentres diferencias.
+  - En cada comparación de medias corrige los grados de libertad por comparaciones
+
+---
+### Prueba de Duncan
+Además de estos pasos que lucen muy parecidos a la prueba de Newman-Keuls este método introduce además una significancia o $\alpha$ variable, esto como un **"nivel de protección"** basado en los grados de libertad y viene dada por la fórmula:
+
+$$
+\begin{aligned}
+\alpha_{p}=1-(1-\alpha)^K-1
+\end{aligned}
+$$
+El nivel de protección puede ser tabulado por varios valores, de la siguiente manera:
+
+||Nivel de protección alfa| probabilidad de error tipo I|
+|:-:|:-----------------------:|:-----------------------------:|
+|k=2|0.95|0.05|
+|k=3|0.95|0.097|
+|k=4|0.95|0.143|
+|k=5|0.95|0.185|
+|k=6|0.95|0.226|
+
+---
+.pull-left[
+```{r}
+library(agricolae)
+duncan.test(anov, "Tratamiento", console = TRUE)
+```
+]
+
+.pull-right[
+```{r, fig.align='center', out.width="50%"}
+library(agricolae)
+duncan<-agricolae::duncan.test(anov, "Tratamiento")
+plot(duncan)
+```
+
+]
+---
+# Duncan vs Newman-Keuls
+
+- La prueba de Duncan está basado en Newman-Keuls, éste último no protege la tasa de error familiar (tipo I) como Duncan con su alfa variable
+
+- La prueba de Duncan entonces intencionalmente sube los niveles del alfa en cada paso del procedimiento de Newman-Keuls
+
+- Por estas subidas de los alfas muchos critican esta prueba por ser muy liberal 
+
+---
+## Otras pruebas...
+
+- Prueba de Dunnet : comparar con un control
+
+- Prueba de Scheffé: se aplica también con datos no balanceados
+
+- Prueba de Fisher (LSD): mismo principio de Duncan pero con la distribución t. 
+
+- Tukey-Kramer: para datos desbalanceados.
+
+- Pruebas pareadas (t.test) con correcciones: Bonferroni, Holm-Bonferroni, FDR, entre otras. 
+
+
+---
+### Ejemplo aplicado
+
+- Carga la data de **"PlantGrowth"** y mira los diferentes tratamientos, luego corre el modelo en el ANOVA y prueba si hay diferencias significativas.
+- Aplica las tres pruebas vistas hoy y compara los resultados.
+
+```{r}
+data("PlantGrowth")
+```
+
+
+---
+### El día de hoy aprendimos que...
+- Se utiliza un ANOVA para determinar si existe o no una diferencia estadísticamente significativa entre las medias de tres o más grupos independientes.
+- Si un ANOVA produce un valor p que es menor que nuestro nivel de significancia, podemos usar pruebas *post hoc* para averiguar qué medias de grupo difieren entre sí.
+- Las pruebas *post hoc* nos permiten controlar la tasa de error familiar mientras realizamos múltiples comparaciones por pares.
+- La compensación de controlar la tasa de error familiar es un poder estadístico más bajo. Podemos reducir los efectos de un poder estadístico más bajo haciendo menos comparaciones por pares.
+- Debe determinar de antemano en qué grupos le gustaría hacer comparaciones por pares y qué prueba post hoc utilizará para hacerlo.
+
+
+---
+## Referencias y material suplementario
+
+- [Advanced Statistics I 2021 Edition](https://bookdown.org/danbarch/psy_207_advanced_stats_I/differences-between-two-things.html#sign-binomial-test)
+
+- [Pruebas paramétricas y no paramétricas](https://enviromigration.files.wordpress.com/2016/04/pruebas-paramc3a9tricas-y-no-parametricas.pdf)
+
+- [Estadística paramétrica y no paramétrica](https://rstudio-pubs-static.s3.amazonaws.com/724751_c45a17f9e45f464c93e94f3fb0c6d340.html#16)
+
+- [Prácticos de bioestadística 2](https://derek-corcoran-barrios.github.io/AyduantiaStats/_book/t-student.html)
