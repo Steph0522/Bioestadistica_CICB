@@ -103,7 +103,7 @@ top:1em;right:1em;
 ---
 ## Análisis de varianza - ANOVA
 
-&lt;uw-blockquote&gt; Este análisis constituye la herramienta básica para el estudio del **efecto de una o más variables independientes** (cada uno con dos o más niveles) sobre la media de **una variable continua**.
+&lt;uw-blockquote&gt; Este análisis lo realizamos para medir el **efecto de una o más variables independientes** (cada uno con más de dos niveles) sobre la media de **una variable continua**.
 
 
 ---
@@ -122,18 +122,15 @@ top:1em;right:1em;
 &lt;uw-blockquote&gt; Las pruebas *post hoc* pueden ayudar a contar la historia de los datos más allá de una simple diferencia.
 ---
 ## Pruebas de comparaciones múltiples para ANOVA
-&lt;uw-blockquote&gt; Para identificar las diferencias hay que comparar dos a dos las medias de todos los grupos introducidos en el análisis mediante pruebas que comparen 2 grupos, a esto se le conoce como análisis *post-hoc*.
+- Para identificar las diferencias hay que comparar dos a dos las medias de todos los grupos introducidos en el análisis mediante pruebas que comparen 2 grupos, a esto se le conoce como análisis *post-hoc*.
 
-&lt;uw-blockquote&gt; Los niveles de significancia pueden ser ajustados en función del número de comparaciones. Debido a la inflación del error de tipo I, cuantas más comparaciones se hagan más aumenta la probabilidad de encontrar diferencias significativas 
+- Los niveles de significancia pueden ser ajustados en función del número de comparaciones. Debido a la inflación del error de tipo I, cuantas más comparaciones se hagan más aumenta la probabilidad de encontrar diferencias significativas 
 
 ---
 ### Pruebas de comparaciones múltiples para ANOVA
 La siguiente tabla ilustra cuántas comparaciones por pares están asociadas con cada número de grupos junto con la tasa de error por familia:
 
 &lt;img src="https://statologos.com/ezoimgfmt/fourpillarfreedom.com/wp-content/uploads/2019/04/post_hoc1.jpg?ezimgfmt=rs:386x298/rscb1/ng:webp/ngcb1" alt="" style="display: block; margin: auto;" /&gt;
-
-Afortunadamente,muchas de las pruebas *post hoc* nos brindan una forma de hacer múltiples comparaciones entre grupos mientras se controla la tasa de error familiar.
-
 
 
 ---
@@ -376,16 +373,11 @@ SNK.test(anov, "Tratamiento", console = TRUE)
 ## 
 ## Tratamiento,  means
 ## 
-##               Valor      std r        se   Min   Max   Q25   Q50
-## Tratamiento1 -1.042 1.368912 5 0.8574838 -3.10  0.18 -1.66 -0.72
-## Tratamiento2  5.650 1.955479 5 0.8574838  3.06  7.88  4.74  5.29
-## Tratamiento3  4.768 2.627845 5 0.8574838  0.12  6.56  5.51  5.72
-## Tratamiento4  8.916 1.449890 5 0.8574838  7.31 11.21  8.18  8.83
-##               Q75
-## Tratamiento1 0.09
-## Tratamiento2 7.28
-## Tratamiento3 5.93
-## Tratamiento4 9.05
+##               Valor      std r        se   Min   Max   Q25   Q50  Q75
+## Tratamiento1 -1.042 1.368912 5 0.8574838 -3.10  0.18 -1.66 -0.72 0.09
+## Tratamiento2  5.650 1.955479 5 0.8574838  3.06  7.88  4.74  5.29 7.28
+## Tratamiento3  4.768 2.627845 5 0.8574838  0.12  6.56  5.51  5.72 5.93
+## Tratamiento4  8.916 1.449890 5 0.8574838  7.31 11.21  8.18  8.83 9.05
 ## 
 ## Alpha: 0.05 ; DF Error: 16 
 ## 
@@ -492,16 +484,11 @@ duncan.test(anov, "Tratamiento", console = TRUE)
 ## 
 ## Tratamiento,  means
 ## 
-##               Valor      std r        se   Min   Max   Q25   Q50
-## Tratamiento1 -1.042 1.368912 5 0.8574838 -3.10  0.18 -1.66 -0.72
-## Tratamiento2  5.650 1.955479 5 0.8574838  3.06  7.88  4.74  5.29
-## Tratamiento3  4.768 2.627845 5 0.8574838  0.12  6.56  5.51  5.72
-## Tratamiento4  8.916 1.449890 5 0.8574838  7.31 11.21  8.18  8.83
-##               Q75
-## Tratamiento1 0.09
-## Tratamiento2 7.28
-## Tratamiento3 5.93
-## Tratamiento4 9.05
+##               Valor      std r        se   Min   Max   Q25   Q50  Q75
+## Tratamiento1 -1.042 1.368912 5 0.8574838 -3.10  0.18 -1.66 -0.72 0.09
+## Tratamiento2  5.650 1.955479 5 0.8574838  3.06  7.88  4.74  5.29 7.28
+## Tratamiento3  4.768 2.627845 5 0.8574838  0.12  6.56  5.51  5.72 5.93
+## Tratamiento4  8.916 1.449890 5 0.8574838  7.31 11.21  8.18  8.83 9.05
 ## 
 ## Alpha: 0.05 ; DF Error: 16 
 ## 

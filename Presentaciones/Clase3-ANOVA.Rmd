@@ -71,7 +71,7 @@ library(tidyverse)
 ---
 ## Análisis de varianza - ANOVA
 
-<uw-blockquote> Este análisis constituye la herramienta básica para el estudio del **efecto de una o más variables independientes** (cada uno con dos o más niveles) sobre la media de **una variable continua**.
+<uw-blockquote> Este análisis lo realizamos para medir el **efecto de una o más variables independientes** (cada uno con más de dos niveles) sobre la media de **una variable continua**.
 
 
 ---
@@ -90,9 +90,9 @@ library(tidyverse)
 <uw-blockquote> Las pruebas *post hoc* pueden ayudar a contar la historia de los datos más allá de una simple diferencia.
 ---
 ## Pruebas de comparaciones múltiples para ANOVA
-<uw-blockquote> Para identificar las diferencias hay que comparar dos a dos las medias de todos los grupos introducidos en el análisis mediante pruebas que comparen 2 grupos, a esto se le conoce como análisis *post-hoc*.
+- Para identificar las diferencias hay que comparar dos a dos las medias de todos los grupos introducidos en el análisis mediante pruebas que comparen 2 grupos, a esto se le conoce como análisis *post-hoc*.
 
-<uw-blockquote> Los niveles de significancia pueden ser ajustados en función del número de comparaciones. Debido a la inflación del error de tipo I, cuantas más comparaciones se hagan más aumenta la probabilidad de encontrar diferencias significativas 
+- Los niveles de significancia pueden ser ajustados en función del número de comparaciones. Debido a la inflación del error de tipo I, cuantas más comparaciones se hagan más aumenta la probabilidad de encontrar diferencias significativas 
 
 ---
 ### Pruebas de comparaciones múltiples para ANOVA
@@ -101,9 +101,6 @@ La siguiente tabla ilustra cuántas comparaciones por pares están asociadas con
 ```{r, echo=FALSE, fig.align='center'}
 knitr::include_graphics("https://statologos.com/ezoimgfmt/fourpillarfreedom.com/wp-content/uploads/2019/04/post_hoc1.jpg?ezimgfmt=rs:386x298/rscb1/ng:webp/ngcb1")
 ```
-
-Afortunadamente,muchas de las pruebas *post hoc* nos brindan una forma de hacer múltiples comparaciones entre grupos mientras se controla la tasa de error familiar.
-
 
 
 ---
