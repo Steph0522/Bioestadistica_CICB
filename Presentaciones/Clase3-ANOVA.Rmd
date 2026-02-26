@@ -73,6 +73,8 @@ library(tidyverse)
 
 <uw-blockquote> Este análisis lo realizamos para medir el **efecto de una o más variables independientes** (cada uno con más de dos niveles) sobre la media de **una variable continua**.
 
+---
+## Ejemplo ANOVA - manual
 
 ---
 
@@ -92,7 +94,7 @@ library(tidyverse)
 ## Pruebas de comparaciones múltiples para ANOVA
 - Para identificar las diferencias hay que comparar dos a dos las medias de todos los grupos introducidos en el análisis mediante pruebas que comparen 2 grupos, a esto se le conoce como análisis *post-hoc*.
 
-- Los niveles de significancia pueden ser ajustados en función del número de comparaciones. Debido a la inflación del error de tipo I, cuantas más comparaciones se hagan más aumenta la probabilidad de encontrar diferencias significativas 
+- Los niveles de significancia pueden ser ajustados en función del número de comparaciones. Debido a la inflación del error de tipo I, cuantas más comparaciones se hagan más aumenta la probabilidad de encontrar diferencias significativas. 
 
 ---
 ### Pruebas de comparaciones múltiples para ANOVA
@@ -182,12 +184,18 @@ dif6<- mean(datos$Tratamiento4)-mean(datos$Tratamiento2)
 .pull-right[
 ```{r}
 dif1>HSD_val;dif2>HSD_val;dif3>HSD_val;dif4>HSD_val;dif5>HSD_val;dif6>HSD_val
+```
+
+]
+
+---
+## Ejemplo aplicado
+```{r}
 up<-dif1+(qcri*sqme)
 low<-dif1-(qcri*sqme)
 data.frame(up,low)
 ```
 
-]
 ---
 ## Ejemplo aplicado
 
@@ -213,7 +221,7 @@ plot(hsd_agricolae)
 
 ]
 ---
-## Newman-Keuls (student)
+### Newman-Keuls (student)
 
 + Es una prueba *post hoc* para probar las diferencias en las medias de varios grupos. Se realiza después que una ANOVA haya dado significativo y sé usa para identificar qué par de medias son diferentes. La prueba se basa también en la **distribución de rango estudentizada**.
 
@@ -297,7 +305,7 @@ plot(snk)
 
 
 ---
-#### Prueba de Duncan
+### Prueba de Duncan
 1. Ordenar las medias de la más grande a la más pequeña.
 2. Cacular el valor crítico *q*, aquí denominad como $r$, como las pruebas anteriores
 3. Encontrar el valor crítico en la tabla de valores críticos con los $k$ y los grados de libertad del error. 
@@ -308,6 +316,10 @@ $$
 R_{(k,\nu,\alpha_{p})}=r_{k, \alpha_{p},k, v}\sqrt{\frac{CME}{n}}
 \end{aligned}
 $$
+
+---
+### Prueba de Duncan
+
 - Este $r$ (antes $q_{crítico}$) es variable como anteriormente vimos en la prueba de Newman-Keuls y las diferencias de los promedios:
   - Si las dos primeras medias no son diferentes entonces para la prueba
   - Si la dos primeras son diferentes sigue con los siguientes pares de medias desde el paso 2, para cuando no encuentres diferencias.
@@ -315,14 +327,13 @@ $$
 
 ---
 ### Prueba de Duncan
-Además de estos pasos que lucen muy parecidos a la prueba de Newman-Keuls este método introduce además una significancia o $\alpha$ variable, esto como un **"nivel de protección"** basado en los grados de libertad y viene dada por la fórmula:
+Además de estos pasos que lucen muy parecidos a la prueba de Newman-Keuls este método introduce además una significancia o $\alpha$ variable, esto como un **"nivel de protección"**:
 
 $$
 \begin{aligned}
 \alpha_{p}=1-(1-\alpha)^K-1
 \end{aligned}
 $$
-El nivel de protección puede ser tabulado por varios valores, de la siguiente manera:
 
 ||Nivel de protección alfa| probabilidad de error tipo I|
 |:-:|:-----------------------:|:-----------------------------:|
@@ -386,6 +397,10 @@ data("PlantGrowth")
 ### El día de hoy aprendimos que...
 - Se utiliza un ANOVA para determinar si existe o no una diferencia estadísticamente significativa entre las medias de tres o más grupos independientes.
 - Si un ANOVA produce un valor p que es menor que nuestro nivel de significancia, podemos usar pruebas *post hoc* para averiguar qué medias de grupo difieren entre sí.
+
+---
+### El día de hoy aprendimos que...
+
 - Las pruebas *post hoc* nos permiten controlar la tasa de error familiar mientras realizamos múltiples comparaciones por pares.
 - La compensación de controlar la tasa de error familiar es un poder estadístico más bajo. Podemos reducir los efectos de un poder estadístico más bajo haciendo menos comparaciones por pares.
 - Debe determinar de antemano en qué grupos le gustaría hacer comparaciones por pares y qué prueba post hoc utilizará para hacerlo.
