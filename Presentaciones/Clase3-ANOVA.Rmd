@@ -76,7 +76,104 @@ library(tidyverse)
 ---
 ## Ejemplo ANOVA - manual
 
+Un profesor quiere saber si tres métodos de enseñanza diferentes (A, B, C) producen notas distintas en un examen. Toma una muestra pequeña de 3 alumnos por método. 
+Notas obtenidas (Variable dependiente: Nota | Factor: Método):
+- *Método A:* 6, 8, 7
+- *Método B:* 9, 10, 8
+- *Método C:* 4, 6, 5
+
 ---
+## Ejemplo ANOVA - manual
+
+- **Paso 1: Formular Hipótesis**
+
+$H_{0}$ (Hipótesis Nula): Las medias son iguales. El método no afecta la nota.
+
+$H_{1}$ (Hipótesis Alternativa): Al menos una media es diferente. Un método es diferente. 
+
+---
+## Ejemplo ANOVA - manual
+
+- **Paso 2: Calcular medias de grupos y media general**
+
+Media Método A ($\bar{X}_{A}$): $(6+8+7)/3 = 7$ 
+
+Media Método B ($\bar{X}_{B}$): $(9+10+8)/3 = 9$ 
+
+Media Método C ($\bar{X}_{C}$): $(4+6+5)/3 = 5$ 
+
+Media General ($\bar{X}$): $(7+9+5)/3 = 7$
+---
+## Ejemplo ANOVA - manual
+
+- **Paso 3: Calcular Suma de Cuadrados (SC) **
+
+ + **Suma de Cuadrados Entre Grupos (SCT)**: Mide cuánto difieren las medias de los grupos de la media general.
+
+Fórmula: $n\Sigma(\bar{x}_{k}-\bar{x})^2$
+
+$3 * [(7-7)^2 + (9-7)^2 + (5-7)^2]$
+
+$3 * [(0)^2 + (2)^2 + (-2)^2]$
+
+$3 * [0+4+4] = 3*8 = 24$
+
+---
+## Ejemplo ANOVA - manual
+
+ + **Suma de Cuadrados Dentro de Grupos (SCE)**: Mide la variabilidad dentro de cada método.
+
+Fórmula: $\Sigma(x_{k}-\bar{x_{k}})^2$
+ 
+**Grupo A:** $(6-7)^2 + (8-7)^2 + (7-7)^2 = 1+1+0 = 2$
+
+**Grupo B:**  $(9-9)^2 + (10-9)^2 + (8-9)^2 = 0+1+1 = 2$
+
+**Grupo C:** $(4-5)^2 + (6-5)^2 + (5-5)^2 = 1+1+0 = 2$
+
+ $SCE = 2+2+2 = 6$
+---
+## Ejemplo ANOVA - manual
+
+- **Paso 4: Calcular los grados de libertad (gl) **
+
+$gl_{entre}= k-1 = 3-1 = 2$
+
+$gl_{dentro}= N- k= 9-3 = 6$
+
+**Paso 5: Calcular Cuadrados Medios**
+
+$SCT/k-1 = 24/2 = 12$
+
+$SCE/N-k = 6/6 = 1$
+
+
+**Paso ¿65: Calcular el estadístico F**
+
+$F = 12/1 = 12$
+
+---
+## Ejemplo ANOVA - manual
+
+**Paso 7: Interpretar el resultado**
+
+F Calculado: 12
+
+F Crítico (Tabla F): Buscamos con 2 y 6 grados de libertad y nivel de confianza 0.05. 
+```{r, echo=FALSE}
+knitr::include_graphics("../images/fdist.png")
+```
+
+---
+## Ejemplo ANOVA - manual
+
+Conclusión: Como F calc > F crit, rechazamos la hipótesis nula.
+
+Significado: Hay una diferencia significativa en las notas dependiendo del método
+
+
+---
+
 
 ## Pruebas de comparaciones múltiples para ANOVA
 
@@ -232,15 +329,11 @@ plot(hsd_agricolae)
  - $H_{a}$: media 1 ≠ media 2
 
 ---
-## Newman-Keuls
+#### Newman-Keuls
 1. Ordenar las medias de la más grande a la más pequeña.
 2. Calcular el error estándar como anteriormente $\sqrt{\frac{CME}{n}}$
 3. Cacular el valor crítico *q* con la fórmula:
-$$
-\begin{aligned}
-q_{crítico} = \frac{\bar{x_{1}}-\bar{x_{2}}}{S_{12}}
-\end{aligned}
-$$
+$q_{crítico} = \frac{\bar{x_{1}}-\bar{x_{2}}}{S_{12}}$
 4. Encontrar el valor crítico en la tabla de valores críticos con los $k$ y los grados de libertad del error. [Tabla1](https://elvers.us/stats/tables/qprobability.html), [Tabla2](https://www.statisticshowto.com/studentized-range-distribution/#qtable) `r fontawesome::fa("link", fill = "#103261")`
   - Si las dos primeras medias no son diferentes entonces para la prueba
   - Si la dos primeras son diferentes sigue con los siguientes pares de medias desde el paso 2, para cuando no encuentres diferencias.
@@ -249,39 +342,30 @@ $$
 ---
 #[Newman-Keuls](https://methods.sagepub.com/reference/encyc-of-research-design/n266.xml) `r fontawesome::fa("link", fill = "#103261")`
 
-.pull-left[
-```{r, fig.align='center', echo=FALSE}
-knitr::include_graphics("https://pltfrmrsrcscdn.sagepub.com/srm/images/encyc-of-research-design/p900-1.jpg")
-```
-]
-
-.pull-right[
-
-```{r, fig.align='center', echo=FALSE}
-knitr::include_graphics("https://pltfrmrsrcscdn.sagepub.com/srm/images/encyc-of-research-design/p901-2.jpg")
+```{r,echo=FALSE}
+knitr::include_graphics("images/new.jpg")
 ```
 
- > Con 40 df y 5 k. 
- 
-]
 
 ---
-.pull-left[
+
 ```{r, out.height=5, out.width="80%"}
 library(agricolae)
 SNK.test(anov, "Tratamiento", console = TRUE)
 ```
-]
 
+---
 
-
-.pull-right[
-```{r, out.width="50%", fig.align='center'}
+```{r, fig.align='center'}
 library(agricolae)
 snk<-SNK.test(anov, "Tratamiento", console = FALSE)
 plot(snk)
 ```
-]
+
+
+
+
+
 ---
 ## Tukey-HSD vs Newman-Keuls
 
@@ -292,7 +376,7 @@ plot(snk)
 - Newman-Keuls es más conservadora que Tukey-HSD por su umbral móvil y el valor de alfa o significancia es el mismo del ANOVA (0.05).
 
 ---
-# Prueba de Duncan
+## Prueba de Duncan
 
 + Es una variante de Newman-Keuls pero a diferencia de esta, usa niveles de alfa que se van incrementando en cada paso del procedimiento, siendo menos suceptible a errores de Tipo I.
 
@@ -344,21 +428,21 @@ $$
 |k=6|0.95|0.226|
 
 ---
-.pull-left[
+
 ```{r}
 library(agricolae)
 duncan.test(anov, "Tratamiento", console = TRUE)
 ```
-]
 
-.pull-right[
-```{r, fig.align='center', out.width="50%"}
+
+---
+```{r, fig.align='center'}
 library(agricolae)
 duncan<-agricolae::duncan.test(anov, "Tratamiento")
 plot(duncan)
 ```
 
-]
+
 ---
 # Duncan vs Newman-Keuls
 
@@ -381,21 +465,286 @@ plot(duncan)
 
 - Pruebas pareadas (t.test) con correcciones: Bonferroni, Holm-Bonferroni, FDR, entre otras. 
 
+---
+
+## 1 variable cuantitativa >2 grupos dependientes: ANOVA por bloques 
+```{r, warning=FALSE, message=FALSE}
+library(BHH2)
+data(penicillin.data)
+penicilina<- penicillin.data
+str(penicilina)
+```
+---
+```{r}
+plot(yield~blend+treat, data = penicilina)
+```
+---
+```{r}
+modelo3<- lm(yield~blend+treat, data = penicilina)
+```
+
+```{r, fig.align='center'}
+par(mfrow = c(2, 2))
+plot(modelo3)
+```
 
 ---
-### Ejemplo aplicado
-
-- Carga la data de **"PlantGrowth"** y mira los diferentes tratamientos, luego corre el modelo en el ANOVA y prueba si hay diferencias significativas.
-- Aplica las tres pruebas vistas hoy y compara los resultados.
+# Anova por bloques
 
 ```{r}
-data("PlantGrowth")
+anova(lm(yield~ blend+treat,data = penicilina))
+```
+---
+
+## ANOVA 2 factores fijos sin interacción y con interacción
+
+Modelo aditivo, efectos fijos: aov(variable_respuesta \~ factor1 + factor2, data)
+
+Modelo con interacción: aov(variable_respuesta \~ factor1 x factor2, data)
+
+Modelo solo interacción: aov(variable_respuesta \~ factor1 : factor2, data)
+
+
+---
+### Ejemplo ANOVA 2 vías
+
+Para este ejemplo usaremos el set de datos 'ToothGrowth'
+
+```{r}
+data("ToothGrowth")
+dientes<- ToothGrowth
+str(dientes)
+```
+
+Como podemos observar la variable de respuesta aquí sería la longitud de los dientes y los factores a evaluar son *'supp'* y *'dose'*, *supp* es la forma en que le dieron la vitamina C a los cerdos, si como OJ (jugo de naranja) o AS (ácido ascórbico) a diferentes dosis (*dose*) de 0.5, 1 y 2 mg/día.
+---
+### Ejemplo ANOVA 2 vías
+
+El factor 'dose' o dosis no aparece como factor sino como variable numérica.
+
+Esto puede ser un inconveniente al correr el ANOVA así que modificaremos esto en la data.
+
+
+```{r}
+dientes$dose <- factor(dientes$dose, 
+                  levels = c(0.5, 1, 2),
+                  labels = c("D0.5", "D1", "D2"))
+head(dientes)
+
+```
+
+---
+### Ejemplo ANOVA 2 vías
+
+Bien, visualizaremos nuestros datos para ver las tendencias de nuestros factores sobre nuestra variable de respuesta:
+
+```{r, message=FALSE, warning=FALSE, out.width="45%", echo=FALSE}
+library(ggpubr)
+ggboxplot(data = ToothGrowth, x = "supp", y = "len", fill = "supp")+theme(text = element_text(size = 40))
+ggboxplot(data = ToothGrowth, x = "dose", y = "len", fill = "dose")+theme(text = element_text(size = 40))
+```
+
+---
+### Ejemplo ANOVA 2 vías
+
+.pull-left[
+```{r, echo=TRUE, out.width="80%", fig.align='center'}
+ggboxplot(data = ToothGrowth, x = "dose", y = "len", fill = "supp")
+```
+]
+
+.pull-right[
+```{r, message=FALSE, warning=FALSE, echo=TRUE, fig.height=6}
+ggline(ToothGrowth, x = "dose", y = "len", color = "supp", add = c("mean_se", "jitter"))
+```
+]
+
+---
+### Ejemplo ANOVA 2 vías
+
+Como pudimos ver aparentemente los factores podrían tener una interacción, en este caso podríamos correr una ANOVA dos vías o bien aditivo o bien mutiplicativo si queremos confirmar la interacción, o bien solo ver la interacción.
+
+```{r}
+anova1<- aov(len ~ supp + dose, data = dientes)
+anova2<-  aov(len ~ supp * dose, data = dientes)
+anova3<-  aov(len ~ supp : dose, data = dientes)
+
+```
+
+```{r}
+summary(anova1)
+```
+
+---
+### Ejemplo ANOVA 2 vías
+
+```{r}
+summary(anova2)
+```
+
+
+```{r}
+summary(anova3)
+```
+
+---
+## ANOVA 2 factores de efectos aleatorios/mixtos
+
+```{r, message=FALSE, warning=FALSE}
+library(faraway)
+data(rabbit)
+conejos<- rabbit
+str(conejos)
+```
+
+---
+```{r}
+plot(gain~ block + treat, rabbit, col=456)
+```
+---
+
+```{r}
+#Observamos que tanto el bloque como el tratamiento son significativos.
+lm.rabbit <- lm(gain~ block+treat, data=rabbit)
+anova(lm.rabbit)
+```
+---
+```{r}
+# nos interesa analizar el efecto del factor (dieta) sobre la respuesta una vez que se haya tenido en cuenta la variabilidad atribuible al bloque (camada).
+library(nlme)
+lme.rabbit1 <- lme(gain~ treat, random=~1|block, data=rabbit)
+anova(lme.rabbit1)
+```
+
+---
+## ANOVA 2 factores anidados 
+
+```{r}
+df<-data.frame(crecimiento = c (13, 16, 16, 12, 15, 16, 19, 16, 15, 15, 12, 15,
+                          19, 19, 20, 22, 23, 18, 16, 18, 19, 20, 21, 21,
+                          21, 23, 24, 22, 25, 20, 20, 22, 24, 22, 25, 26),
+                 fertilizante = factor(c(rep(c(' A ', ' B ', ' C '), each=12 ))),
+                 tech = factor(c(rep(1: 9,  each=4 ))))
+```
+
+```{r}
+str(df)
+```
+
+---
+
+```{r}
+summary(aov(crecimiento ~ fertilizante/tech, data = df))
+```
+
+```{r}
+summary(aov(crecimiento ~ fertilizante %in% tech, data = df))
+```
+---
+## ANOVA 2 factores fijos parcelas divididas (split plot)
+
+En este experimento, se desean medir los efectos de tres factores sobre la cantidad de glucógeno en el hígado de ratas. En este experimento, hay 6 ratas (parcelas o plots). 
+A cada rata, se le asignó al azar una de las tres dietas alimentarias (T1, T2 y T3).
+De cada rata, se le extrajo el hígado y se dividió en cuatro segmentos. Cada segmento se preparó utilizando uno de dos productos químicos diferentes (P1 y P2). Finalmente, se midió el nivel de glucógeno de cada pedazo de hígado usando dos técnicas analíticas diferentes (A y B). La unidad experimental de la dieta es la rata. La unidad experimental para la preparación química del hígado es una tira de hígado. La unidad experimental de la técnica analítica es un trozo de hígado. Todos son diferentes.
+
+---
+## ANOVA 2 factores fijos parcelas divididas (split plot)
+
+```{r, warning=FALSE, message=FALSE}
+ratas<- readr::read_csv("https://raw.githubusercontent.com/Steph0522/Curso_Bioestadistica_2023/main/Modulo2/data_ratas.csv")
+str(ratas)
+
+```
+---
+## ANOVA 2 factores fijos parcelas divididas (split plot)
+
+```{r, warning=FALSE, message=FALSE}
+anova_factorial <- lm(glycogen ~ food * prep * method, data = ratas)
+anova(anova_factorial)
+```
+---
+```{r, warning=FALSE, message=FALSE}
+anova_split <- aov(glycogen ~ food * prep * method + Error(rat/food:prep), data = ratas)
+summary(anova_split)
 ```
 
 
 ---
+
+## Análisis de medidas repetidas
+
+
+Queremos realizar un análisis de medidas repetidas para los datos de rendimiento académico de seis alumnos. En cada alumno se ha medido a cinco tiempos diferentes su rendimiento, por tanto las muestras tomadas no son independientes entre si. Para poder analizar estos datos debemos considerar las muestras como relacionadas, es decir debemos realizar un ANOVA de medidas repetidas.\
+
+```{r}
+individuos<- factor(c(rep(1,5), rep(2,5), rep(3, 5),
+                      rep(4, 5), rep(5,5), rep(6,5)))
+tiempo<- factor(rep(1:5, 6))
+rendimiento<- c(8.5, 8.2,8.9, 7.7, 7.4,
+                9.8,8.9,8.9,8.8,8.1,
+                9.6,9.0, 9.3, 7.5, 7.1,
+                7.5, 7.8, 7.8, 4.5, 4.6,
+                5.8, 5.8, 5.9, 2.6, 1.2,
+                9.9, 9.8, 9.6, 8.6, 8.7)
+data_rendimiento<- data.frame(individuos=individuos,
+                              tiempo=tiempo, rendimiento=rendimiento)
+
+```
+---
+## Análisis de medidas repetidas
+
+```{r}
+str(data_rendimiento)
+```
+---
+## Análisis de medidas repetidas
+
+Vamos a realizar el análisis de medidas repetidas ANOVA paramétrico por medio del paquete ez. Para ello hay que indicar nuestros datos (data), nuestra variable (dv), nuestros individuos (wid) y el tiempo (within):
+
+---
+## Análisis de medidas repetidas
+
+**Versión paramétrica:**
+
+```{r, warning=FALSE, message=FALSE}
+library(ez)
+ezANOVA(data=data_rendimiento, dv=rendimiento, wid=individuos, within=tiempo)
+```
+
+
+Podemos ver en nuestros resultados que el tiempo es significativo, es decir, el rendimiento escolar cambia con el tiempo. Pero en este caso nuestros datos violan uno de los requisitos que es la esfericidad (test de Mauchly significativo), debemos fiarnos de la p de la **Sphericity corrections** que nos confirma lo que hemos deducido al principio.
+---
+## Análisis de medidas repetidas
+
+```{r, out.width='80%', fig.align='center'}
+boxplot(rendimiento~tiempo, xlab="tiempo", 
+        ylab="Rendimiento académico", 
+        main="rendimiento alumnos con el paso del tiempo",
+        col="blue", data=data_rendimiento)
+```
+---
+## Análisis de medidas repetidas
+
+**Versión no paramétrica:**\
+
+```{r, message=FALSE, warning=FALSE, eval=FALSE}
+library(tidyverse)
+library(jmv)
+#cambiamos el formato de la data
+data_rendimiento_notidy<-data_rendimiento %>% mutate(tiempo =case_when(
+  tiempo== 1 ~ "T1",
+  tiempo== 2 ~ "T2",
+  tiempo== 3 ~ "T3",
+  tiempo== 4 ~ "T4",
+  tiempo== 5 ~ "T5")) %>% pivot_wider(names_from =tiempo, 
+                                      values_from = rendimiento )
+
+jmv::anovaRMNP(data_rendimiento_notidy, measures=vars(T1,T2,T3,T4,T5))
+```
+---
 ### El día de hoy aprendimos que...
-- Se utiliza un ANOVA para determinar si existe o no una diferencia estadísticamente significativa entre las medias de tres o más grupos independientes.
+- Se utiliza un ANOVA para determinar si existe o no una diferencia estadísticamente significativa entre las medias de tres o más grupos independientes. Y hay de varios tipos.
+
 - Si un ANOVA produce un valor p que es menor que nuestro nivel de significancia, podemos usar pruebas *post hoc* para averiguar qué medias de grupo difieren entre sí.
 
 ---
