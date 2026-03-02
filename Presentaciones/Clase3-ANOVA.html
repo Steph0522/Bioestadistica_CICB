@@ -114,6 +114,8 @@ Notas obtenidas (Variable dependiente: Nota | Factor: Método):
 - *Método B:* 9, 10, 8
 - *Método C:* 4, 6, 5
 
+&lt;uw-blockquote&gt; Pasos: Hipótesis, medias, calcular SCT y SCE, gl, CM y F. Interpretar el resultado y concluir. 
+
 ---
 ## Ejemplo ANOVA - manual
 
@@ -276,6 +278,30 @@ $$
 ---
 ## Ejemplo aplicado
 
+``` r
+datos&lt;- data.frame(Tratamiento1=c(-3.10,0.18,-0.72,0.09,-1.66),
+                  Tratamiento2=c(7.28,3.06,4.74,5.29,7.88),
+                  Tratamiento3=c(0.12,5.51,5.72,5.93,6.56),
+                  Tratamiento4=c(8.18,9.05,11.21,7.31,8.83))
+
+datost&lt;- datos %&gt;% pivot_longer(cols = everything(), names_to = "Tratamiento", values_to = "Valor")
+head(datost)
+```
+
+```
+## # A tibble: 6 × 2
+##   Tratamiento  Valor
+##   &lt;chr&gt;        &lt;dbl&gt;
+## 1 Tratamiento1 -3.1 
+## 2 Tratamiento2  7.28
+## 3 Tratamiento3  0.12
+## 4 Tratamiento4  8.18
+## 5 Tratamiento1  0.18
+## 6 Tratamiento2  3.06
+```
+---
+## Ejemplo aplicado
+
 | Tratamiento1 | Tratamiento2 | Tratamiento3 | Tratamiento4 |
 |:------------:|:------------:|:------------:|:------------:|
 |    -3.10     |     7.28     |     0.12     |     8.18     |
@@ -285,7 +311,25 @@ $$
 |    -1.66     |     7.88     |     6.56     |     8.83     |
 ---
 ## Ejemplo aplicado
-.pull-left[
+
+
+```
+## [1] "SCT: 257.93914"
+```
+ 
+
+```
+## [1] "SCE: 58.82228"
+```
+
+```
+## [1] "CMT: 85.9797133333333"
+```
+
+```
+## [1] "CME: 3.6763925"
+```
+
 
 ``` r
 qcri&lt;-qtukey(p = 0.95, nmeans = 4, df = 16)
@@ -305,7 +349,8 @@ qcri; HSD_val
 ```
 ## [1] 3.469459
 ```
-
+---
+### Ejemplo aplicado
 
 
 ``` r
@@ -318,9 +363,6 @@ dif6&lt;- mean(datos$Tratamiento4)-mean(datos$Tratamiento2)
 ```
 
 
-]
-
-.pull-right[
 
 ``` r
 dif1&gt;HSD_val;dif2&gt;HSD_val;dif3&gt;HSD_val;dif4&gt;HSD_val;dif5&gt;HSD_val;dif6&gt;HSD_val
@@ -350,7 +392,6 @@ dif1&gt;HSD_val;dif2&gt;HSD_val;dif3&gt;HSD_val;dif4&gt;HSD_val;dif5&gt;HSD_val;
 ## [1] FALSE
 ```
 
-]
 
 ---
 ## Ejemplo aplicado
@@ -400,7 +441,7 @@ TukeyHSD(anov, "Tratamiento", ordered = T)
 plot(TukeyHSD(anov, "Tratamiento", ordered = T))
 ```
 
-&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-12-1.png" alt="" style="display: block; margin: auto;" /&gt;
+&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-15-1.png" alt="" style="display: block; margin: auto;" /&gt;
 ]
 
 .pull-right[
@@ -411,7 +452,7 @@ hsd_agricolae&lt;-HSD.test(anov, "Tratamiento", group = TRUE)
 plot(hsd_agricolae)
 ```
 
-&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-13-1.png" alt="" style="display: block; margin: auto;" /&gt;
+&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-16-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 ]
 ---
@@ -461,11 +502,16 @@ SNK.test(anov, "Tratamiento", console = TRUE)
 ## 
 ## Tratamiento,  means
 ## 
-##               Valor      std r        se   Min   Max   Q25   Q50  Q75
-## Tratamiento1 -1.042 1.368912 5 0.8574838 -3.10  0.18 -1.66 -0.72 0.09
-## Tratamiento2  5.650 1.955479 5 0.8574838  3.06  7.88  4.74  5.29 7.28
-## Tratamiento3  4.768 2.627845 5 0.8574838  0.12  6.56  5.51  5.72 5.93
-## Tratamiento4  8.916 1.449890 5 0.8574838  7.31 11.21  8.18  8.83 9.05
+##               Valor      std r        se   Min   Max   Q25   Q50
+## Tratamiento1 -1.042 1.368912 5 0.8574838 -3.10  0.18 -1.66 -0.72
+## Tratamiento2  5.650 1.955479 5 0.8574838  3.06  7.88  4.74  5.29
+## Tratamiento3  4.768 2.627845 5 0.8574838  0.12  6.56  5.51  5.72
+## Tratamiento4  8.916 1.449890 5 0.8574838  7.31 11.21  8.18  8.83
+##               Q75
+## Tratamiento1 0.09
+## Tratamiento2 7.28
+## Tratamiento3 5.93
+## Tratamiento4 9.05
 ## 
 ## Alpha: 0.05 ; DF Error: 16 
 ## 
@@ -491,7 +537,7 @@ snk&lt;-SNK.test(anov, "Tratamiento", console = FALSE)
 plot(snk)
 ```
 
-&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-16-1.png" alt="" style="display: block; margin: auto;" /&gt;
+&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-19-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 
 
@@ -577,11 +623,16 @@ duncan.test(anov, "Tratamiento", console = TRUE)
 ## 
 ## Tratamiento,  means
 ## 
-##               Valor      std r        se   Min   Max   Q25   Q50  Q75
-## Tratamiento1 -1.042 1.368912 5 0.8574838 -3.10  0.18 -1.66 -0.72 0.09
-## Tratamiento2  5.650 1.955479 5 0.8574838  3.06  7.88  4.74  5.29 7.28
-## Tratamiento3  4.768 2.627845 5 0.8574838  0.12  6.56  5.51  5.72 5.93
-## Tratamiento4  8.916 1.449890 5 0.8574838  7.31 11.21  8.18  8.83 9.05
+##               Valor      std r        se   Min   Max   Q25   Q50
+## Tratamiento1 -1.042 1.368912 5 0.8574838 -3.10  0.18 -1.66 -0.72
+## Tratamiento2  5.650 1.955479 5 0.8574838  3.06  7.88  4.74  5.29
+## Tratamiento3  4.768 2.627845 5 0.8574838  0.12  6.56  5.51  5.72
+## Tratamiento4  8.916 1.449890 5 0.8574838  7.31 11.21  8.18  8.83
+##               Q75
+## Tratamiento1 0.09
+## Tratamiento2 7.28
+## Tratamiento3 5.93
+## Tratamiento4 9.05
 ## 
 ## Alpha: 0.05 ; DF Error: 16 
 ## 
@@ -607,7 +658,7 @@ duncan&lt;-agricolae::duncan.test(anov, "Tratamiento")
 plot(duncan)
 ```
 
-&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-18-1.png" alt="" style="display: block; margin: auto;" /&gt;
+&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-21-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -633,8 +684,14 @@ plot(duncan)
 - Pruebas pareadas (t.test) con correcciones: Bonferroni, Holm-Bonferroni, FDR, entre otras. 
 
 ---
+class: inverse, center, middle
 
-## 1 variable cuantitativa &gt;2 grupos dependientes: ANOVA por bloques 
+# Otros ANOVAs...
+
+
+---
+
+## ANOVA por bloques : 1 variable cuantitativa &gt;2 grupos dependientes
 
 ``` r
 library(BHH2)
@@ -656,7 +713,7 @@ str(penicilina)
 plot(yield~blend+treat, data = penicilina)
 ```
 
-![](Clase3-ANOVA_files/figure-html/unnamed-chunk-20-1.png)&lt;!-- --&gt;![](Clase3-ANOVA_files/figure-html/unnamed-chunk-20-2.png)&lt;!-- --&gt;
+![](Clase3-ANOVA_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;![](Clase3-ANOVA_files/figure-html/unnamed-chunk-23-2.png)&lt;!-- --&gt;
 ---
 
 ``` r
@@ -669,7 +726,7 @@ par(mfrow = c(2, 2))
 plot(modelo3)
 ```
 
-&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-22-1.png" alt="" style="display: block; margin: auto;" /&gt;
+&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-25-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 ---
 # Anova por bloques
@@ -692,7 +749,7 @@ anova(lm(yield~ blend+treat,data = penicilina))
 ```
 ---
 
-## ANOVA 2 factores fijos sin interacción y con interacción
+## ANOVA 2 vías
 
 Modelo aditivo, efectos fijos: aov(variable_respuesta \~ factor1 + factor2, data)
 
@@ -717,7 +774,7 @@ str(dientes)
 ## 'data.frame':	60 obs. of  3 variables:
 ##  $ len : num  4.2 11.5 7.3 5.8 6.4 10 11.2 11.2 5.2 7 ...
 ##  $ supp: Factor w/ 2 levels "OJ","VC": 2 2 2 2 2 2 2 2 2 2 ...
-##  $ dose: num  0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 ...
+##  $ dose: int  500 500 500 500 500 500 500 500 500 500 ...
 ```
 
 Como podemos observar la variable de respuesta aquí sería la longitud de los dientes y los factores a evaluar son *'supp'* y *'dose'*, *supp* es la forma en que le dieron la vitamina C a los cerdos, si como OJ (jugo de naranja) o AS (ácido ascórbico) a diferentes dosis (*dose*) de 0.5, 1 y 2 mg/día.
@@ -732,7 +789,7 @@ Esto puede ser un inconveniente al correr el ANOVA así que modificaremos esto e
 
 ``` r
 dientes$dose &lt;- factor(dientes$dose, 
-                  levels = c(0.5, 1, 2),
+                  levels = c(500, 1000, 2000),
                   labels = c("D0.5", "D1", "D2"))
 head(dientes)
 ```
@@ -752,7 +809,7 @@ head(dientes)
 
 Bien, visualizaremos nuestros datos para ver las tendencias de nuestros factores sobre nuestra variable de respuesta:
 
-&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-26-1.png" alt="" width="45%" /&gt;&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-26-2.png" alt="" width="45%" /&gt;
+&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-29-1.png" alt="" width="45%" /&gt;&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-29-2.png" alt="" width="45%" /&gt;
 
 ---
 ### Ejemplo ANOVA 2 vías
@@ -763,7 +820,7 @@ Bien, visualizaremos nuestros datos para ver las tendencias de nuestros factores
 ggboxplot(data = ToothGrowth, x = "dose", y = "len", fill = "supp")
 ```
 
-&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-27-1.png" alt="" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-30-1.png" alt="" width="80%" style="display: block; margin: auto;" /&gt;
 ]
 
 .pull-right[
@@ -772,7 +829,7 @@ ggboxplot(data = ToothGrowth, x = "dose", y = "len", fill = "supp")
 ggline(ToothGrowth, x = "dose", y = "len", color = "supp", add = c("mean_se", "jitter"))
 ```
 
-![](Clase3-ANOVA_files/figure-html/unnamed-chunk-28-1.png)&lt;!-- --&gt;
+![](Clase3-ANOVA_files/figure-html/unnamed-chunk-31-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -857,7 +914,7 @@ str(conejos)
 plot(gain~ block + treat, rabbit, col=456)
 ```
 
-![](Clase3-ANOVA_files/figure-html/unnamed-chunk-34-1.png)&lt;!-- --&gt;![](Clase3-ANOVA_files/figure-html/unnamed-chunk-34-2.png)&lt;!-- --&gt;
+![](Clase3-ANOVA_files/figure-html/unnamed-chunk-37-1.png)&lt;!-- --&gt;![](Clase3-ANOVA_files/figure-html/unnamed-chunk-37-2.png)&lt;!-- --&gt;
 ---
 
 
@@ -1037,11 +1094,17 @@ summary(anova_split)
 
 ---
 
-## Análisis de medidas repetidas
+## ANOVA con medidas repetidas
 
 
-Queremos realizar un análisis de medidas repetidas para los datos de rendimiento académico de seis alumnos. En cada alumno se ha medido a cinco tiempos diferentes su rendimiento, por tanto las muestras tomadas no son independientes entre si. Para poder analizar estos datos debemos considerar las muestras como relacionadas, es decir debemos realizar un ANOVA de medidas repetidas.\
+Queremos realizar un análisis de medidas repetidas para los datos de rendimiento académico de seis alumnos. 
 
+En cada alumno se ha medido a cinco tiempos diferentes su rendimiento, por tanto las muestras tomadas no son independientes entre si. 
+
+Para poder analizar estos datos debemos considerar las muestras como relacionadas, es decir debemos realizar un ANOVA de medidas repetidas.
+
+---
+## ANOVA con medidas repetidas
 
 ``` r
 individuos&lt;- factor(c(rep(1,5), rep(2,5), rep(3, 5),
@@ -1057,7 +1120,7 @@ data_rendimiento&lt;- data.frame(individuos=individuos,
                               tiempo=tiempo, rendimiento=rendimiento)
 ```
 ---
-## Análisis de medidas repetidas
+## ANOVA con medidas repetidas
 
 
 ``` r
@@ -1071,12 +1134,12 @@ str(data_rendimiento)
 ##  $ rendimiento: num  8.5 8.2 8.9 7.7 7.4 9.8 8.9 8.9 8.8 8.1 ...
 ```
 ---
-## Análisis de medidas repetidas
+## ANOVA con medidas repetidas
 
 Vamos a realizar el análisis de medidas repetidas ANOVA paramétrico por medio del paquete ez. Para ello hay que indicar nuestros datos (data), nuestra variable (dv), nuestros individuos (wid) y el tiempo (within):
 
 ---
-## Análisis de medidas repetidas
+## ANOVA con medidas repetidas
 
 **Versión paramétrica:**
 
@@ -1096,28 +1159,22 @@ ezANOVA(data=data_rendimiento, dv=rendimiento, wid=individuos, within=tiempo)
 ## 2 tiempo 0.003212948 0.03413309     *
 ## 
 ## $`Sphericity Corrections`
-##   Effect       GGe       p[GG] p[GG]&lt;.05       HFe       p[HF] p[HF]&lt;.05
-## 2 tiempo 0.3126606 0.009730034         * 0.3669864 0.006076078         *
+##   Effect       GGe       p[GG] p[GG]&lt;.05       HFe       p[HF]
+## 2 tiempo 0.3126606 0.009730034         * 0.3669864 0.006076078
+##   p[HF]&lt;.05
+## 2         *
 ```
-
+---
+## ANOVA con medidas repetidas
 
 Podemos ver en nuestros resultados que el tiempo es significativo, es decir, el rendimiento escolar cambia con el tiempo. Pero en este caso nuestros datos violan uno de los requisitos que es la esfericidad (test de Mauchly significativo), debemos fiarnos de la p de la **Sphericity corrections** que nos confirma lo que hemos deducido al principio.
 ---
-## Análisis de medidas repetidas
 
-
-``` r
-boxplot(rendimiento~tiempo, xlab="tiempo", 
-        ylab="Rendimiento académico", 
-        main="rendimiento alumnos con el paso del tiempo",
-        col="blue", data=data_rendimiento)
-```
-
-&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-47-1.png" alt="" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-50-1.png" alt="" width="80%" style="display: block; margin: auto;" /&gt;
 ---
-## Análisis de medidas repetidas
+## ANOVA con medidas repetidas
 
-**Versión no paramétrica:**\
+**Versión no paramétrica:**
 
 
 ``` r
@@ -1131,12 +1188,33 @@ data_rendimiento_notidy&lt;-data_rendimiento %&gt;% mutate(tiempo =case_when(
   tiempo== 4 ~ "T4",
   tiempo== 5 ~ "T5")) %&gt;% pivot_wider(names_from =tiempo, 
                                       values_from = rendimiento )
+```
 
+---
+## ANOVA con medidas repetidas
+
+**Versión no paramétrica:**
+
+``` r
 jmv::anovaRMNP(data_rendimiento_notidy, measures=vars(T1,T2,T3,T4,T5))
+```
+
+```
+## 
+##  REPEATED MEASURES ANOVA (NON-PARAMETRIC)
+## 
+##  Friedman                        
+##  ─────────────────────────────── 
+##    χ²          df    p           
+##  ─────────────────────────────── 
+##    19.24786     4    0.0007025   
+##  ───────────────────────────────
 ```
 ---
 ### El día de hoy aprendimos que...
 - Se utiliza un ANOVA para determinar si existe o no una diferencia estadísticamente significativa entre las medias de tres o más grupos independientes. Y hay de varios tipos.
+
+- Hay diferentes ANOVAs dependiendo del diseño experimental. 
 
 - Si un ANOVA produce un valor p que es menor que nuestro nivel de significancia, podemos usar pruebas *post hoc* para averiguar qué medias de grupo difieren entre sí.
 

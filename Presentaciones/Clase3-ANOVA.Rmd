@@ -82,6 +82,8 @@ Notas obtenidas (Variable dependiente: Nota | Factor: Método):
 - *Método B:* 9, 10, 8
 - *Método C:* 4, 6, 5
 
+<uw-blockquote> Pasos: Hipótesis, medias, calcular SCT y SCE, gl, CM y F. Interpretar el resultado y concluir. 
+
 ---
 ## Ejemplo ANOVA - manual
 
@@ -247,12 +249,45 @@ $$
 
 ---
 ## Ejemplo aplicado
+```{r}
+datos<- data.frame(Tratamiento1=c(-3.10,0.18,-0.72,0.09,-1.66),
+                  Tratamiento2=c(7.28,3.06,4.74,5.29,7.88),
+                  Tratamiento3=c(0.12,5.51,5.72,5.93,6.56),
+                  Tratamiento4=c(8.18,9.05,11.21,7.31,8.83))
+
+datost<- datos %>% pivot_longer(cols = everything(), names_to = "Tratamiento", values_to = "Valor")
+head(datost)
+```
+---
+## Ejemplo aplicado
 ```{r, echo=FALSE, fig.align='center'}
 knitr::kable(datos, align = "c")
 ```
 ---
 ## Ejemplo aplicado
-.pull-left[
+
+```{r, echo=FALSE}
+SCT1= 5*(mean(datos$Tratamiento1)-mean(as.matrix(datos)))^2
+SCT2= 5*(mean(datos$Tratamiento2)-mean(as.matrix(datos)))^2
+SCT3= 5*(mean(datos$Tratamiento3)-mean(as.matrix(datos)))^2
+SCT4= 5*(mean(datos$Tratamiento4)-mean(as.matrix(datos)))^2
+
+SCT= (SCT1+SCT2+SCT3+SCT4); print(paste0("SCT: ",SCT))
+```
+ 
+```{r, echo=FALSE}
+SCE1= sum((datos$Tratamiento1-mean(datos$Tratamiento1))^2)
+SCE2= sum((datos$Tratamiento2-mean(datos$Tratamiento2))^2)
+SCE3= sum((datos$Tratamiento3-mean(datos$Tratamiento3))^2)
+SCE4= sum((datos$Tratamiento4-mean(datos$Tratamiento4))^2)
+
+SCE = (SCE1+SCE2+SCE3+SCE4); print(paste0("SCE: ",SCE))
+
+CMT=SCT/(4-1);print(paste0("CMT: ",CMT))
+
+CME=SCE/(20-4);print(paste0("CME: ",CME))
+```
+
 ```{r}
 qcri<-qtukey(p = 0.95, nmeans = 4, df = 16)
 
@@ -263,7 +298,8 @@ HSD_val<- qcri*sqme
 
 qcri; HSD_val
 ```
-
+---
+### Ejemplo aplicado
 
 ```{r}
 dif1<- mean(datos$Tratamiento3)-mean(datos$Tratamiento1)
@@ -276,14 +312,10 @@ dif6<- mean(datos$Tratamiento4)-mean(datos$Tratamiento2)
 ```
 
 
-]
-
-.pull-right[
 ```{r}
 dif1>HSD_val;dif2>HSD_val;dif3>HSD_val;dif4>HSD_val;dif5>HSD_val;dif6>HSD_val
 ```
 
-]
 
 ---
 ## Ejemplo aplicado
@@ -466,8 +498,14 @@ plot(duncan)
 - Pruebas pareadas (t.test) con correcciones: Bonferroni, Holm-Bonferroni, FDR, entre otras. 
 
 ---
+class: inverse, center, middle
 
-## 1 variable cuantitativa >2 grupos dependientes: ANOVA por bloques 
+# Otros ANOVAs...
+
+
+---
+
+## ANOVA por bloques : 1 variable cuantitativa >2 grupos dependientes
 ```{r, warning=FALSE, message=FALSE}
 library(BHH2)
 data(penicillin.data)
@@ -496,7 +534,7 @@ anova(lm(yield~ blend+treat,data = penicilina))
 ```
 ---
 
-## ANOVA 2 factores fijos sin interacción y con interacción
+## ANOVA 2 vías
 
 Modelo aditivo, efectos fijos: aov(variable_respuesta \~ factor1 + factor2, data)
 
@@ -527,7 +565,7 @@ Esto puede ser un inconveniente al correr el ANOVA así que modificaremos esto e
 
 ```{r}
 dientes$dose <- factor(dientes$dose, 
-                  levels = c(0.5, 1, 2),
+                  levels = c(500, 1000, 2000),
                   labels = c("D0.5", "D1", "D2"))
 head(dientes)
 
@@ -671,11 +709,17 @@ summary(anova_split)
 
 ---
 
-## Análisis de medidas repetidas
+## ANOVA con medidas repetidas
 
 
-Queremos realizar un análisis de medidas repetidas para los datos de rendimiento académico de seis alumnos. En cada alumno se ha medido a cinco tiempos diferentes su rendimiento, por tanto las muestras tomadas no son independientes entre si. Para poder analizar estos datos debemos considerar las muestras como relacionadas, es decir debemos realizar un ANOVA de medidas repetidas.\
+Queremos realizar un análisis de medidas repetidas para los datos de rendimiento académico de seis alumnos. 
 
+En cada alumno se ha medido a cinco tiempos diferentes su rendimiento, por tanto las muestras tomadas no son independientes entre si. 
+
+Para poder analizar estos datos debemos considerar las muestras como relacionadas, es decir debemos realizar un ANOVA de medidas repetidas.
+
+---
+## ANOVA con medidas repetidas
 ```{r}
 individuos<- factor(c(rep(1,5), rep(2,5), rep(3, 5),
                       rep(4, 5), rep(5,5), rep(6,5)))
@@ -691,18 +735,18 @@ data_rendimiento<- data.frame(individuos=individuos,
 
 ```
 ---
-## Análisis de medidas repetidas
+## ANOVA con medidas repetidas
 
 ```{r}
 str(data_rendimiento)
 ```
 ---
-## Análisis de medidas repetidas
+## ANOVA con medidas repetidas
 
 Vamos a realizar el análisis de medidas repetidas ANOVA paramétrico por medio del paquete ez. Para ello hay que indicar nuestros datos (data), nuestra variable (dv), nuestros individuos (wid) y el tiempo (within):
 
 ---
-## Análisis de medidas repetidas
+## ANOVA con medidas repetidas
 
 **Versión paramétrica:**
 
@@ -710,24 +754,21 @@ Vamos a realizar el análisis de medidas repetidas ANOVA paramétrico por medio 
 library(ez)
 ezANOVA(data=data_rendimiento, dv=rendimiento, wid=individuos, within=tiempo)
 ```
-
+---
+## ANOVA con medidas repetidas
 
 Podemos ver en nuestros resultados que el tiempo es significativo, es decir, el rendimiento escolar cambia con el tiempo. Pero en este caso nuestros datos violan uno de los requisitos que es la esfericidad (test de Mauchly significativo), debemos fiarnos de la p de la **Sphericity corrections** que nos confirma lo que hemos deducido al principio.
 ---
-## Análisis de medidas repetidas
 
-```{r, out.width='80%', fig.align='center'}
-boxplot(rendimiento~tiempo, xlab="tiempo", 
-        ylab="Rendimiento académico", 
-        main="rendimiento alumnos con el paso del tiempo",
-        col="blue", data=data_rendimiento)
+```{r,echo=FALSE,out.width='80%', fig.align='center'}
+boxplot(rendimiento~tiempo, xlab="tiempo", ylab="Rendimiento académico", main="rendimiento alumnos con el paso del tiempo", col="blue", data=data_rendimiento)
 ```
 ---
-## Análisis de medidas repetidas
+## ANOVA con medidas repetidas
 
-**Versión no paramétrica:**\
+**Versión no paramétrica:**
 
-```{r, message=FALSE, warning=FALSE, eval=FALSE}
+```{r, message=FALSE, warning=FALSE, eval=TRUE}
 library(tidyverse)
 library(jmv)
 #cambiamos el formato de la data
@@ -738,12 +779,20 @@ data_rendimiento_notidy<-data_rendimiento %>% mutate(tiempo =case_when(
   tiempo== 4 ~ "T4",
   tiempo== 5 ~ "T5")) %>% pivot_wider(names_from =tiempo, 
                                       values_from = rendimiento )
+```
 
+---
+## ANOVA con medidas repetidas
+
+**Versión no paramétrica:**
+```{r, message=FALSE, warning=FALSE, eval=TRUE}
 jmv::anovaRMNP(data_rendimiento_notidy, measures=vars(T1,T2,T3,T4,T5))
 ```
 ---
 ### El día de hoy aprendimos que...
 - Se utiliza un ANOVA para determinar si existe o no una diferencia estadísticamente significativa entre las medias de tres o más grupos independientes. Y hay de varios tipos.
+
+- Hay diferentes ANOVAs dependiendo del diseño experimental. 
 
 - Si un ANOVA produce un valor p que es menor que nuestro nivel de significancia, podemos usar pruebas *post hoc* para averiguar qué medias de grupo difieren entre sí.
 
