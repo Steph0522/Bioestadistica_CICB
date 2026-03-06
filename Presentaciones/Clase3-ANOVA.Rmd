@@ -83,6 +83,21 @@ Notas obtenidas (Variable dependiente: Nota | Factor: Método):
 - *Método C:* 4, 6, 5
 
 <uw-blockquote> Pasos: Hipótesis, medias, calcular SCT y SCE, gl, CM y F. Interpretar el resultado y concluir. 
+---
+## Ejemplo ANOVA - manual
+```{r}
+data = data.frame(
+  A=c(6,8,7), 
+  B=c(9,10,8),
+  C=c(4,6,5)
+)
+
+data_df = data %>% pivot_longer(., cols = everything(), names_to = "metodos", values_to = "notas")
+summary(aov(lm(notas ~ metodos, data = data_df)))
+
+```
+
+
 
 ---
 ## Ejemplo ANOVA - manual
@@ -196,7 +211,7 @@ Significado: Hay una diferencia significativa en las notas dependiendo del méto
 - Los niveles de significancia pueden ser ajustados en función del número de comparaciones. Debido a la inflación del error de tipo I, cuantas más comparaciones se hagan más aumenta la probabilidad de encontrar diferencias significativas. 
 
 ---
-### Pruebas de comparaciones múltiples para ANOVA
+### Pruebas de comparaciones múltiples
 La siguiente tabla ilustra cuántas comparaciones por pares están asociadas con cada número de grupos junto con la tasa de error por familia:
 
 ```{r, echo=FALSE, fig.align='center'}
@@ -483,6 +498,16 @@ plot(duncan)
 - La prueba de Duncan entonces intencionalmente sube los niveles del alfa en cada paso del procedimiento de Newman-Keuls
 
 - Por estas subidas de los alfas muchos critican esta prueba por ser muy liberal 
+---
+<div style="font-size: 70%">
+
+| Prueba | Tipo de control del error | Nivel de conservadurismo | Cuándo se usa | Ventaja principal | Desventaja |
+|------|------|------|------|------|------|
+| Tukey (HSD) | Controla el error familiar (FWER) para todas las comparaciones | Alta (conservadora) | Cuando se comparan **todas las medias entre sí** después de ANOVA | Método estándar en biología; control estadístico robusto | Puede detectar menos diferencias |
+| Newman–Keuls (SNK) | Control parcial del error tipo I | Intermedia | Cuando los tratamientos tienen **orden lógico** (ej. dosis crecientes) | Más poder que Tukey | No controla completamente el error familiar |
+| Duncan | Control débil del error tipo I | Baja (liberal) | Análisis **exploratorios** o clasificación de tratamientos (común en agronomía clásica) | Detecta más diferencias entre grupos | Mayor riesgo de falsos positivos |
+
+
 
 ---
 ## Otras pruebas...

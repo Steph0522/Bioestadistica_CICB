@@ -115,6 +115,29 @@ Notas obtenidas (Variable dependiente: Nota | Factor: Método):
 - *Método C:* 4, 6, 5
 
 &lt;uw-blockquote&gt; Pasos: Hipótesis, medias, calcular SCT y SCE, gl, CM y F. Interpretar el resultado y concluir. 
+---
+## Ejemplo ANOVA - manual
+
+``` r
+data = data.frame(
+  A=c(6,8,7), 
+  B=c(9,10,8),
+  C=c(4,6,5)
+)
+
+data_df = data %&gt;% pivot_longer(., cols = everything(), names_to = "metodos", values_to = "notas")
+summary(aov(lm(notas ~ metodos, data = data_df)))
+```
+
+```
+##             Df Sum Sq Mean Sq F value Pr(&gt;F)   
+## metodos      2     24      12      12  0.008 **
+## Residuals    6      6       1                  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+
 
 ---
 ## Ejemplo ANOVA - manual
@@ -226,7 +249,7 @@ Significado: Hay una diferencia significativa en las notas dependiendo del méto
 - Los niveles de significancia pueden ser ajustados en función del número de comparaciones. Debido a la inflación del error de tipo I, cuantas más comparaciones se hagan más aumenta la probabilidad de encontrar diferencias significativas. 
 
 ---
-### Pruebas de comparaciones múltiples para ANOVA
+### Pruebas de comparaciones múltiples
 La siguiente tabla ilustra cuántas comparaciones por pares están asociadas con cada número de grupos junto con la tasa de error por familia:
 
 &lt;img src="https://statologos.com/ezoimgfmt/fourpillarfreedom.com/wp-content/uploads/2019/04/post_hoc1.jpg?ezimgfmt=rs:386x298/rscb1/ng:webp/ngcb1" alt="" style="display: block; margin: auto;" /&gt;
@@ -441,7 +464,7 @@ TukeyHSD(anov, "Tratamiento", ordered = T)
 plot(TukeyHSD(anov, "Tratamiento", ordered = T))
 ```
 
-&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-15-1.png" alt="" style="display: block; margin: auto;" /&gt;
+&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-17-1.png" alt="" style="display: block; margin: auto;" /&gt;
 ]
 
 .pull-right[
@@ -452,7 +475,7 @@ hsd_agricolae&lt;-HSD.test(anov, "Tratamiento", group = TRUE)
 plot(hsd_agricolae)
 ```
 
-&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-16-1.png" alt="" style="display: block; margin: auto;" /&gt;
+&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-18-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 ]
 ---
@@ -502,16 +525,11 @@ SNK.test(anov, "Tratamiento", console = TRUE)
 ## 
 ## Tratamiento,  means
 ## 
-##               Valor      std r        se   Min   Max   Q25   Q50
-## Tratamiento1 -1.042 1.368912 5 0.8574838 -3.10  0.18 -1.66 -0.72
-## Tratamiento2  5.650 1.955479 5 0.8574838  3.06  7.88  4.74  5.29
-## Tratamiento3  4.768 2.627845 5 0.8574838  0.12  6.56  5.51  5.72
-## Tratamiento4  8.916 1.449890 5 0.8574838  7.31 11.21  8.18  8.83
-##               Q75
-## Tratamiento1 0.09
-## Tratamiento2 7.28
-## Tratamiento3 5.93
-## Tratamiento4 9.05
+##               Valor      std r        se   Min   Max   Q25   Q50  Q75
+## Tratamiento1 -1.042 1.368912 5 0.8574838 -3.10  0.18 -1.66 -0.72 0.09
+## Tratamiento2  5.650 1.955479 5 0.8574838  3.06  7.88  4.74  5.29 7.28
+## Tratamiento3  4.768 2.627845 5 0.8574838  0.12  6.56  5.51  5.72 5.93
+## Tratamiento4  8.916 1.449890 5 0.8574838  7.31 11.21  8.18  8.83 9.05
 ## 
 ## Alpha: 0.05 ; DF Error: 16 
 ## 
@@ -537,7 +555,7 @@ snk&lt;-SNK.test(anov, "Tratamiento", console = FALSE)
 plot(snk)
 ```
 
-&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-19-1.png" alt="" style="display: block; margin: auto;" /&gt;
+&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-21-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 
 
@@ -623,16 +641,11 @@ duncan.test(anov, "Tratamiento", console = TRUE)
 ## 
 ## Tratamiento,  means
 ## 
-##               Valor      std r        se   Min   Max   Q25   Q50
-## Tratamiento1 -1.042 1.368912 5 0.8574838 -3.10  0.18 -1.66 -0.72
-## Tratamiento2  5.650 1.955479 5 0.8574838  3.06  7.88  4.74  5.29
-## Tratamiento3  4.768 2.627845 5 0.8574838  0.12  6.56  5.51  5.72
-## Tratamiento4  8.916 1.449890 5 0.8574838  7.31 11.21  8.18  8.83
-##               Q75
-## Tratamiento1 0.09
-## Tratamiento2 7.28
-## Tratamiento3 5.93
-## Tratamiento4 9.05
+##               Valor      std r        se   Min   Max   Q25   Q50  Q75
+## Tratamiento1 -1.042 1.368912 5 0.8574838 -3.10  0.18 -1.66 -0.72 0.09
+## Tratamiento2  5.650 1.955479 5 0.8574838  3.06  7.88  4.74  5.29 7.28
+## Tratamiento3  4.768 2.627845 5 0.8574838  0.12  6.56  5.51  5.72 5.93
+## Tratamiento4  8.916 1.449890 5 0.8574838  7.31 11.21  8.18  8.83 9.05
 ## 
 ## Alpha: 0.05 ; DF Error: 16 
 ## 
@@ -658,7 +671,7 @@ duncan&lt;-agricolae::duncan.test(anov, "Tratamiento")
 plot(duncan)
 ```
 
-&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-21-1.png" alt="" style="display: block; margin: auto;" /&gt;
+&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-23-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -669,6 +682,16 @@ plot(duncan)
 - La prueba de Duncan entonces intencionalmente sube los niveles del alfa en cada paso del procedimiento de Newman-Keuls
 
 - Por estas subidas de los alfas muchos critican esta prueba por ser muy liberal 
+---
+&lt;div style="font-size: 70%"&gt;
+
+| Prueba | Tipo de control del error | Nivel de conservadurismo | Cuándo se usa | Ventaja principal | Desventaja |
+|------|------|------|------|------|------|
+| Tukey (HSD) | Controla el error familiar (FWER) para todas las comparaciones | Alta (conservadora) | Cuando se comparan **todas las medias entre sí** después de ANOVA | Método estándar en biología; control estadístico robusto | Puede detectar menos diferencias |
+| Newman–Keuls (SNK) | Control parcial del error tipo I | Intermedia | Cuando los tratamientos tienen **orden lógico** (ej. dosis crecientes) | Más poder que Tukey | No controla completamente el error familiar |
+| Duncan | Control débil del error tipo I | Baja (liberal) | Análisis **exploratorios** o clasificación de tratamientos (común en agronomía clásica) | Detecta más diferencias entre grupos | Mayor riesgo de falsos positivos |
+
+
 
 ---
 ## Otras pruebas...
@@ -713,7 +736,7 @@ str(penicilina)
 plot(yield~blend+treat, data = penicilina)
 ```
 
-![](Clase3-ANOVA_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;![](Clase3-ANOVA_files/figure-html/unnamed-chunk-23-2.png)&lt;!-- --&gt;
+![](Clase3-ANOVA_files/figure-html/unnamed-chunk-25-1.png)&lt;!-- --&gt;![](Clase3-ANOVA_files/figure-html/unnamed-chunk-25-2.png)&lt;!-- --&gt;
 ---
 
 ``` r
@@ -726,7 +749,7 @@ par(mfrow = c(2, 2))
 plot(modelo3)
 ```
 
-&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-25-1.png" alt="" style="display: block; margin: auto;" /&gt;
+&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-27-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 ---
 # Anova por bloques
@@ -809,7 +832,7 @@ head(dientes)
 
 Bien, visualizaremos nuestros datos para ver las tendencias de nuestros factores sobre nuestra variable de respuesta:
 
-&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-29-1.png" alt="" width="45%" /&gt;&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-29-2.png" alt="" width="45%" /&gt;
+&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-31-1.png" alt="" width="45%" /&gt;&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-31-2.png" alt="" width="45%" /&gt;
 
 ---
 ### Ejemplo ANOVA 2 vías
@@ -820,7 +843,7 @@ Bien, visualizaremos nuestros datos para ver las tendencias de nuestros factores
 ggboxplot(data = ToothGrowth, x = "dose", y = "len", fill = "supp")
 ```
 
-&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-30-1.png" alt="" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-32-1.png" alt="" width="80%" style="display: block; margin: auto;" /&gt;
 ]
 
 .pull-right[
@@ -829,7 +852,7 @@ ggboxplot(data = ToothGrowth, x = "dose", y = "len", fill = "supp")
 ggline(ToothGrowth, x = "dose", y = "len", color = "supp", add = c("mean_se", "jitter"))
 ```
 
-![](Clase3-ANOVA_files/figure-html/unnamed-chunk-31-1.png)&lt;!-- --&gt;
+![](Clase3-ANOVA_files/figure-html/unnamed-chunk-33-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -914,7 +937,7 @@ str(conejos)
 plot(gain~ block + treat, rabbit, col=456)
 ```
 
-![](Clase3-ANOVA_files/figure-html/unnamed-chunk-37-1.png)&lt;!-- --&gt;![](Clase3-ANOVA_files/figure-html/unnamed-chunk-37-2.png)&lt;!-- --&gt;
+![](Clase3-ANOVA_files/figure-html/unnamed-chunk-39-1.png)&lt;!-- --&gt;![](Clase3-ANOVA_files/figure-html/unnamed-chunk-39-2.png)&lt;!-- --&gt;
 ---
 
 
@@ -1170,7 +1193,7 @@ ezANOVA(data=data_rendimiento, dv=rendimiento, wid=individuos, within=tiempo)
 Podemos ver en nuestros resultados que el tiempo es significativo, es decir, el rendimiento escolar cambia con el tiempo. Pero en este caso nuestros datos violan uno de los requisitos que es la esfericidad (test de Mauchly significativo), debemos fiarnos de la p de la **Sphericity corrections** que nos confirma lo que hemos deducido al principio.
 ---
 
-&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-50-1.png" alt="" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="Clase3-ANOVA_files/figure-html/unnamed-chunk-52-1.png" alt="" width="80%" style="display: block; margin: auto;" /&gt;
 ---
 ## ANOVA con medidas repetidas
 
