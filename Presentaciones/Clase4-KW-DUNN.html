@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Kruskal wallis y Dunn</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dra. Stephanie Hereira Pacheco" />
+    <script src="Clase4-KW-DUNN_files/header-attrs-2.30/header-attrs.js"></script>
+    <script src="Clase4-KW-DUNN_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+    <script src="Clase4-KW-DUNN_files/clipboard-2.0.6/clipboard.min.js"></script>
+    <link href="Clase4-KW-DUNN_files/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="Clase4-KW-DUNN_files/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"<i class=\"fa fa-clipboard\"><\/i>","success":"<i class=\"fa fa-check\" style=\"color: #90BE6D\"><\/i>","error":"Press Ctrl+C to Copy"})</script>
+    <link href="Clase4-KW-DUNN_files/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+    <link href="Clase4-KW-DUNN_files/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+    <link href="Clase4-KW-DUNN_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
+    <script src="Clase4-KW-DUNN_files/tile-view-0.2.6/tile-view.js"></script>
+    <link href="Clase4-KW-DUNN_files/shareon-1.4.1/shareon.min.css" rel="stylesheet" />
+    <script src="Clase4-KW-DUNN_files/shareon-1.4.1/shareon.min.js"></script>
+    <link href="Clase4-KW-DUNN_files/xaringanExtra-shareagain-0.2.6/shareagain.css" rel="stylesheet" />
+    <script src="Clase4-KW-DUNN_files/xaringanExtra-shareagain-0.2.6/shareagain.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Kruskal wallis y Dunn
+]
+.subtitle[
+## <img src="logo.jpg" style="width:2in" />
+]
+.author[
+### Dra. Stephanie Hereira Pacheco
+]
+.institute[
+### CICB, UATx
+]
+.date[
+### 09-03-2024
+]
+
+---
+
+
+
+
+
+
+
+
+<div>
+<style type="text/css">.xaringan-extra-logo {
+width: 110px;
+height: 128px;
+z-index: 0;
+background-image: url(https://www.ciisder.mx/images/logos/logo_uatx_2019.png);
+background-size: contain;
+background-repeat: no-repeat;
+position: absolute;
+top:1em;right:1em;
+}
+</style>
+<script>(function () {
+  let tries = 0
+  function addLogo () {
+    if (typeof slideshow === 'undefined') {
+      tries += 1
+      if (tries < 10) {
+        setTimeout(addLogo, 100)
+      }
+    } else {
+      document.querySelectorAll('.remark-slide-content:not(.title-slide):not(.inverse):not(.hide_logo)')
+        .forEach(function (slide) {
+          const logo = document.createElement('div')
+          logo.classList = 'xaringan-extra-logo'
+          logo.href = null
+          slide.appendChild(logo)
+        })
+    }
+  }
+  document.addEventListener('DOMContentLoaded', addLogo)
+})()</script>
+</div>
+
+
+
+
+
+# Contenido
+
++ Pruebas no paramétricas
+
++ Kruskal Wallis test
+
++ Pruebas posthoc no paramétricas
+
++ Dunn test
+
+---
+## Pruebas no paramétricas y supuestos estadísticos
+
+- Las pruebas no paramétricas no requieren que conozcamos la distribución de nuestros datos ni parámetros de la población de estudio como su media o varianza poblacional.
+
+- Las pruebas no paramétricas nos permiten analizar
+datos en escala nominal u ordinal y en su mayoría los resultados se derivan a partir de procedimientos de ordenación y recuento, por lo que su base lógica es de fácil comprensión. 
+
+---
+## Pruebas no paramétricas y supuestos estadísticos
+
+- Cuando trabajamos con muestras pequeñas (n &lt; 10) en
+las que se desconoce si es válido suponer la normalidad de los datos, conviene utilizar pruebas no paramétricas
+
+- Pocos supuestos: aleatoriedad e independencia.
+
+---
+# PRUEBAS NO PARAMÉTRICAS
+
+
+|VENTAJAS    | DESVENTAJAS     | 
+|-------------------|-------|
+| - Mayor aplicabilidad | - Eficiencia estadística menor
+| - Se pueden usar variables ordinales     |- Poder estadísitico menor   | 
+| - Son más fáciles de calcular     | - No se pueden evaluar interacciones| 
+
+---
+# PRUEBAS NO PARAMÉTRICAS
+
+
+|TIPO    |   PRUEBA     | 
+|:-------------------:|:-------:|
+| Comparación de 2 grupos	  |   Wilcoxon/U Mann Withney | 
+| Comparación de &gt;2 grupos       | Kruskal-wallis/Friedman  | 
+| Correlación de dos variables     | Coeficiente de Spearman| 
+| Variables cualitativas     | Chi-cuadrada/Fisher| 
+
+---
+## Prueba de Kruskal Wallis
+
+&lt;uw-blockquote&gt; La prueba de Kruskal-Wallis es un método estadístico no paramétrico propuesto por **William Kruskal** y **W. Allen Wallis** en 1952. 
+
+&lt;uw-blockquote&gt; Funciona como una alternativa al **ANOVA** de un factor cuando no se cumple la normalidad, comparando las medianas de tres o más grupos independientes mediante el uso de rangos.
+
+---
+## Prueba de Kruskal Wallis (prueba H) 
+
+
+- La prueba de Kruskal-Wallis se utiliza cuando no se cumplen los supuestos de un ANOVA de una vía. 
+
+- Debido a que es una prueba no paramétrica, los datos no necesitan seguir una distribución normal.
+
+- Los datos deben tener al menos una escala ordinal y las muestras deben ser independientes.
+
+---
+### Prueba de Kruskal-Wallis vs. ANOVA
+
+En la prueba de Kruskal-Wallis son suficientes variables ordinales, ya que las pruebas no paramétricas analizan los rangos de los datos en lugar de los valores originales.
+
+**Características principales**
+
+- **No paramétrica**: no asume normalidad en los datos, por lo que es adecuada para datos que no siguen una distribución normal.
+
+- **Datos ordinales o continuos**: puede utilizarse con datos ordinales o con datos continuos convertidos en rangos.
+
+- **Grupos independientes**: se utiliza para comparar grupos independientes, es decir, las observaciones de cada grupo no están relacionadas. 
+
+---
+### Prueba de Kruskal-Wallis vs. ANOVA
+
+&lt;img src="images/Kruskal-Wallis-Test-vs-anova.png" alt="" width="1103" /&gt;
+
+&lt;uw-blockquote&gt; La prueba de Kruskal-Wallis evalúa diferencias en las sumas de rangos, no directamente en las medianas. **Esta distinción es importante.**
+---
+## Pregunta de investigación e hipótesis
+
+La pregunta de investigación para la prueba de Kruskal-Wallis puede ser:
+
+**¿Existe una diferencia en la tendencia central de varias muestras independientes?**
+
+De esta pregunta se derivan las siguientes hipótesis:
+
+**Hipótesis nula (H₀)**: Las muestras independientes tienen la misma tendencia centra (distribución)l y, por lo tanto, provienen de la misma población.
+
+**Hipótesis alternativa (H₁)**: Al menos una de las muestras independientes no tiene la misma tendencia central (distribución) que las demás y, por lo tanto, proviene de una población diferente.
+---
+## Supuestos de la prueba de Kruskal-Wallis
+
+**Para aplicar la prueba se requiere:**
+
+1. Varias muestras aleatorias independientes.
+
+2. Variables con escala al menos ordinal.
+
+3. No es necesario que los datos sigan una distribución específica.
+
+&lt;uw-blockquote&gt; Si las muestras no son independientes (es decir, son dependientes o repetidas), se debe usar la **prueba de Friedman**.
+---
+### Suma de rangos 
+
+1. La prueba asigna rangos a todos los datos combinados de todos los grupos. 
+
+2. Cada valor se reemplaza por su rango dentro del conjunto total.Luego se suman los rangos para cada grupo.
+
+4. La hipótesis nula establece que el rango medio de los grupos es igual. 
+
+5. La lógica es que, si las distribuciones son similares, diferencias en los rangos medios implican diferencias en las medianas. 
+
+6. Para realizar la prueba se calcula la estadística H, que corresponde a una aproximación de la distribución χ² (chi-cuadrado).
+
+El valor crítico de H se obtiene a partir de la tabla de valores críticos de χ².
+
+---
+### Cálculo de la prueba de Kruskal-Wallis
+
+&lt;img src="images/Kruskal-Wallis-Test-Expected-value.png" alt="" width="361" /&gt;&lt;img src="images/Kruskal-Wallis-Test-Variance.png" alt="" width="236" /&gt;&lt;img src="images/Kruskal-Wallis-Test-h-statistic.png" alt="" width="772" /&gt;
+---
+### Ejemplo de cálculo
+
+Supongamos que se mide el tiempo de reacción en tres grupos y se quiere determinar si existen diferencias.
+
+1. Asignar un rango a cada observación
+2. Calcular la suma de rangos 
+3. Calcular el rango medio por grupo.
+
+En el ejemplo se midió el tiempo de reacción en 12 personas, por lo que N = 12.
+
+---
+### Ejemplo de cálculo
+&lt;img src="images/calculate-Kruskal-Wallis-Test.png" alt="" width="1212" /&gt;
+---
+### Ejemplo de cálculo
+&lt;img src="images/Kruskal-Wallis-Test.png" alt="" width="996" /&gt;
+
+---
+### Ejemplo de cálculo
+&lt;img src="images/H-Test.png" alt="" width="821" /&gt;
+---
+### Ejemplo de cálculo
+&lt;img src="images/Kruskal-Wallis-Test_critical_H_value.png" alt="" width="748" /&gt;
+
+Para un nivel de significancia del 5%, el valor crítico es 5.991.
+
+H crítico &gt;  H calculado, no se rechaza la hipótesis nula.
+---
+### Ejemplo para practicar Kruskal–Wallis
+
+Un investigador quiere saber si tres métodos de estudio producen diferencias en el tiempo que tardan los estudiantes en resolver un examen.
+
+Método A: estudio individual
+
+Método B: estudio con videos
+
+Método C: estudio en grupo
+
+Se registra el tiempo en minutos que tardan los estudiantes en terminar el examen.
+
+---
+### Ejemplo para practicar Kruskal–Wallis
+
+
+``` r
+data &lt;- data.frame(
+  grupo = c("A","A","A",
+            "B","B","B",
+            "C","C","C"),
+  tiempo = c(18,22,20,
+             25,28,24,
+             15,17,19)
+)
+data
+```
+
+```
+##   grupo tiempo
+## 1     A     18
+## 2     A     22
+## 3     A     20
+## 4     B     25
+## 5     B     28
+## 6     B     24
+## 7     C     15
+## 8     C     17
+## 9     C     19
+```
+---
+### Ejemplo para practicar Kruskal–Wallis
+
+- Calcular rangos
+
+
+``` r
+data$rank &lt;- rank(data$tiempo)
+
+data
+```
+
+```
+##   grupo tiempo rank
+## 1     A     18    3
+## 2     A     22    6
+## 3     A     20    5
+## 4     B     25    8
+## 5     B     28    9
+## 6     B     24    7
+## 7     C     15    1
+## 8     C     17    2
+## 9     C     19    4
+```
+- Suma de rangos por grupo
+
+``` r
+R_i &lt;- tapply(data$rank, data$grupo, sum)
+R_i
+```
+
+```
+##  A  B  C 
+## 14 24  7
+```
+---
+### Ejemplo para practicar Kruskal–Wallis
+- Tamaño de cada grupo
+
+``` r
+n_i &lt;- table(data$grupo)
+n_i
+```
+
+```
+## 
+## A B C 
+## 3 3 3
+```
+- Número total de observaciones
+
+``` r
+N &lt;- nrow(data)
+N
+```
+
+```
+## [1] 9
+```
+
+- Número de grupos
+
+``` r
+k &lt;- length(unique(data$grupo))
+k
+```
+
+```
+## [1] 3
+```
+
+---
+- Estadístico
+
+``` r
+H &lt;- (12/(N*(N+1))) * sum((R_i^2)/n_i) - 3*(N+1)
+H
+```
+
+```
+## [1] 6.488889
+```
+- Grados de libertad
+
+``` r
+df &lt;- k - 1
+df
+```
+
+```
+## [1] 2
+```
+
+- Valor crítico
+
+``` r
+qchisq(0.95, df)
+```
+
+```
+## [1] 5.991465
+```
+
+- Prueba de hipótesis
+
+``` r
+H = 6.49
+Hcrítico = 5.991
+H &gt; Hcrítico
+```
+
+```
+## [1] TRUE
+```
+---
+- En R
+
+
+``` r
+kruskal.test(tiempo ~ grupo, data = data)
+```
+
+```
+## 
+## 	Kruskal-Wallis rank sum test
+## 
+## data:  tiempo by grupo
+## Kruskal-Wallis chi-squared = 6.4889, df = 2, p-value = 0.03899
+```
+
+
+---
+
+### Ejemplo en R
+
+Un hospital está evaluando la efectividad de tres programas diferentes de rehabilitación para la recuperación después de un accidente cerebrovascular (ACV):
+
+- Programa A (Terapia tradicional)
+
+- Programa B (Musicoterapia)
+
+- Programa C (Terapia con realidad virtual)
+
+El hospital registra la mejoría en las puntuaciones de movilidad de los pacientes después de que completan sus respectivos programas de rehabilitación.
+
+
+---
+
+# Preguntas...
+
+
+- **¿Cúal es la variable independiente de este problema?**
+
+- **¿Cuál es la variable dependiente? ¿qué indican sus valores?**
+
+- **¿Qué nos va a decir la prueba al realizarla?**
+
+- **¿Qué impacto puede tener la respuesta de esta prueba?**
+
+
+---
+
+### Preguntas...
+
+- **¿Cúal es la variable independiente de este problema?**
+
+En esta situación, nuestra variable independiente es categórica, que corresponde al programa de rehabilitación, con tres niveles.
+
+- **¿Cuál es la variable dependiente? ¿qué indican sus valores?**
+
+La variable dependiente es la mejoría en las puntuaciones de movilidad, la cual está en escala ordinal, donde valores más bajos indican peor movilidad y valores más altos indican mejor movilidad.
+
+---
+
+### Preguntas...
+
+- **¿Qué nos va a decir la prueba al realizarla?**
+
+Después de realizar la prueba de Kruskal-Wallis, si los resultados indican una diferencia significativa (p &lt; 0.05), podemos concluir que al menos uno de los programas de rehabilitación produce una mediana de mejoría en la movilidad diferente a la de los otros.
+
+- **¿Qué impacto puede tener la respuesta de esta prueba?**
+
+Este hallazgo llevaría al hospital a explorar qué programas específicos son más efectivos, lo que podría conducir al mejoramiento de los protocolos de recuperación para pacientes que han sufrido un accidente cerebrovascular.
+
+---
+### Ejemplo en R
+
+
+``` r
+set.seed(123) 
+program &lt;- factor(rep(c("Program_A", "Program_B", "Program_C"), each = 30))
+mobility_scores &lt;- c(
+  sample(1:10, 30, replace = TRUE, prob = c(0.2, 0.2, 0.2, 0.15, 0.15, 0.1, 0.05, 0.05, 0, 0)),
+  sample(1:10, 30, replace = TRUE, prob = c(0.1, 0.1, 0.15, 0.2, 0.2, 0.1, 0.1, 0.1, 0, 0)),
+  sample(1:10, 30, replace = TRUE, prob = c(0.05, 0.05, 0.1, 0.15, 0.25, 0.2, 0.1, 0.05, 0, 0))
+)
+
+data &lt;- data.frame(program, mobility_scores)
+head(data)
+```
+
+```
+##     program mobility_scores
+## 1 Program_A               3
+## 2 Program_A               4
+## 3 Program_A               1
+## 4 Program_A               6
+## 5 Program_A               7
+## 6 Program_A               2
+```
+
+---
+### Ejemplo en R
+
+``` r
+kruskal_result &lt;- kruskal.test(mobility_scores ~ program, data = data)
+kruskal_result
+```
+
+```
+## 
+## 	Kruskal-Wallis rank sum test
+## 
+## data:  mobility_scores by program
+## Kruskal-Wallis chi-squared = 3.9213, df = 2, p-value = 0.1408
+```
+
+
+
+---
+## Referencias y material suplementario
+
+- [Advanced Statistics I 2021 Edition](https://bookdown.org/danbarch/psy_207_advanced_stats_I/differences-between-two-things.html#sign-binomial-test)
+
+- [Pruebas paramétricas y no paramétricas](https://enviromigration.files.wordpress.com/2016/04/pruebas-paramc3a9tricas-y-no-parametricas.pdf)
+
+- [Estadística paramétrica y no paramétrica](https://rstudio-pubs-static.s3.amazonaws.com/724751_c45a17f9e45f464c93e94f3fb0c6d340.html#16)
+
+- [Prácticos de bioestadística 2](https://derek-corcoran-barrios.github.io/AyduantiaStats/_book/t-student.html)
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create();
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
