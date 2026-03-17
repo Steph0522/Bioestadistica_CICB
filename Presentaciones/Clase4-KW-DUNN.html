@@ -93,9 +93,10 @@ top:1em;right:1em;
 
 + Kruskal Wallis test
 
-+ Pruebas posthoc no paramétricas
-
 + Dunn test
+
++ Correcciones en pruebas *post hocs*
+
 
 ---
 ## Pruebas no paramétricas y supuestos estadísticos
@@ -130,7 +131,7 @@ las que se desconoce si es válido suponer la normalidad de los datos, conviene 
 |TIPO    |   PRUEBA     | 
 |:-------------------:|:-------:|
 | Comparación de 2 grupos	  |   Wilcoxon/U Mann Withney | 
-| Comparación de &gt;2 grupos       | Kruskal-wallis/Friedman  | 
+| Comparación de &gt;2 grupos       | Kruskal-wallis | 
 | Correlación de dos variables     | Coeficiente de Spearman| 
 | Variables cualitativas     | Chi-cuadrada/Fisher| 
 
@@ -173,7 +174,6 @@ En la prueba de Kruskal-Wallis son suficientes variables ordinales, ya que las p
 ---
 ## Pregunta de investigación e hipótesis
 
-La pregunta de investigación para la prueba de Kruskal-Wallis puede ser:
 
 **¿Existe una diferencia en la tendencia central de varias muestras independientes?**
 
@@ -265,8 +265,7 @@ data &lt;- data.frame(
             "C","C","C"),
   tiempo = c(18,22,20,
              25,28,24,
-             15,17,19)
-)
+             15,17,19))
 data
 ```
 
@@ -283,7 +282,6 @@ data
 ## 9     C     19
 ```
 ---
-### Ejemplo para practicar Kruskal–Wallis
 
 - Calcular rangos
 
@@ -318,7 +316,6 @@ R_i
 ## 14 24  7
 ```
 ---
-### Ejemplo para practicar Kruskal–Wallis
 - Tamaño de cada grupo
 
 ``` r
@@ -384,19 +381,27 @@ qchisq(0.95, df)
 ```
 ## [1] 5.991465
 ```
-
+---
 - Prueba de hipótesis
 
 ``` r
-H = 6.49
+Hcalculado = 6.49
 Hcrítico = 5.991
-H &gt; Hcrítico
+Hcalculado &gt; Hcrítico
 ```
 
 ```
 ## [1] TRUE
 ```
----
+
+``` r
+pchisq(H, df = df, lower.tail = FALSE)
+```
+
+```
+## [1] 0.03899022
+```
+
 - En R
 
 
@@ -509,6 +514,233 @@ kruskal_result
 ## Kruskal-Wallis chi-squared = 3.9213, df = 2, p-value = 0.1408
 ```
 
+---
+
+## Dunn Test
+Olive Jean Dunn  una reconocida estadística estadounidense.Se desarrolló en la década de 1960. 
+
+``` r
+knitr::include_graphics("images/dunn.webp")
+```
+
+![](images/dunn.webp)&lt;!-- --&gt;
+
+---
+### Ejemplo en R extendido
+
+
+``` r
+n &lt;- 30  
+set.seed(123)  
+group_A &lt;- rexp(n, rate = 0.1) + 15  
+group_B &lt;- rexp(n, rate = 0.1) + 25  
+group_C &lt;- rexp(n, rate = 0.1) + 35 
+
+data &lt;- data.frame(
+  mobility_scores = c(group_A, group_B, group_C),  # Concatenate all group scores
+  program = factor(rep(c("Program A", "Program B", "Program C"), each = n)) )
+
+head(data)
+```
+
+```
+##   mobility_scores   program
+## 1        23.43457 Program A
+## 2        20.76610 Program A
+## 3        28.29055 Program A
+## 4        15.31577 Program A
+## 5        15.56211 Program A
+## 6        18.16501 Program A
+```
+---
+
+
+``` r
+ggplot(data, aes(x = mobility_scores, fill = program)) + geom_histogram(aes(y = ..density..), bins = 15, alpha = 0.5, position = "identity") + geom_density(alpha = 0.7) + facet_wrap(~ program) + ggtitle("Distribución de los puntajes de movilidad por programa") + xlab("Puntajes de movilidad") + ylab("Densidad") + theme_minimal() + scale_fill_brewer(palette = "Set1")
+```
+
+&lt;img src="Clase4-KW-DUNN_files/figure-html/unnamed-chunk-25-1.png" alt="" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Pareada de wilcoxon
+
+
+``` r
+pairwise.wilcox.test(data$mobility_scores, data$program, p.adjust.method = "holm")
+```
+
+```
+## 
+## 	Pairwise comparisons using Wilcoxon rank sum exact test 
+## 
+## data:  data$mobility_scores and data$program 
+## 
+##           Program A Program B
+## Program B 4.4e-08   -        
+## Program C 1.9e-11   0.00013  
+## 
+## P value adjustment method: holm
+```
+
+
+
+---
+
+
+``` r
+library(rstatix)
+dunn_res &lt;- data %&gt;% dunn_test(mobility_scores ~ program, p.adjust.method = "bonferroni")
+dunn_res
+```
+
+```
+## # A tibble: 3 × 9
+##   .y.             group1    group2       n1    n2 statistic        p    p.adj p.adj.signif
+## * &lt;chr&gt;           &lt;chr&gt;     &lt;chr&gt;     &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       
+## 1 mobility_scores Program A Program B    30    30      4.23 2.39e- 5 7.16e- 5 ****        
+## 2 mobility_scores Program A Program C    30    30      7.00 2.61e-12 7.82e-12 ****        
+## 3 mobility_scores Program B Program C    30    30      2.77 5.57e- 3 1.67e- 2 *
+```
+
+``` r
+library(FSA)
+dunn_result &lt;- dunnTest(mobility_scores ~ program, data = data, method = "bonferroni")
+dunn_result
+```
+
+```
+## Dunn (1964) Kruskal-Wallis multiple comparison
+```
+
+```
+##   p-values adjusted with the Bonferroni method.
+```
+
+```
+##              Comparison         Z      P.unadj        P.adj
+## 1 Program A - Program B -4.225121 2.388123e-05 7.164369e-05
+## 2 Program A - Program C -6.997394 2.607680e-12 7.823041e-12
+## 3 Program B - Program C -2.772272 5.566642e-03 1.669993e-02
+```
+---
+### Ejemplo en R extendido
+
+``` r
+kruskal_test &lt;- kruskal.test(mobility_scores ~ program, data = data)
+kruskal_test
+```
+
+```
+## 
+## 	Kruskal-Wallis rank sum test
+## 
+## data:  mobility_scores by program
+## Kruskal-Wallis chi-squared = 49.667, df = 2, p-value = 1.64e-11
+```
+
+---
+
+#### Métodos de corrección por comparaciones múltiples en R
+&lt;div style="font-size: 50%"&gt;
+
+
+| Método        | Fórmula básica | Ventajas | Desventajas | Uso recomendado |
+|:--------------:|---------------|----------|-------------|-----------------|
+| Bonferroni   | `\(p_{adj} = \min(p \times m, 1)\)` | Muy simple, control estricto del error tipo I | Muy conservador, baja potencia | Pocos tests, alto control de falsos positivos |
+| Holm         | Ordenar p-values: `\(p_{(i)} = \max_{j \le i} [(m - j + 1)p_{(j)}]\)` | Más potente que Bonferroni, controla bien el error | Aún conservador con muchos tests | Alternativa general recomendada a Bonferroni |
+| Hochberg     | Step-up: `\(p_{(i)} = \min_{j \ge i} [(m - j + 1)p_{(j)}]\)` | Más potente que Holm | Requiere independencia o dependencia positiva | Datos independientes o débilmente dependientes |
+| Hommel       | Variante basada en Bonferroni (más compleja) | Mayor potencia que Holm y Hochberg | Computacionalmente más complejo | Cuando se busca máxima potencia con control estricto |
+| BH (FDR)     | `\(p_{adj} = \frac{p_{(i)} \cdot m}{i}\)` | Alta potencia, ideal para muchos tests | Permite falsos positivos | Ómicas, metagenómica, múltiples comparaciones |
+| BY (FDR)     | `\(p_{adj} = \frac{p_{(i)} \cdot m}{i \cdot c(m)}\)`, donde `\(c(m)=\sum_{j=1}^m \frac{1}{j}\)` | Funciona con dependencia entre tests | Muy conservador | Datos altamente correlacionados |
+| None         | `\(p_{adj} = p\)` | Máxima potencia | Alto riesgo de falsos positivos | Exploratorio |
+---
+
+
+``` r
+library(ggpubr)
+data %&gt;% ggplot(aes(x = program, y = mobility_scores, fill = program))+
+  geom_boxplot()+ geom_pwc(method = "dunn_test",  p.adjust.method = "bonferroni",  label = "p.adj.format")+theme_classic()
+```
+
+&lt;img src="Clase4-KW-DUNN_files/figure-html/unnamed-chunk-29-1.png" alt="" style="display: block; margin: auto;" /&gt;
+---
+
+``` r
+pvals &lt;- dunn_res %&gt;%
+  select(group1, group2, p.adj) %&gt;%
+  tidyr::pivot_wider(names_from = group2, values_from = p.adj)
+
+pvals
+```
+
+```
+## # A tibble: 2 × 3
+##   group1    `Program B` `Program C`
+##   &lt;chr&gt;           &lt;dbl&gt;       &lt;dbl&gt;
+## 1 Program A   0.0000716    7.82e-12
+## 2 Program B  NA            1.67e- 2
+```
+
+
+``` r
+library(multcompView)
+comparisons &lt;- dunn_res %&gt;%
+  unite(pair, group1, group2, sep = "-") %&gt;%
+  select(pair, p.adj)
+
+pvec &lt;- comparisons$p.adj
+names(pvec) &lt;- comparisons$pair
+
+letras &lt;- multcompLetters(pvec)$Letters
+letras
+```
+
+```
+## Program A Program B Program C 
+##       "a"       "b"       "c"
+```
+---
+
+``` r
+letras_df &lt;- data.frame(
+  grupo = names(letras),
+  letra = letras)%&gt;%
+  rename(program=grupo)
+
+pos &lt;- data %&gt;%
+  group_by(program) %&gt;%
+  summarise(y = max(mobility_scores) + 4)
+
+letras_df &lt;- left_join(letras_df, pos, by = "program")
+letras_df
+```
+
+```
+##     program letra         y
+## 1 Program A     a  59.41012
+## 2 Program B     b 101.11008
+## 3 Program C     c  83.98673
+```
+
+
+``` r
+ggplot(data, aes(x = program, y = mobility_scores, fill = program)) +
+  geom_boxplot() +
+  geom_text(data = letras_df,
+            aes(x = program, y = y, label = letra, fontface =  "bold"),
+            size = 7) +
+  theme_classic()
+```
+---
+&lt;img src="Clase4-KW-DUNN_files/figure-html/unnamed-chunk-34-1.png" alt="" style="display: block; margin: auto;" /&gt;
+
+---
+## Tarea - Ejercicio
+
+Usando los datos de ToothGrowth corre en R una kruskal wallis test seguida por Dunn.
+
+¿Cómo harías si queires evaluar la interacción?
 
 
 ---

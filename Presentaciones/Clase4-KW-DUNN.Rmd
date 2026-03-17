@@ -61,9 +61,10 @@ library(tidyverse)
 
 + Kruskal Wallis test
 
-+ Pruebas posthoc no paramétricas
-
 + Dunn test
+
++ Correcciones en pruebas *post hocs*
+
 
 ---
 ## Pruebas no paramétricas y supuestos estadísticos
@@ -98,7 +99,7 @@ las que se desconoce si es válido suponer la normalidad de los datos, conviene 
 |TIPO    |   PRUEBA     | 
 |:-------------------:|:-------:|
 | Comparación de 2 grupos	  |   Wilcoxon/U Mann Withney | 
-| Comparación de >2 grupos       | Kruskal-wallis/Friedman  | 
+| Comparación de >2 grupos       | Kruskal-wallis | 
 | Correlación de dos variables     | Coeficiente de Spearman| 
 | Variables cualitativas     | Chi-cuadrada/Fisher| 
 
@@ -143,7 +144,6 @@ knitr::include_graphics("images/Kruskal-Wallis-Test-vs-anova.png")
 ---
 ## Pregunta de investigación e hipótesis
 
-La pregunta de investigación para la prueba de Kruskal-Wallis puede ser:
 
 **¿Existe una diferencia en la tendencia central de varias muestras independientes?**
 
@@ -246,12 +246,10 @@ data <- data.frame(
             "C","C","C"),
   tiempo = c(18,22,20,
              25,28,24,
-             15,17,19)
-)
+             15,17,19))
 data
 ```
 ---
-### Ejemplo para practicar Kruskal–Wallis
 
 - Calcular rangos
 
@@ -266,7 +264,6 @@ R_i <- tapply(data$rank, data$grupo, sum)
 R_i
 ```
 ---
-### Ejemplo para practicar Kruskal–Wallis
 - Tamaño de cada grupo
 ```{r}
 n_i <- table(data$grupo)
@@ -300,14 +297,15 @@ df
 ```{r}
 qchisq(0.95, df)
 ```
-
+---
 - Prueba de hipótesis
 ```{r}
-H = 6.49
+Hcalculado = 6.49
 Hcrítico = 5.991
-H > Hcrítico
+Hcalculado > Hcrítico
+pchisq(H, df = df, lower.tail = FALSE)
 ```
----
+
 - En R
 
 ```{r}
@@ -391,6 +389,147 @@ kruskal_result <- kruskal.test(mobility_scores ~ program, data = data)
 kruskal_result
 ```
 
+---
+
+## Dunn Test
+Olive Jean Dunn  una reconocida estadística estadounidense.Se desarrolló en la década de 1960. 
+```{r}
+knitr::include_graphics("images/dunn.webp")
+```
+
+---
+### Ejemplo en R extendido
+
+```{r}
+n <- 30  
+set.seed(123)  
+group_A <- rexp(n, rate = 0.1) + 15  
+group_B <- rexp(n, rate = 0.1) + 25  
+group_C <- rexp(n, rate = 0.1) + 35 
+
+data <- data.frame(
+  mobility_scores = c(group_A, group_B, group_C),  # Concatenate all group scores
+  program = factor(rep(c("Program A", "Program B", "Program C"), each = n)) )
+
+head(data)
+```
+---
+
+```{r, fig.align='center'}
+ggplot(data, aes(x = mobility_scores, fill = program)) + geom_histogram(aes(y = ..density..), bins = 15, alpha = 0.5, position = "identity") + geom_density(alpha = 0.7) + facet_wrap(~ program) + ggtitle("Distribución de los puntajes de movilidad por programa") + xlab("Puntajes de movilidad") + ylab("Densidad") + theme_minimal() + scale_fill_brewer(palette = "Set1")
+```
+
+---
+
+## Pareada de wilcoxon
+
+```{r}
+pairwise.wilcox.test(data$mobility_scores, data$program, p.adjust.method = "holm")
+```
+
+
+
+---
+
+```{r}
+library(rstatix)
+dunn_res <- data %>% dunn_test(mobility_scores ~ program, p.adjust.method = "bonferroni")
+dunn_res
+library(FSA)
+dunn_result <- dunnTest(mobility_scores ~ program, data = data, method = "bonferroni")
+dunn_result
+
+```
+---
+### Ejemplo en R extendido
+```{r}
+kruskal_test <- kruskal.test(mobility_scores ~ program, data = data)
+kruskal_test
+```
+
+---
+
+#### Métodos de corrección por comparaciones múltiples en R
+<div style="font-size: 50%">
+
+
+| Método        | Fórmula básica | Ventajas | Desventajas | Uso recomendado |
+|:--------------:|---------------|----------|-------------|-----------------|
+| Bonferroni   | $p_{adj} = \min(p \times m, 1)$ | Muy simple, control estricto del error tipo I | Muy conservador, baja potencia | Pocos tests, alto control de falsos positivos |
+| Holm         | Ordenar p-values: $p_{(i)} = \max_{j \le i} [(m - j + 1)p_{(j)}]$ | Más potente que Bonferroni, controla bien el error | Aún conservador con muchos tests | Alternativa general recomendada a Bonferroni |
+| Hochberg     | Step-up: $p_{(i)} = \min_{j \ge i} [(m - j + 1)p_{(j)}]$ | Más potente que Holm | Requiere independencia o dependencia positiva | Datos independientes o débilmente dependientes |
+| Hommel       | Variante basada en Bonferroni (más compleja) | Mayor potencia que Holm y Hochberg | Computacionalmente más complejo | Cuando se busca máxima potencia con control estricto |
+| BH (FDR)     | $p_{adj} = \frac{p_{(i)} \cdot m}{i}$ | Alta potencia, ideal para muchos tests | Permite falsos positivos | Ómicas, metagenómica, múltiples comparaciones |
+| BY (FDR)     | $p_{adj} = \frac{p_{(i)} \cdot m}{i \cdot c(m)}$, donde $c(m)=\sum_{j=1}^m \frac{1}{j}$ | Funciona con dependencia entre tests | Muy conservador | Datos altamente correlacionados |
+| None         | $p_{adj} = p$ | Máxima potencia | Alto riesgo de falsos positivos | Exploratorio |
+---
+
+```{r, message=FALSE, warning=FALSE, fig.align='center'}
+library(ggpubr)
+data %>% ggplot(aes(x = program, y = mobility_scores, fill = program))+
+  geom_boxplot()+ geom_pwc(method = "dunn_test",  p.adjust.method = "bonferroni",  label = "p.adj.format")+theme_classic()
+
+```
+---
+```{r}
+pvals <- dunn_res %>%
+  select(group1, group2, p.adj) %>%
+  tidyr::pivot_wider(names_from = group2, values_from = p.adj)
+
+pvals
+```
+
+```{r, warning=FALSE, message=FALSE}
+library(multcompView)
+comparisons <- dunn_res %>%
+  unite(pair, group1, group2, sep = "-") %>%
+  select(pair, p.adj)
+
+pvec <- comparisons$p.adj
+names(pvec) <- comparisons$pair
+
+letras <- multcompLetters(pvec)$Letters
+letras
+```
+---
+```{r}
+letras_df <- data.frame(
+  grupo = names(letras),
+  letra = letras)%>%
+  rename(program=grupo)
+
+pos <- data %>%
+  group_by(program) %>%
+  summarise(y = max(mobility_scores) + 4)
+
+letras_df <- left_join(letras_df, pos, by = "program")
+letras_df
+```
+
+```{r, eval=FALSE}
+ggplot(data, aes(x = program, y = mobility_scores, fill = program)) +
+  geom_boxplot() +
+  geom_text(data = letras_df,
+            aes(x = program, y = y, label = letra, fontface =  "bold"),
+            size = 7) +
+  theme_classic()
+```
+---
+```{r,echo=FALSE, fig.align='center'}
+ggplot(data, aes(x = program, y = mobility_scores, fill = program)) +
+  geom_boxplot() +
+  geom_text(data = letras_df,
+            aes(x = program, y = y, label = letra, fontface =  "bold"),
+            size = 7) +
+  theme_classic()
+```
+
+---
+## Tarea - Ejercicio
+
+Usando los datos de ToothGrowth corre en R una kruskal wallis test seguida por Dunn.
+
+¿Cómo harías si queires evaluar la interacción?
 
 
 ---
