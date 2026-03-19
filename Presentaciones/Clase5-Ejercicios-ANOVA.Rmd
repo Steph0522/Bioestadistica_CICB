@@ -1,0 +1,202 @@
+---
+title: "Ejercicios ANOVA"
+subtitle: "![](logo.jpg){width=2in}"
+author: "Dra. Stephanie Hereira Pacheco"
+institute: "CICB, UATx"
+date: 09-03-2024
+output:
+  xaringan::moon_reader:
+    css: xaringan-themer.css
+nature:
+  ratio: "16:9"
+---
+
+
+```{r, echo=FALSE}
+htmltools::tagList(rmarkdown::html_dependency_jquery())
+```
+
+
+```{r, include=FALSE, warning=FALSE, eval=FALSE}
+library(xaringanthemer)
+style_mono_accent(
+  base_color = "#5E2129",
+  code_highlight_color = "#E3906F", 
+  code_inline_color = "#0E2B54",
+  text_font_size = "1.3rem",
+  
+)
+```
+
+```{r, xaringanExtra-clipboard, echo=FALSE}
+htmltools::tagList(
+  xaringanExtra::use_clipboard(
+    button_text = "<i class=\"fa fa-clipboard\"></i>",
+    success_text = "<i class=\"fa fa-check\" style=\"color: #90BE6D\"></i>",
+  ),
+  rmarkdown::html_dependency_font_awesome()
+)
+
+xaringanExtra::use_logo(
+  image_url = "https://www.ciisder.mx/images/logos/logo_uatx_2019.png",
+  position = xaringanExtra::css_position(top = "1em", right = "1em")
+)
+
+xaringanExtra::use_tile_view()
+
+xaringanExtra::use_share_again()
+
+
+```
+
+## MANOVA en R
+
+```{r,echo=FALSE, fig.align='center'}
+library(ggplot2)
+library(gridExtra)
+
+box_sl <- ggplot(iris, aes(x = Species, y = Sepal.Length, fill = Species)) +
+  geom_boxplot() +
+  theme(legend.position = "top")
+box_sw <- ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species)) +
+  geom_boxplot() +
+  theme(legend.position = "top")
+box_pl <- ggplot(iris, aes(x = Species, y = Petal.Length, fill = Species)) +
+  geom_boxplot() +
+  theme(legend.position = "top")
+box_pw <- ggplot(iris, aes(x = Species, y = Petal.Width, fill = Species)) +
+  geom_boxplot() +
+  theme(legend.position = "top")
+
+grid.arrange(box_sl, box_sw, box_pl, box_pw, ncol = 2, nrow = 2)
+```
+
+---
+
+## MANOVA en R
+
+```{r}
+dependent_vars <- cbind(iris$Sepal.Length, iris$Sepal.Width, iris$Petal.Length, iris$Petal.Width)
+independent_var <- iris$Species
+
+manova_model <- manova(dependent_vars ~ independent_var, data = iris)
+summary(manova_model)
+```
+
+---
+#### MANOVA en R
+
+En un experimento para inhibir un tumor, se quiere investigar el efecto del sexo (S) y de la temperatura ambiental (T).
+
+```{r}
+pesos <-c (18.15,16.51, 0.24, 19.15, 19.49, 0.16, 18.68,
+      19.50, 0.32, 18.35, 19.81, 0.17, 19.54, 19.84,
+      0.20, 20.58, 19.44, 0.22,21.27, 23.30, 0.33, 
+      18.87, 22.00, 0.25, 19.57, 22.30, 0.45, 20.66,
+      21.08, 0.20, 20.15, 18.95, 0.35, 21.56, 20.34, 
+      0.20,20.74, 16.69, 0.31, 20.22, 19.00, 0.18, 
+      20.02, 19.26, 0.41, 18.38, 17.92, 0.30, 17.20,
+      15.90, 0.28, 20.85, 19.90, 0.17)
+y1<-pesos[c(T,F,F)]
+y2<-pesos[c(F,T,F)]
+y3<-pesos[c(F,F,T)]
+temp <-factor(c(rep(4,6),rep(20,6),rep(34,6)))
+sex<-factor(rep(c(rep("F",3),rep("M",3)),3))
+ratas<-data.frame(y1,y2,y3,temp,sex)
+head(ratas)
+```
+---
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.width=14, fig.height=8}
+library(ggpubr)
+a = ggboxplot(ratas,x="sex",y=c("y1","y2"),
+          merge=T,palette = "jco")
+b = ggboxplot(ratas,x="temp",y=c("y1","y2"),
+          merge=T,palette = "jco")
+
+cowplot::plot_grid(a,b, ncol = 2)
+```
+
+---
+#### Checando normalidad
+```{r}
+library(MVN)
+mvn(ratas[,c(1,2,3)])
+```
+---
+#### Checando homocedasticidad
+```{r, warning=FALSE, message=FALSE}
+library(car)
+leveneTest(ratas$y1~ratas$sex)
+leveneTest(ratas$y1~ratas$temp)
+```
+
+---
+### Checando homocedasticidad
+```{r}
+leveneTest(ratas$y2~ratas$sex)
+leveneTest(ratas$y2~ratas$temp)
+
+```
+
+---
+### Modelos MANOVA
+```{r}
+mod1<-manova(cbind(y1,y2,y3)~sex+temp,data=ratas)
+summary(mod1)
+
+```
+
+```{r}
+mod2<-manova(cbind(y1,y2,y3)~sex*temp,data=ratas)
+summary(mod2)
+```
+
+---
+### Modelos univariados
+```{r}
+m1<-aov(y1~temp,data=ratas)
+m2<-aov(y2~temp,data=ratas)
+m3<-aov(y3~temp,data=ratas)
+m4<-aov(y1~temp*sex,data=ratas)
+m5<-aov(y2~temp*sex,data=ratas)
+m6<-aov(y3~temp*sex,data=ratas)
+summary(m1)
+```
+
+---
+### Modelos univariados
+```{r}
+summary(m2)
+summary(m3)
+summary(m4)
+```
+---
+### Modelos univariados
+```{r}
+summary(m5)
+summary(m6)
+```
+---
+
+### Prueba posthoc
+```{r}
+post<-TukeyHSD(m2)
+post
+```
+
+---
+## perMANOVA en R
+```{r}
+
+```
+
+
+
+---
+## Ejercicios ANOVA
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+```
+
