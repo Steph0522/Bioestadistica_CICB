@@ -226,7 +226,7 @@ leveneTest(ratas$y1~ratas$temp)
 ```
 
 ---
-### Checando homocedasticidad
+#### Checando homocedasticidad
 
 ``` r
 leveneTest(ratas$y2~ratas$sex)
@@ -368,7 +368,7 @@ summary(m6)
 ```
 ---
 
-### Prueba posthoc
+### Prueba *posthoc*
 
 ``` r
 post&lt;-TukeyHSD(m2)
@@ -391,15 +391,594 @@ post
 ---
 ## perMANOVA en R
 
+``` r
+library(vegan) 
+birds&lt;-read.csv('https://raw.githubusercontent.com/collnell/lab-demo/master/bird_by_fg.csv')
+trees&lt;-read.csv('https://raw.githubusercontent.com/collnell/lab-demo/master/tree_comp.csv')
+head(birds)
+```
+
+```
+##   DIVERSITY PLOT CA FR GR HE IN NE OM
+## 1         M    3  0  0  0  0  2  0  0
+## 2         M    9  0  0  2  0  6  0  4
+## 3         M   12  0  0  0  0  2  0  2
+## 4         M   17  0  0  0  0  7  0  4
+## 5         M   20  0  0  0  0  1  0  4
+## 6         M   21  0  0  3  0 14  0  7
+```
+
+``` r
+head(trees)
+```
+
+```
+##   PLOT comp A B C D E F row col
+## 1    3    D 0 0 0 1 0 0   3   1
+## 2    9    A 1 0 0 0 0 0   2   2
+## 3   12    E 0 0 0 0 1 0   5   2
+## 4   17    F 0 0 0 0 0 1   3   3
+## 5   20    A 1 0 0 0 0 0   6   3
+## 6   21    B 0 1 0 0 0 0   7   3
+```
+
+---
+## perMANOVA en R
+
+``` r
+bird.matrix&lt;- as.matrix(birds[,3:9]) # response variables
+trees$B&lt;-as.factor(trees$B)
+birds.manova&lt;-manova(bird.matrix~as.factor(B), data=trees)
+summary(birds.manova)
+```
+
+```
+##              Df  Pillai approx F num Df den Df  Pr(&gt;F)  
+## as.factor(B)  1 0.39147   2.2056      7     24 0.07027 .
+## Residuals    30                                         
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
 
 
+---
+## perMANOVA en R
 
+``` r
+bird.mat&lt;- sqrt(bird.matrix)
+bird.dist&lt;-vegdist(bird.mat, method='bray')
+set.seed(36) #reproducible results
+bird.div&lt;-adonis2(bird.dist~as.factor(birds$DIVERSITY), data=birds, permutations=9999)
+bird.div
+```
+
+```
+## Permutation test for adonis under reduced model
+## Permutation: free
+## Number of permutations: 9999
+## 
+## adonis2(formula = bird.dist ~ as.factor(birds$DIVERSITY), data = birds, permutations = 9999)
+##          Df SumOfSqs      R2      F Pr(&gt;F)   
+## Model     1  0.32857 0.12174 4.1585 0.0077 **
+## Residual 30  2.37033 0.87826                 
+## Total    31  2.69890 1.00000                 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+---
+## Ejercicios ANOVA
+
+Se evaluó el efecto de tres tratamientos (fertilizantes) sobre el crecimiento de plantas (cm).
+
+
+``` r
+grupo &lt;- factor(rep(c("Control","A","B"), each = 3))
+crecimiento &lt;- c(10,11,12,13,14,15,16,17,18)
+
+data &lt;- data.frame(grupo, crecimiento)
+data
+```
+
+```
+##     grupo crecimiento
+## 1 Control          10
+## 2 Control          11
+## 3 Control          12
+## 4       A          13
+## 5       A          14
+## 6       A          15
+## 7       B          16
+## 8       B          17
+## 9       B          18
+```
+
+1. Identificación del problema
+
+Preguntas:
+
+¿Cuál es la variable independiente (factor)?
+
+¿Cuál es la variable dependiente?
+
+¿Cuántos niveles tiene el factor?
+
+
+2. Hipótesis
+
+H₀: Todas las medias son iguales
+
+H₁: Al menos una media es diferente
+
+3. Cálculo manual
+
+
+``` r
+#Paso 1: medias por grupo
+tapply(data$crecimiento, data$grupo, mean)
+```
+
+```
+##       A       B Control 
+##      14      17      11
+```
+
+``` r
+#Paso 2: media global
+mean(data$crecimiento)
+```
+
+```
+## [1] 14
+```
+
+``` r
+#Paso 3: Suma de cuadrados total (SCT)
+SCT &lt;- sum((data$crecimiento - mean(data$crecimiento))^2)
+SCT
+```
+
+```
+## [1] 60
+```
+
+``` r
+#Paso 4: Suma de cuadrados entre grupos (SCE)
+medias &lt;- tapply(data$crecimiento, data$grupo, mean)
+ni &lt;- table(data$grupo)
+
+SCE &lt;- sum(ni * (medias - mean(data$crecimiento))^2)
+SCE
+```
+
+```
+## [1] 54
+```
+
+``` r
+#Paso 5: Suma de cuadrados dentro de grupos (SCI)
+SCI &lt;- SCT - SCE
+SCI
+```
+
+```
+## [1] 6
+```
+
+``` r
+#Paso 6: Grados de libertad
+N = 9 
+k=3
+N-1 #total 
+```
+
+```
+## [1] 8
+```
+
+``` r
+k-1 #entre
+```
+
+```
+## [1] 2
+```
+
+``` r
+N-k #dentro
+```
+
+```
+## [1] 6
+```
+
+``` r
+#Paso 7: Cuadrados medios
+CM_entre &lt;- SCE / 2
+CM_dentro &lt;- SCI / 6
+
+CM_entre
+```
+
+```
+## [1] 27
+```
+
+``` r
+CM_dentro
+```
+
+```
+## [1] 1
+```
+
+``` r
+#Paso 8: Estadístico F
+F_value &lt;- CM_entre / CM_dentro
+F_value
+```
+
+```
+## [1] 27
+```
+
+``` r
+modelo &lt;- lm(crecimiento ~ grupo, data = data)
+anova(modelo)
+```
+
+```
+## Analysis of Variance Table
+## 
+## Response: crecimiento
+##           Df Sum Sq Mean Sq F value Pr(&gt;F)    
+## grupo      2     54      27      27  0.001 ***
+## Residuals  6      6       1                   
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+6. Interpretación
+
+Preguntas:
+
+¿El p-value es menor a 0.05?
+
+¿Se rechaza H₀?
+
+¿El fertilizante tiene efecto?
+
+👉 Escribe tu conclusión:
+
+7. Comparaciones múltiples (post hoc)
+
+``` r
+TukeyHSD(aov(modelo))
+```
+
+```
+##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = modelo)
+## 
+## $grupo
+##           diff        lwr        upr     p adj
+## B-A          3  0.4947644  5.5052356 0.0242291
+## Control-A   -3 -5.5052356 -0.4947644 0.0242291
+## Control-B   -6 -8.5052356 -3.4947644 0.0007942
+```
+Preguntas:
+
+¿Qué grupos son diferentes?
+
+¿Cuál tratamiento tiene mayor efecto?
+
+🔹 8. Interpretación biológica
+
+👉 Explica en términos biológicos:
+
+¿Qué fertilizante funciona mejor?
+
+¿Hay diferencias claras entre tratamientos?
+
+🔹 9. Reflexión final
+
+¿Qué pasaría si F ≈ 1?
+
+¿Qué indica una varianza dentro de grupos alta?
 ---
 ## Ejercicios ANOVA
 
 
 
 
+
+``` r
+dat &lt;- penguins %&gt;%
+  select(species, flipper_length_mm)
+summary(dat)
+```
+
+```
+##       species    flipper_length_mm
+##  Adelie   :152   Min.   :172.0    
+##  Chinstrap: 68   1st Qu.:190.0    
+##  Gentoo   :124   Median :197.0    
+##                  Mean   :200.9    
+##                  3rd Qu.:213.0    
+##                  Max.   :231.0    
+##                  NA's   :2
+```
+
+
+
+``` r
+ggplot(dat) +
+  aes(x = species, y = flipper_length_mm, color = species) +
+  geom_jitter() +
+  theme(legend.position = "none")
+```
+
+```
+## Warning: Removed 2 rows containing missing values or values outside the scale range
+## (`geom_point()`).
+```
+
+![](Clase5-Ejercicios-ANOVA_files/figure-html/unnamed-chunk-25-1.png)&lt;!-- --&gt;
+
+
+``` r
+res_aov &lt;- aov(flipper_length_mm ~ species,
+  data = dat
+)
+par(mfrow = c(1, 2)) # combine plots
+
+# histogram
+hist(res_aov$residuals)
+
+# QQ-plot
+library(car)
+qqPlot(res_aov$residuals,
+  id = FALSE # id = FALSE to remove point identification
+)
+```
+
+![](Clase5-Ejercicios-ANOVA_files/figure-html/unnamed-chunk-26-1.png)&lt;!-- --&gt;
+
+``` r
+shapiro.test(res_aov$residuals)
+```
+
+```
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  res_aov$residuals
+## W = 0.99452, p-value = 0.2609
+```
+
+
+``` r
+# Boxplot
+boxplot(flipper_length_mm ~ species,
+  data = dat
+)
+```
+
+![](Clase5-Ejercicios-ANOVA_files/figure-html/unnamed-chunk-28-1.png)&lt;!-- --&gt;
+
+
+``` r
+library(car)
+
+leveneTest(flipper_length_mm ~ species,
+  data = dat
+)
+```
+
+```
+## Levene's Test for Homogeneity of Variance (center = median)
+##        Df F value Pr(&gt;F)
+## group   2  0.3306 0.7188
+##       339
+```
+
+
+``` r
+res_aov &lt;- aov(flipper_length_mm ~ species,
+  data = dat
+)
+
+summary(res_aov)
+```
+
+```
+##              Df Sum Sq Mean Sq F value Pr(&gt;F)    
+## species       2  52473   26237   594.8 &lt;2e-16 ***
+## Residuals   339  14953      44                   
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 2 observations deleted due to missingness
+```
+
+
+``` r
+library(multcomp)
+```
+
+```
+## Loading required package: mvtnorm
+```
+
+```
+## Warning: package 'mvtnorm' was built under R version 4.3.3
+```
+
+```
+## Loading required package: survival
+```
+
+```
+## 
+## Attaching package: 'survival'
+```
+
+```
+## The following object is masked from 'package:MVN':
+## 
+##     royston
+```
+
+```
+## Loading required package: TH.data
+```
+
+```
+## Loading required package: MASS
+```
+
+```
+## 
+## Attaching package: 'MASS'
+```
+
+```
+## The following object is masked from 'package:dplyr':
+## 
+##     select
+```
+
+```
+## 
+## Attaching package: 'TH.data'
+```
+
+```
+## The following object is masked _by_ '.GlobalEnv':
+## 
+##     birds
+```
+
+```
+## The following object is masked from 'package:MASS':
+## 
+##     geyser
+```
+
+``` r
+# Tukey HSD test:
+post_test &lt;- glht(res_aov,
+  linfct = mcp(species = "Tukey")
+)
+
+summary(post_test)
+```
+
+```
+## 
+## 	 Simultaneous Tests for General Linear Hypotheses
+## 
+## Multiple Comparisons of Means: Tukey Contrasts
+## 
+## 
+## Fit: aov(formula = flipper_length_mm ~ species, data = dat)
+## 
+## Linear Hypotheses:
+##                         Estimate Std. Error t value Pr(&gt;|t|)    
+## Chinstrap - Adelie == 0   5.8699     0.9699   6.052    1e-08 ***
+## Gentoo - Adelie == 0     27.2333     0.8067  33.760   &lt;1e-08 ***
+## Gentoo - Chinstrap == 0  21.3635     1.0036  21.286   &lt;1e-08 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## (Adjusted p values reported -- single-step method)
+```
+
+
+``` r
+# Edit from here
+x &lt;- which(names(dat) == "species") # name of grouping variable
+y &lt;- which(
+  names(dat) == "flipper_length_mm" # names of variables to test
+)
+method1 &lt;- "anova" # one of "anova" or "kruskal.test"
+method2 &lt;- "t.test" # one of "wilcox.test" or "t.test"
+my_comparisons &lt;- list(c("Chinstrap", "Adelie"), c("Gentoo", "Adelie"), c("Gentoo", "Chinstrap")) # comparisons for post-hoc tests
+# Edit until here
+
+
+# Edit at your own risk
+library(ggpubr)
+for (i in y) {
+  for (j in x) {
+    p &lt;- ggboxplot(dat,
+      x = colnames(dat[j]), y = colnames(dat[i]),
+      color = colnames(dat[j]),
+      legend = "none",
+      palette = "npg",
+      add = "jitter"
+    )
+    print(
+      p + stat_compare_means(aes(label = paste0(after_stat(method), ", p-value = ", after_stat(p.format))),
+        method = method1, label.y = max(dat[, i], na.rm = TRUE)
+      )
+      + stat_compare_means(comparisons = my_comparisons, method = method2, label = "p.format") # remove if p-value of ANOVA or Kruskal-Wallis test &gt;= alpha
+    )
+  }
+}
+```
+
+```
+## Warning: Removed 2 rows containing non-finite outside the scale range
+## (`stat_boxplot()`).
+```
+
+```
+## Warning: Removed 2 rows containing non-finite outside the scale range
+## (`stat_compare_means()`).
+```
+
+```
+## Warning: Removed 2 rows containing non-finite outside the scale range
+## (`stat_signif()`).
+```
+
+```
+## Warning: Removed 2 rows containing missing values or values outside the scale range
+## (`geom_point()`).
+```
+
+![](Clase5-Ejercicios-ANOVA_files/figure-html/unnamed-chunk-32-1.png)&lt;!-- --&gt;
+
+``` r
+library(ggstatsplot)
+```
+
+```
+## You can cite this package as:
+##      Patil, I. (2021). Visualizations with statistical details: The 'ggstatsplot' approach.
+##      Journal of Open Source Software, 6(61), 3167, doi:10.21105/joss.03167
+```
+
+``` r
+ggbetweenstats(
+  data = dat,
+  x = species,
+  y = flipper_length_mm,
+  type = "parametric", # ANOVA or Kruskal-Wallis
+  var.equal = TRUE, # ANOVA or Welch ANOVA
+  plot.type = "box",
+  pairwise.comparisons = TRUE,
+  pairwise.display = "significant",
+  centrality.plotting = FALSE,
+  bf.message = FALSE
+)
+```
+
+![](Clase5-Ejercicios-ANOVA_files/figure-html/unnamed-chunk-33-1.png)&lt;!-- --&gt;
+
+https://rpubs.com/luis_fernandez_bernal/anova_2_vias
+https://rpubs.com/joaquin_ar/219504
+https://rpubs.com/JhonierRangel/1339103
+https://rpubs.com/joaquin_ar/219148
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

@@ -131,7 +131,7 @@ leveneTest(ratas$y1~ratas$temp)
 ```
 
 ---
-### Checando homocedasticidad
+#### Checando homocedasticidad
 ```{r}
 leveneTest(ratas$y2~ratas$sex)
 leveneTest(ratas$y2~ratas$temp)
@@ -178,7 +178,7 @@ summary(m6)
 ```
 ---
 
-### Prueba posthoc
+### Prueba *posthoc*
 ```{r}
 post<-TukeyHSD(m2)
 post
@@ -186,17 +186,268 @@ post
 
 ---
 ## perMANOVA en R
-```{r}
+```{r, warning=FALSE, message=FALSE}
+library(vegan) 
+birds<-read.csv('https://raw.githubusercontent.com/collnell/lab-demo/master/bird_by_fg.csv')
+trees<-read.csv('https://raw.githubusercontent.com/collnell/lab-demo/master/tree_comp.csv')
+head(birds)
+head(trees)
+```
 
+---
+## perMANOVA en R
+```{r}
+bird.matrix<- as.matrix(birds[,3:9]) # response variables
+trees$B<-as.factor(trees$B)
+birds.manova<-manova(bird.matrix~as.factor(B), data=trees)
+summary(birds.manova)
 ```
 
 
+---
+## perMANOVA en R
+```{r}
+bird.mat<- sqrt(bird.matrix)
+bird.dist<-vegdist(bird.mat, method='bray')
+set.seed(36) #reproducible results
+bird.div<-adonis2(bird.dist~as.factor(birds$DIVERSITY), data=birds, permutations=9999)
+bird.div
+```
+---
+## Ejercicios ANOVA
 
+Se evaluó el efecto de tres tratamientos (fertilizantes) sobre el crecimiento de plantas (cm).
+
+```{r}
+grupo <- factor(rep(c("Control","A","B"), each = 3))
+crecimiento <- c(10,11,12,13,14,15,16,17,18)
+
+data <- data.frame(grupo, crecimiento)
+data
+```
+
+1. Identificación del problema
+
+Preguntas:
+
+¿Cuál es la variable independiente (factor)?
+
+¿Cuál es la variable dependiente?
+
+¿Cuántos niveles tiene el factor?
+
+
+2. Hipótesis
+
+H₀: Todas las medias son iguales
+
+H₁: Al menos una media es diferente
+
+3. Cálculo manual
+
+```{r}
+#Paso 1: medias por grupo
+tapply(data$crecimiento, data$grupo, mean)
+#Paso 2: media global
+mean(data$crecimiento)
+#Paso 3: Suma de cuadrados total (SCT)
+SCT <- sum((data$crecimiento - mean(data$crecimiento))^2)
+SCT
+#Paso 4: Suma de cuadrados entre grupos (SCE)
+medias <- tapply(data$crecimiento, data$grupo, mean)
+ni <- table(data$grupo)
+
+SCE <- sum(ni * (medias - mean(data$crecimiento))^2)
+SCE
+#Paso 5: Suma de cuadrados dentro de grupos (SCI)
+SCI <- SCT - SCE
+SCI
+#Paso 6: Grados de libertad
+N = 9 
+k=3
+N-1 #total 
+k-1 #entre
+N-k #dentro
+#Paso 7: Cuadrados medios
+CM_entre <- SCE / 2
+CM_dentro <- SCI / 6
+
+CM_entre
+CM_dentro
+#Paso 8: Estadístico F
+F_value <- CM_entre / CM_dentro
+F_value
+```
+```{r}
+modelo <- lm(crecimiento ~ grupo, data = data)
+anova(modelo)
+```
+6. Interpretación
+
+Preguntas:
+
+¿El p-value es menor a 0.05?
+
+¿Se rechaza H₀?
+
+¿El fertilizante tiene efecto?
+
+👉 Escribe tu conclusión:
+
+7. Comparaciones múltiples (post hoc)
+```{r}
+TukeyHSD(aov(modelo))
+```
+Preguntas:
+
+¿Qué grupos son diferentes?
+
+¿Cuál tratamiento tiene mayor efecto?
+
+🔹 8. Interpretación biológica
+
+👉 Explica en términos biológicos:
+
+¿Qué fertilizante funciona mejor?
+
+¿Hay diferencias claras entre tratamientos?
+
+🔹 9. Reflexión final
+
+¿Qué pasaría si F ≈ 1?
+
+¿Qué indica una varianza dentro de grupos alta?
 ---
 ## Ejercicios ANOVA
 
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(tidyverse)
+# install.packages("palmerpenguins")
+library(palmerpenguins)
+
 ```
 
+```{r}
+dat <- penguins %>%
+  select(species, flipper_length_mm)
+summary(dat)
+
+```
+
+
+```{r}
+
+ggplot(dat) +
+  aes(x = species, y = flipper_length_mm, color = species) +
+  geom_jitter() +
+  theme(legend.position = "none")
+```
+
+```{r}
+res_aov <- aov(flipper_length_mm ~ species,
+  data = dat
+)
+par(mfrow = c(1, 2)) # combine plots
+
+# histogram
+hist(res_aov$residuals)
+
+# QQ-plot
+library(car)
+qqPlot(res_aov$residuals,
+  id = FALSE # id = FALSE to remove point identification
+)
+```
+```{r}
+shapiro.test(res_aov$residuals)
+
+```
+
+```{r}
+# Boxplot
+boxplot(flipper_length_mm ~ species,
+  data = dat
+)
+```
+
+```{r}
+library(car)
+
+leveneTest(flipper_length_mm ~ species,
+  data = dat
+)
+```
+
+```{r}
+res_aov <- aov(flipper_length_mm ~ species,
+  data = dat
+)
+
+summary(res_aov)
+```
+
+```{r}
+library(multcomp)
+
+# Tukey HSD test:
+post_test <- glht(res_aov,
+  linfct = mcp(species = "Tukey")
+)
+
+summary(post_test)
+```
+
+```{r}
+# Edit from here
+x <- which(names(dat) == "species") # name of grouping variable
+y <- which(
+  names(dat) == "flipper_length_mm" # names of variables to test
+)
+method1 <- "anova" # one of "anova" or "kruskal.test"
+method2 <- "t.test" # one of "wilcox.test" or "t.test"
+my_comparisons <- list(c("Chinstrap", "Adelie"), c("Gentoo", "Adelie"), c("Gentoo", "Chinstrap")) # comparisons for post-hoc tests
+# Edit until here
+
+
+# Edit at your own risk
+library(ggpubr)
+for (i in y) {
+  for (j in x) {
+    p <- ggboxplot(dat,
+      x = colnames(dat[j]), y = colnames(dat[i]),
+      color = colnames(dat[j]),
+      legend = "none",
+      palette = "npg",
+      add = "jitter"
+    )
+    print(
+      p + stat_compare_means(aes(label = paste0(after_stat(method), ", p-value = ", after_stat(p.format))),
+        method = method1, label.y = max(dat[, i], na.rm = TRUE)
+      )
+      + stat_compare_means(comparisons = my_comparisons, method = method2, label = "p.format") # remove if p-value of ANOVA or Kruskal-Wallis test >= alpha
+    )
+  }
+}
+```
+```{r}
+library(ggstatsplot)
+
+ggbetweenstats(
+  data = dat,
+  x = species,
+  y = flipper_length_mm,
+  type = "parametric", # ANOVA or Kruskal-Wallis
+  var.equal = TRUE, # ANOVA or Welch ANOVA
+  plot.type = "box",
+  pairwise.comparisons = TRUE,
+  pairwise.display = "significant",
+  centrality.plotting = FALSE,
+  bf.message = FALSE
+)
+```
+
+https://rpubs.com/luis_fernandez_bernal/anova_2_vias
+https://rpubs.com/joaquin_ar/219504
+https://rpubs.com/JhonierRangel/1339103
+https://rpubs.com/joaquin_ar/219148
