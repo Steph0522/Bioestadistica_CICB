@@ -197,7 +197,7 @@ head(trees)
 ---
 ## perMANOVA en R
 ```{r}
-bird.matrix<- as.matrix(birds[,3:9]) # response variables
+bird.matrix<- as.matrix(birds[,3:9]) 
 trees$B<-as.factor(trees$B)
 birds.manova<-manova(bird.matrix~as.factor(B), data=trees)
 summary(birds.manova)
@@ -209,12 +209,17 @@ summary(birds.manova)
 ```{r}
 bird.mat<- sqrt(bird.matrix)
 bird.dist<-vegdist(bird.mat, method='bray')
-set.seed(36) #reproducible results
-bird.div<-adonis2(bird.dist~as.factor(birds$DIVERSITY), data=birds, permutations=9999)
+set.seed(36) 
+bird.div<-adonis2(bird.dist~as.factor(birds$DIVERSITY), data=birds, permutations=999)
 bird.div
 ```
 ---
-## Ejercicios ANOVA
+class: inverse, center, middle
+
+# Ejercicios ANOVA
+
+---
+## Ejercicios ANOVA - Manual
 
 Se evaluó el efecto de tres tratamientos (fertilizantes) sobre el crecimiento de plantas (cm).
 
@@ -225,25 +230,34 @@ crecimiento <- c(10,11,12,13,14,15,16,17,18)
 data <- data.frame(grupo, crecimiento)
 data
 ```
-
-1. Identificación del problema
-
-Preguntas:
-
-¿Cuál es la variable independiente (factor)?
-
-¿Cuál es la variable dependiente?
-
-¿Cuántos niveles tiene el factor?
+---
+## Ejercicios ANOVA
+**1. Identificación del problema**
+**2. Hipótesis**
+**3. Cálculo manual y en R**
+**4. Interpretación**
+**5. Comparaciones múltiples (post hoc) en R**
 
 
-2. Hipótesis
+---
+## Ejercicios ANOVA
+**1. Identificación del problema**
 
-H₀: Todas las medias son iguales
+- ¿Cuál es la variable independiente (factor)?
+
+- ¿Cuál es la variable dependiente?
+
+- ¿Cuántos niveles tiene el factor?
+
+
+**2. Hipótesis**
+
+H₀: Todas las mediasde los tratamientos son iguales
 
 H₁: Al menos una media es diferente
+---
 
-3. Cálculo manual
+**3. Cálculo manual**
 
 ```{r}
 #Paso 1: medias por grupo
@@ -253,6 +267,10 @@ mean(data$crecimiento)
 #Paso 3: Suma de cuadrados total (SCT)
 SCT <- sum((data$crecimiento - mean(data$crecimiento))^2)
 SCT
+```
+---
+
+```{r}
 #Paso 4: Suma de cuadrados entre grupos (SCE)
 medias <- tapply(data$crecimiento, data$grupo, mean)
 ni <- table(data$grupo)
@@ -262,9 +280,17 @@ SCE
 #Paso 5: Suma de cuadrados dentro de grupos (SCI)
 SCI <- SCT - SCE
 SCI
+```
+
+
+```{r}
 #Paso 6: Grados de libertad
 N = 9 
 k=3
+```
+
+---
+```{r}
 N-1 #total 
 k-1 #entre
 N-k #dentro
@@ -274,15 +300,25 @@ CM_dentro <- SCI / 6
 
 CM_entre
 CM_dentro
+```
+
+---
+```{r}
 #Paso 8: Estadístico F
 F_value <- CM_entre / CM_dentro
 F_value
+qf(0.05, df1=2, df2=6, lower.tail = FALSE)
+pf(27, df1=2, df2=6, lower.tail = FALSE)
+
 ```
+
+
 ```{r}
 modelo <- lm(crecimiento ~ grupo, data = data)
 anova(modelo)
 ```
-6. Interpretación
+---
+**4. Interpretación**
 
 Preguntas:
 
@@ -292,50 +328,49 @@ Preguntas:
 
 ¿El fertilizante tiene efecto?
 
-👉 Escribe tu conclusión:
 
-7. Comparaciones múltiples (post hoc)
+---
+
+**5. Comparaciones múltiples (post hoc) en R**
 ```{r}
-TukeyHSD(aov(modelo))
+anova_modelo <- aov(modelo)
+TukeyHSD(anova_modelo)
 ```
-Preguntas:
+---
+```{r, warning=FALSE, message=FALSE, fig.align='center'}
+library(agricolae)
+plot(HSD.test(anova_modelo, "grupo"))
+```
 
-¿Qué grupos son diferentes?
+---
 
-¿Cuál tratamiento tiene mayor efecto?
+**Preguntas finales...**
 
-🔹 8. Interpretación biológica
+- ¿Qué grupos son diferentes?
 
-👉 Explica en términos biológicos:
+- ¿Cuál tratamiento tiene mayor efecto?
 
-¿Qué fertilizante funciona mejor?
+- ¿Qué fertilizante funciona mejor?
 
-¿Hay diferencias claras entre tratamientos?
+- ¿Hay diferencias claras entre tratamientos?
 
-🔹 9. Reflexión final
-
-¿Qué pasaría si F ≈ 1?
-
-¿Qué indica una varianza dentro de grupos alta?
 ---
 ## Ejercicios ANOVA
 
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
-# install.packages("palmerpenguins")
 library(palmerpenguins)
-
+head(penguins)
 ```
 
 ```{r}
 dat <- penguins %>%
-  select(species, flipper_length_mm)
-summary(dat)
+  dplyr::select(species, flipper_length_mm) %>% glimpse()
 
 ```
 
-
+---
 ```{r}
 
 ggplot(dat) +
@@ -343,34 +378,35 @@ ggplot(dat) +
   geom_jitter() +
   theme(legend.position = "none")
 ```
-
+---
+#### Checando normalidad
 ```{r}
 res_aov <- aov(flipper_length_mm ~ species,
   data = dat
 )
-par(mfrow = c(1, 2)) # combine plots
+par(mfrow = c(1, 2)) 
 
-# histogram
 hist(res_aov$residuals)
 
-# QQ-plot
 library(car)
 qqPlot(res_aov$residuals,
-  id = FALSE # id = FALSE to remove point identification
+  id = FALSE 
 )
 ```
+---
+#### Checando normalidad
 ```{r}
 shapiro.test(res_aov$residuals)
-
 ```
-
+---
+#### Checando homocedasticidad
 ```{r}
-# Boxplot
 boxplot(flipper_length_mm ~ species,
   data = dat
 )
 ```
-
+---
+#### Checando homocedasticidad
 ```{r}
 library(car)
 
@@ -378,7 +414,8 @@ leveneTest(flipper_length_mm ~ species,
   data = dat
 )
 ```
-
+---
+#### Anova
 ```{r}
 res_aov <- aov(flipper_length_mm ~ species,
   data = dat
@@ -386,11 +423,11 @@ res_aov <- aov(flipper_length_mm ~ species,
 
 summary(res_aov)
 ```
-
+---
+#### Tukey
 ```{r}
 library(multcomp)
 
-# Tukey HSD test:
 post_test <- glht(res_aov,
   linfct = mcp(species = "Tukey")
 )

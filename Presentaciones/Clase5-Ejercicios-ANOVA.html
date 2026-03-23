@@ -426,7 +426,7 @@ head(trees)
 ## perMANOVA en R
 
 ``` r
-bird.matrix&lt;- as.matrix(birds[,3:9]) # response variables
+bird.matrix&lt;- as.matrix(birds[,3:9]) 
 trees$B&lt;-as.factor(trees$B)
 birds.manova&lt;-manova(bird.matrix~as.factor(B), data=trees)
 summary(birds.manova)
@@ -447,26 +447,31 @@ summary(birds.manova)
 ``` r
 bird.mat&lt;- sqrt(bird.matrix)
 bird.dist&lt;-vegdist(bird.mat, method='bray')
-set.seed(36) #reproducible results
-bird.div&lt;-adonis2(bird.dist~as.factor(birds$DIVERSITY), data=birds, permutations=9999)
+set.seed(36) 
+bird.div&lt;-adonis2(bird.dist~as.factor(birds$DIVERSITY), data=birds, permutations=999)
 bird.div
 ```
 
 ```
 ## Permutation test for adonis under reduced model
 ## Permutation: free
-## Number of permutations: 9999
+## Number of permutations: 999
 ## 
-## adonis2(formula = bird.dist ~ as.factor(birds$DIVERSITY), data = birds, permutations = 9999)
+## adonis2(formula = bird.dist ~ as.factor(birds$DIVERSITY), data = birds, permutations = 999)
 ##          Df SumOfSqs      R2      F Pr(&gt;F)   
-## Model     1  0.32857 0.12174 4.1585 0.0077 **
+## Model     1  0.32857 0.12174 4.1585  0.005 **
 ## Residual 30  2.37033 0.87826                 
 ## Total    31  2.69890 1.00000                 
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
 ---
-## Ejercicios ANOVA
+class: inverse, center, middle
+
+# Ejercicios ANOVA
+
+---
+## Ejercicios ANOVA - Manual
 
 Se evaluó el efecto de tres tratamientos (fertilizantes) sobre el crecimiento de plantas (cm).
 
@@ -491,25 +496,34 @@ data
 ## 8       B          17
 ## 9       B          18
 ```
-
-1. Identificación del problema
-
-Preguntas:
-
-¿Cuál es la variable independiente (factor)?
-
-¿Cuál es la variable dependiente?
-
-¿Cuántos niveles tiene el factor?
+---
+## Ejercicios ANOVA
+**1. Identificación del problema**
+**2. Hipótesis**
+**3. Cálculo manual y en R**
+**4. Interpretación**
+**5. Comparaciones múltiples (post hoc) en R**
 
 
-2. Hipótesis
+---
+## Ejercicios ANOVA
+**1. Identificación del problema**
 
-H₀: Todas las medias son iguales
+- ¿Cuál es la variable independiente (factor)?
+
+- ¿Cuál es la variable dependiente?
+
+- ¿Cuántos niveles tiene el factor?
+
+
+**2. Hipótesis**
+
+H₀: Todas las mediasde los tratamientos son iguales
 
 H₁: Al menos una media es diferente
+---
 
-3. Cálculo manual
+**3. Cálculo manual**
 
 
 ``` r
@@ -540,6 +554,8 @@ SCT
 ```
 ## [1] 60
 ```
+---
+
 
 ``` r
 #Paso 4: Suma de cuadrados entre grupos (SCE)
@@ -564,10 +580,17 @@ SCI
 ## [1] 6
 ```
 
+
+
 ``` r
 #Paso 6: Grados de libertad
 N = 9 
 k=3
+```
+
+---
+
+``` r
 N-1 #total 
 ```
 
@@ -611,6 +634,8 @@ CM_dentro
 ## [1] 1
 ```
 
+---
+
 ``` r
 #Paso 8: Estadístico F
 F_value &lt;- CM_entre / CM_dentro
@@ -620,6 +645,24 @@ F_value
 ```
 ## [1] 27
 ```
+
+``` r
+qf(0.05, df1=2, df2=6, lower.tail = FALSE)
+```
+
+```
+## [1] 5.143253
+```
+
+``` r
+pf(27, df1=2, df2=6, lower.tail = FALSE)
+```
+
+```
+## [1] 0.001
+```
+
+
 
 ``` r
 modelo &lt;- lm(crecimiento ~ grupo, data = data)
@@ -636,7 +679,8 @@ anova(modelo)
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
-6. Interpretación
+---
+**4. Interpretación**
 
 Preguntas:
 
@@ -646,12 +690,14 @@ Preguntas:
 
 ¿El fertilizante tiene efecto?
 
-👉 Escribe tu conclusión:
 
-7. Comparaciones múltiples (post hoc)
+---
+
+**5. Comparaciones múltiples (post hoc) en R**
 
 ``` r
-TukeyHSD(aov(modelo))
+anova_modelo &lt;- aov(modelo)
+TukeyHSD(anova_modelo)
 ```
 
 ```
@@ -666,50 +712,64 @@ TukeyHSD(aov(modelo))
 ## Control-A   -3 -5.5052356 -0.4947644 0.0242291
 ## Control-B   -6 -8.5052356 -3.4947644 0.0007942
 ```
-Preguntas:
+---
 
-¿Qué grupos son diferentes?
+``` r
+library(agricolae)
+plot(HSD.test(anova_modelo, "grupo"))
+```
 
-¿Cuál tratamiento tiene mayor efecto?
+&lt;img src="Clase5-Ejercicios-ANOVA_files/figure-html/unnamed-chunk-27-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
-🔹 8. Interpretación biológica
+---
 
-👉 Explica en términos biológicos:
+**Preguntas finales...**
 
-¿Qué fertilizante funciona mejor?
+- ¿Qué grupos son diferentes?
 
-¿Hay diferencias claras entre tratamientos?
+- ¿Cuál tratamiento tiene mayor efecto?
 
-🔹 9. Reflexión final
+- ¿Qué fertilizante funciona mejor?
 
-¿Qué pasaría si F ≈ 1?
+- ¿Hay diferencias claras entre tratamientos?
 
-¿Qué indica una varianza dentro de grupos alta?
 ---
 ## Ejercicios ANOVA
 
 
 
+``` r
+library(tidyverse)
+library(palmerpenguins)
+head(penguins)
+```
+
+```
+## # A tibble: 6 × 8
+##   species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g sex     year
+##   &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt; &lt;fct&gt;  &lt;int&gt;
+## 1 Adelie  Torgersen           39.1          18.7               181        3750 male    2007
+## 2 Adelie  Torgersen           39.5          17.4               186        3800 female  2007
+## 3 Adelie  Torgersen           40.3          18                 195        3250 female  2007
+## 4 Adelie  Torgersen           NA            NA                  NA          NA &lt;NA&gt;    2007
+## 5 Adelie  Torgersen           36.7          19.3               193        3450 female  2007
+## 6 Adelie  Torgersen           39.3          20.6               190        3650 male    2007
+```
 
 
 ``` r
 dat &lt;- penguins %&gt;%
-  select(species, flipper_length_mm)
-summary(dat)
+  dplyr::select(species, flipper_length_mm) %&gt;% glimpse()
 ```
 
 ```
-##       species    flipper_length_mm
-##  Adelie   :152   Min.   :172.0    
-##  Chinstrap: 68   1st Qu.:190.0    
-##  Gentoo   :124   Median :197.0    
-##                  Mean   :200.9    
-##                  3rd Qu.:213.0    
-##                  Max.   :231.0    
-##                  NA's   :2
+## Rows: 344
+## Columns: 2
+## $ species           &lt;fct&gt; Adelie, Adelie, Adelie, Adelie, Adelie, Adelie, Adelie, Adelie, Adeli…
+## $ flipper_length_mm &lt;int&gt; 181, 186, 195, NA, 193, 190, 181, 195, 193, 190, 186, 180, 182, 191, …
 ```
 
-
+---
 
 ``` r
 ggplot(dat) +
@@ -718,31 +778,27 @@ ggplot(dat) +
   theme(legend.position = "none")
 ```
 
-```
-## Warning: Removed 2 rows containing missing values or values outside the scale range
-## (`geom_point()`).
-```
-
-![](Clase5-Ejercicios-ANOVA_files/figure-html/unnamed-chunk-25-1.png)&lt;!-- --&gt;
-
+![](Clase5-Ejercicios-ANOVA_files/figure-html/unnamed-chunk-30-1.png)&lt;!-- --&gt;
+---
+#### Checando normalidad
 
 ``` r
 res_aov &lt;- aov(flipper_length_mm ~ species,
   data = dat
 )
-par(mfrow = c(1, 2)) # combine plots
+par(mfrow = c(1, 2)) 
 
-# histogram
 hist(res_aov$residuals)
 
-# QQ-plot
 library(car)
 qqPlot(res_aov$residuals,
-  id = FALSE # id = FALSE to remove point identification
+  id = FALSE 
 )
 ```
 
-![](Clase5-Ejercicios-ANOVA_files/figure-html/unnamed-chunk-26-1.png)&lt;!-- --&gt;
+![](Clase5-Ejercicios-ANOVA_files/figure-html/unnamed-chunk-31-1.png)&lt;!-- --&gt;
+---
+#### Checando normalidad
 
 ``` r
 shapiro.test(res_aov$residuals)
@@ -755,17 +811,18 @@ shapiro.test(res_aov$residuals)
 ## data:  res_aov$residuals
 ## W = 0.99452, p-value = 0.2609
 ```
-
+---
+#### Checando homocedasticidad
 
 ``` r
-# Boxplot
 boxplot(flipper_length_mm ~ species,
   data = dat
 )
 ```
 
-![](Clase5-Ejercicios-ANOVA_files/figure-html/unnamed-chunk-28-1.png)&lt;!-- --&gt;
-
+![](Clase5-Ejercicios-ANOVA_files/figure-html/unnamed-chunk-33-1.png)&lt;!-- --&gt;
+---
+#### Checando homocedasticidad
 
 ``` r
 library(car)
@@ -781,7 +838,8 @@ leveneTest(flipper_length_mm ~ species,
 ## group   2  0.3306 0.7188
 ##       339
 ```
-
+---
+#### Anova
 
 ``` r
 res_aov &lt;- aov(flipper_length_mm ~ species,
@@ -799,73 +857,12 @@ summary(res_aov)
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 2 observations deleted due to missingness
 ```
-
+---
+#### Tukey
 
 ``` r
 library(multcomp)
-```
 
-```
-## Loading required package: mvtnorm
-```
-
-```
-## Warning: package 'mvtnorm' was built under R version 4.3.3
-```
-
-```
-## Loading required package: survival
-```
-
-```
-## 
-## Attaching package: 'survival'
-```
-
-```
-## The following object is masked from 'package:MVN':
-## 
-##     royston
-```
-
-```
-## Loading required package: TH.data
-```
-
-```
-## Loading required package: MASS
-```
-
-```
-## 
-## Attaching package: 'MASS'
-```
-
-```
-## The following object is masked from 'package:dplyr':
-## 
-##     select
-```
-
-```
-## 
-## Attaching package: 'TH.data'
-```
-
-```
-## The following object is masked _by_ '.GlobalEnv':
-## 
-##     birds
-```
-
-```
-## The following object is masked from 'package:MASS':
-## 
-##     geyser
-```
-
-``` r
-# Tukey HSD test:
 post_test &lt;- glht(res_aov,
   linfct = mcp(species = "Tukey")
 )
@@ -884,7 +881,7 @@ summary(post_test)
 ## 
 ## Linear Hypotheses:
 ##                         Estimate Std. Error t value Pr(&gt;|t|)    
-## Chinstrap - Adelie == 0   5.8699     0.9699   6.052    1e-08 ***
+## Chinstrap - Adelie == 0   5.8699     0.9699   6.052   &lt;1e-08 ***
 ## Gentoo - Adelie == 0     27.2333     0.8067  33.760   &lt;1e-08 ***
 ## Gentoo - Chinstrap == 0  21.3635     1.0036  21.286   &lt;1e-08 ***
 ## ---
@@ -926,39 +923,11 @@ for (i in y) {
 }
 ```
 
-```
-## Warning: Removed 2 rows containing non-finite outside the scale range
-## (`stat_boxplot()`).
-```
-
-```
-## Warning: Removed 2 rows containing non-finite outside the scale range
-## (`stat_compare_means()`).
-```
-
-```
-## Warning: Removed 2 rows containing non-finite outside the scale range
-## (`stat_signif()`).
-```
-
-```
-## Warning: Removed 2 rows containing missing values or values outside the scale range
-## (`geom_point()`).
-```
-
-![](Clase5-Ejercicios-ANOVA_files/figure-html/unnamed-chunk-32-1.png)&lt;!-- --&gt;
+![](Clase5-Ejercicios-ANOVA_files/figure-html/unnamed-chunk-37-1.png)&lt;!-- --&gt;
 
 ``` r
 library(ggstatsplot)
-```
 
-```
-## You can cite this package as:
-##      Patil, I. (2021). Visualizations with statistical details: The 'ggstatsplot' approach.
-##      Journal of Open Source Software, 6(61), 3167, doi:10.21105/joss.03167
-```
-
-``` r
 ggbetweenstats(
   data = dat,
   x = species,
@@ -973,7 +942,7 @@ ggbetweenstats(
 )
 ```
 
-![](Clase5-Ejercicios-ANOVA_files/figure-html/unnamed-chunk-33-1.png)&lt;!-- --&gt;
+![](Clase5-Ejercicios-ANOVA_files/figure-html/unnamed-chunk-38-1.png)&lt;!-- --&gt;
 
 https://rpubs.com/luis_fernandez_bernal/anova_2_vias
 https://rpubs.com/joaquin_ar/219504
