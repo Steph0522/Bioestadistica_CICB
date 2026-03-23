@@ -179,7 +179,7 @@ En la prueba de Kruskal-Wallis son suficientes variables ordinales, ya que las p
 
 De esta pregunta se derivan las siguientes hipótesis:
 
-**Hipótesis nula (H₀)**: Las muestras independientes tienen la misma tendencia centra (distribución)l y, por lo tanto, provienen de la misma población.
+**Hipótesis nula (H₀)**: Las muestras independientes tienen la misma tendencia central (distribución) y, por lo tanto, provienen de la misma población.
 
 **Hipótesis alternativa (H₁)**: Al menos una de las muestras independientes no tiene la misma tendencia central (distribución) que las demás y, por lo tanto, proviene de una población diferente.
 ---
@@ -518,11 +518,6 @@ kruskal_result
 
 ## Dunn Test
 Olive Jean Dunn  una reconocida estadística estadounidense.Se desarrolló en la década de 1960. 
-
-``` r
-knitr::include_graphics("images/dunn.webp")
-```
-
 ![](images/dunn.webp)&lt;!-- --&gt;
 
 ---
@@ -537,7 +532,7 @@ group_B &lt;- rexp(n, rate = 0.1) + 25
 group_C &lt;- rexp(n, rate = 0.1) + 35 
 
 data &lt;- data.frame(
-  mobility_scores = c(group_A, group_B, group_C),  # Concatenate all group scores
+  mobility_scores = c(group_A, group_B, group_C),  
   program = factor(rep(c("Program A", "Program B", "Program C"), each = n)) )
 
 head(data)
@@ -560,6 +555,24 @@ ggplot(data, aes(x = mobility_scores, fill = program)) + geom_histogram(aes(y = 
 ```
 
 &lt;img src="Clase4-KW-DUNN_files/figure-html/unnamed-chunk-25-1.png" alt="" style="display: block; margin: auto;" /&gt;
+---
+
+### Ejemplo en R extendido
+
+
+``` r
+kruskal_test &lt;- kruskal.test(mobility_scores ~ program, data = data)
+kruskal_test
+```
+
+```
+## 
+## 	Kruskal-Wallis rank sum test
+## 
+## data:  mobility_scores by program
+## Kruskal-Wallis chi-squared = 49.667, df = 2, p-value = 1.64e-11
+```
+
 
 ---
 
@@ -603,9 +616,37 @@ dunn_res
 ## 3 mobility_scores Program B Program C    30    30      2.77 5.57e- 3 1.67e- 2 *
 ```
 
+---
+
 ``` r
 library(FSA)
 dunn_result &lt;- dunnTest(mobility_scores ~ program, data = data, method = "bonferroni")
+```
+
+```
+##   Kruskal-Wallis rank sum test
+## 
+## data: x and g
+## Kruskal-Wallis chi-squared = 49.6671, df = 2, p-value = 0
+## 
+## 
+##                      Dunn's Pairwise Comparison of x by g                     
+##                                  (Bonferroni)                                 
+## Col Mean-│
+## Row Mean │   Program    Program 
+## ─────────┼──────────────────────
+## Program  │  -4.225121
+##          │     0.0001*
+##          │
+## Program  │  -6.997393  -2.772272
+##          │     0.0000*    0.0167*
+## 
+## α = 0.05
+## Reject Ho if p ≤ α, where p = Pr(|Z| ≥ |z|)
+```
+---
+
+``` r
 dunn_result
 ```
 
@@ -623,21 +664,7 @@ dunn_result
 ## 2 Program A - Program C -6.997394 2.607680e-12 7.823041e-12
 ## 3 Program B - Program C -2.772272 5.566642e-03 1.669993e-02
 ```
----
-### Ejemplo en R extendido
 
-``` r
-kruskal_test &lt;- kruskal.test(mobility_scores ~ program, data = data)
-kruskal_test
-```
-
-```
-## 
-## 	Kruskal-Wallis rank sum test
-## 
-## data:  mobility_scores by program
-## Kruskal-Wallis chi-squared = 49.667, df = 2, p-value = 1.64e-11
-```
 
 ---
 
@@ -663,7 +690,7 @@ data %&gt;% ggplot(aes(x = program, y = mobility_scores, fill = program))+
   geom_boxplot()+ geom_pwc(method = "dunn_test",  p.adjust.method = "bonferroni",  label = "p.adj.format")+theme_classic()
 ```
 
-&lt;img src="Clase4-KW-DUNN_files/figure-html/unnamed-chunk-29-1.png" alt="" style="display: block; margin: auto;" /&gt;
+&lt;img src="Clase4-KW-DUNN_files/figure-html/unnamed-chunk-31-1.png" alt="" style="display: block; margin: auto;" /&gt;
 ---
 
 ``` r
@@ -733,7 +760,7 @@ ggplot(data, aes(x = program, y = mobility_scores, fill = program)) +
   theme_classic()
 ```
 ---
-&lt;img src="Clase4-KW-DUNN_files/figure-html/unnamed-chunk-34-1.png" alt="" style="display: block; margin: auto;" /&gt;
+&lt;img src="Clase4-KW-DUNN_files/figure-html/unnamed-chunk-36-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Tarea - Ejercicio

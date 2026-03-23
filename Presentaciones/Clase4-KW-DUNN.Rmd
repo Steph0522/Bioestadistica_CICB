@@ -149,7 +149,7 @@ knitr::include_graphics("images/Kruskal-Wallis-Test-vs-anova.png")
 
 De esta pregunta se derivan las siguientes hipótesis:
 
-**Hipótesis nula (H₀)**: Las muestras independientes tienen la misma tendencia centra (distribución)l y, por lo tanto, provienen de la misma población.
+**Hipótesis nula (H₀)**: Las muestras independientes tienen la misma tendencia central (distribución) y, por lo tanto, provienen de la misma población.
 
 **Hipótesis alternativa (H₁)**: Al menos una de las muestras independientes no tiene la misma tendencia central (distribución) que las demás y, por lo tanto, proviene de una población diferente.
 ---
@@ -393,7 +393,7 @@ kruskal_result
 
 ## Dunn Test
 Olive Jean Dunn  una reconocida estadística estadounidense.Se desarrolló en la década de 1960. 
-```{r}
+```{r, echo=FALSE}
 knitr::include_graphics("images/dunn.webp")
 ```
 
@@ -408,16 +408,25 @@ group_B <- rexp(n, rate = 0.1) + 25
 group_C <- rexp(n, rate = 0.1) + 35 
 
 data <- data.frame(
-  mobility_scores = c(group_A, group_B, group_C),  # Concatenate all group scores
+  mobility_scores = c(group_A, group_B, group_C),  
   program = factor(rep(c("Program A", "Program B", "Program C"), each = n)) )
 
 head(data)
 ```
 ---
 
-```{r, fig.align='center'}
+```{r, fig.align='center', message=FALSE, warning=FALSE}
 ggplot(data, aes(x = mobility_scores, fill = program)) + geom_histogram(aes(y = ..density..), bins = 15, alpha = 0.5, position = "identity") + geom_density(alpha = 0.7) + facet_wrap(~ program) + ggtitle("Distribución de los puntajes de movilidad por programa") + xlab("Puntajes de movilidad") + ylab("Densidad") + theme_minimal() + scale_fill_brewer(palette = "Set1")
 ```
+---
+
+### Ejemplo en R extendido
+
+```{r}
+kruskal_test <- kruskal.test(mobility_scores ~ program, data = data)
+kruskal_test
+```
+
 
 ---
 
@@ -435,17 +444,18 @@ pairwise.wilcox.test(data$mobility_scores, data$program, p.adjust.method = "holm
 library(rstatix)
 dunn_res <- data %>% dunn_test(mobility_scores ~ program, p.adjust.method = "bonferroni")
 dunn_res
+```
+
+---
+```{r}
 library(FSA)
 dunn_result <- dunnTest(mobility_scores ~ program, data = data, method = "bonferroni")
-dunn_result
-
 ```
 ---
-### Ejemplo en R extendido
 ```{r}
-kruskal_test <- kruskal.test(mobility_scores ~ program, data = data)
-kruskal_test
+dunn_result
 ```
+
 
 ---
 
